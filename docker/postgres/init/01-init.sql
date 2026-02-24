@@ -1,10 +1,5 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Docker init script - minimal setup
+-- Full schema is managed through migrations (api/src/db/migrations/)
+-- This script only ensures the database and extensions exist
 
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    role VARCHAR(50) DEFAULT 'jamaah',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
