@@ -5,13 +5,13 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
-    "build": "bun build src/index.ts --outdir ./dist",
-    "start": "bun run dist/index.js",
-    "migrate": "bun run src/db/migrate.ts",
-    "seed": "bun run src/db/seed.ts",
-    "test": "bun test",
-    "typecheck": "tsc --noEmit"
+      "dev": "bun run --hot src/index.ts",
+      "build": "bun build src/index.ts --outdir ./dist",
+      "start": "bun run ./dist/index.js",
+      "migrate": "bun run src/db/migrate.ts",
+      "seed": "bun run src/db/seed.ts",
+      "test": "bun test",
+      "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.1",
