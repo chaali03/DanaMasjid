@@ -6,7 +6,18 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint .",
-    "start": "next start"
+    "start": "next start",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "docker:logs": "docker-compose logs -f",
+    "docker:api": "docker-compose exec api sh",
+    "docker:frontend": "docker-compose exec frontend sh",
+    "docker:db": "docker-compose exec postgres psql -U danamasjid danamasjid",
+    "docker:migrate": "docker-compose run --rm migration",
+    "docker:clean": "docker-compose down -v --remove-orphans",
+    "db:migrate": "cd api && bun run migrate",
+    "db:seed": "cd api && bun run seed"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
