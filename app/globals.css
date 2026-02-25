@@ -173,3 +173,10 @@ body:has(.cookie-consent-container) {
   overflow-y: auto !important;
   height: 100% !important;
 }
+
+/* Hide reCAPTCHA badge */
+.grecaptcha-badge {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
