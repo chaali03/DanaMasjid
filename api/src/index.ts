@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes';
+import subscribeRoutes from './routes/subscribeRoutes';
 import { 
   apiLimiter, 
   sanitizeInput, 
@@ -112,6 +113,7 @@ app.set('trust proxy', 1);
 // ============================================
 
 app.use('/api/auth', authRoutes);
+app.use('/api/subscribe', subscribeRoutes);
 
 // Health check endpoint
 app.get('/health', (req: Request, res: Response) => {

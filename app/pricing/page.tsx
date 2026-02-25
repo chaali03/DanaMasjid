@@ -1,10 +1,10 @@
 "use client"
 
-import { Footer } from "@/components/footer"
-import { Pricing } from "@/components/pricing"
-import { Header } from "@/components/header"
-import { HeroSection } from "@/components/hero-section-2"
-import { PricingInfoSection } from "@/components/pricing-info-section"
+import { Footer } from "@/components/layout"
+import { Pricing } from "@/components/cards"
+import { Header } from "@/components/layout"
+import { HeroSection2 } from "@/components/sections"
+import { PricingInfoSection } from "@/components/sections"
 import { motion } from "framer-motion"
 
 const pricingPlans = [
@@ -80,7 +80,7 @@ export default function PricingPage() {
       <div className="h-24" />
 
       {/* Hero Section */}
-      <HeroSection
+      <HeroSection2
         title={
           <>
             Harga yang <span className="relative inline-block">
@@ -101,8 +101,8 @@ export default function PricingPage() {
           text: "LIHAT PAKET →",
           href: "#pricing",
         }}
-        backgroundImage="/images/hero/sky.jpeg"
-        rightImage="/images/harga/heroo.png"
+        backgroundImage="/images/hero/sky.webp"
+        rightImage="/images/harga/heroo.webp"
         contactInfo={{
           website: "",
           phone: "",

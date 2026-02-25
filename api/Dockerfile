@@ -8,6 +8,10 @@ RUN npm install
 
 COPY . .
 
+# Build TypeScript to JavaScript
+RUN npm run build
+
 EXPOSE 3001
 
-CMD ["npm", "run", "dev"]
+# Run the compiled JavaScript instead of TypeScript
+CMD ["node", "dist/index.js"]

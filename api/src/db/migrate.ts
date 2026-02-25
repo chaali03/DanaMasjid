@@ -1,7 +1,6 @@
 import { pool, query } from './connection';
 import { readdir, readFile } from 'node:fs/promises';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 
 async function migrate() {
     console.log('🚀 Starting database migration...\n');
@@ -14,8 +13,6 @@ async function migrate() {
         );
     `);
 
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
     const migrationsDir = join(__dirname, 'migrations');
     
     const files = await readdir(migrationsDir);

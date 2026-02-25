@@ -2,10 +2,9 @@
   "name": "danamasjid-api",
   "version": "1.0.0",
   "description": "DanaMasjid API Backend",
-  "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "node dist/index.js",
     "build": "tsc",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
@@ -13,7 +12,7 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:seed": "tsx src/db/seed.ts"
+    "db:seed": "ts-node src/db/seed.ts"
   },
   "keywords": [],
   "author": "",

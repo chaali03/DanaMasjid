@@ -251,7 +251,7 @@ export default function ForgotPasswordPage() {
           className="relative w-full h-64 md:h-80 overflow-hidden"
         >
           <Image
-            src="/images/login/loginnnn.jpeg"
+            src="/images/login/loginnnn.webp"
             alt="Forgot Password"
             fill
             className="object-cover"

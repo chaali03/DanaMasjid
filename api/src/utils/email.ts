@@ -457,3 +457,232 @@ export const sendWelcomeEmail = async (email: string, name: string, mosqueName: 
     return { success: false, error: error.message };
   }
 };
+
+export const sendSubscriptionEmail = async (email: string): Promise<EmailResult> => {
+  try {
+    const mailOptions = {
+      from: `"DanaMasjid" <${process.env.SMTP_FROM}>`,
+      to: email,
+      subject: 'Daftarkan Masjid Anda di DanaMasjid',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              line-height: 1.6;
+              color: #333;
+              margin: 0;
+              padding: 0;
+              background-color: #f5f5f5;
+            }
+            .container {
+              max-width: 600px;
+              margin: 40px auto;
+              background: white;
+              border-radius: 16px;
+              overflow: hidden;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .header {
+              background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+              padding: 40px 30px;
+              text-align: center;
+            }
+            .logo {
+              width: 80px;
+              height: 80px;
+              margin: 0 auto 20px;
+              background: white;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-center;
+            }
+            .header h1 {
+              color: white;
+              margin: 0;
+              font-size: 28px;
+              font-weight: 700;
+            }
+            .header p {
+              color: rgba(255, 255, 255, 0.9);
+              margin: 10px 0 0;
+              font-size: 16px;
+            }
+            .content {
+              padding: 40px 30px;
+            }
+            .greeting {
+              font-size: 18px;
+              font-weight: 600;
+              color: #1f2937;
+              margin-bottom: 20px;
+            }
+            .message {
+              color: #4b5563;
+              margin-bottom: 25px;
+              font-size: 15px;
+            }
+            .benefits {
+              background: #f0f9ff;
+              padding: 25px;
+              border-radius: 12px;
+              margin: 30px 0;
+              border-left: 4px solid #3b82f6;
+            }
+            .benefits h3 {
+              color: #1f2937;
+              margin: 0 0 20px;
+              font-size: 17px;
+            }
+            .benefit-item {
+              margin: 15px 0;
+              padding-left: 30px;
+              position: relative;
+              color: #4b5563;
+              font-size: 14px;
+            }
+            .benefit-item:before {
+              content: "✓";
+              position: absolute;
+              left: 0;
+              color: #10b981;
+              font-weight: bold;
+              font-size: 18px;
+            }
+            .button {
+              display: inline-block;
+              background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+              color: white;
+              padding: 16px 40px;
+              text-decoration: none;
+              border-radius: 8px;
+              margin: 25px 0;
+              font-weight: 600;
+              font-size: 16px;
+              box-shadow: 0 4px 6px rgba(251, 191, 36, 0.3);
+            }
+            .button-container {
+              text-align: center;
+            }
+            .promo {
+              background: #fef3c7;
+              border: 2px dashed #f59e0b;
+              padding: 20px;
+              border-radius: 12px;
+              text-align: center;
+              margin: 30px 0;
+            }
+            .promo-title {
+              color: #92400e;
+              font-weight: 700;
+              font-size: 18px;
+              margin-bottom: 10px;
+            }
+            .promo-text {
+              color: #78350f;
+              font-size: 14px;
+            }
+            .footer {
+              background: #f9fafb;
+              padding: 30px;
+              text-align: center;
+              border-top: 1px solid #e5e7eb;
+            }
+            .footer p {
+              color: #6b7280;
+              font-size: 13px;
+              margin: 5px 0;
+            }
+            .footer-links {
+              margin-top: 15px;
+            }
+            .footer-links a {
+              color: #3b82f6;
+              text-decoration: none;
+              margin: 0 10px;
+              font-size: 13px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <div class="logo">
+                <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="50" height="50" rx="8" fill="#3b82f6"/>
+                  <path d="M25 10 L35 20 L35 38 L15 38 L15 20 Z" fill="white"/>
+                  <rect x="22" y="28" width="6" height="10" fill="#3b82f6"/>
+                  <circle cx="25" cy="15" r="3" fill="white"/>
+                </svg>
+              </div>
+              <h1>DanaMasjid</h1>
+              <p>Platform Donasi Masjid Terpercaya</p>
+            </div>
+            
+            <div class="content">
+              <div class="greeting">Assalamu'alaikum!</div>
+              
+              <div class="message">
+                Terima kasih atas minat Anda untuk mendaftarkan masjid di platform DanaMasjid. 
+                Kami sangat senang dapat membantu masjid Anda menerima donasi secara transparan dan amanah.
+              </div>
+
+              <div class="promo">
+                <div class="promo-title">🎉 Promo Spesial!</div>
+                <div class="promo-text">
+                  <strong>GRATIS 3 Bulan Pertama</strong><br>
+                  Tanpa biaya setup • Tanpa biaya bulanan
+                </div>
+              </div>
+              
+              <div class="benefits">
+                <h3>Keuntungan Bergabung dengan DanaMasjid:</h3>
+                <div class="benefit-item">Dashboard lengkap untuk kelola donasi</div>
+                <div class="benefit-item">Laporan keuangan real-time & transparan</div>
+                <div class="benefit-item">Sistem pembayaran aman & mudah</div>
+                <div class="benefit-item">Notifikasi otomatis untuk setiap donasi</div>
+                <div class="benefit-item">Support 24/7 dari tim kami</div>
+                <div class="benefit-item">Gratis 3 bulan pertama!</div>
+              </div>
+
+              <div class="button-container">
+                <a href="http://localhost:3000/login" class="button">Daftar Sekarang →</a>
+              </div>
+
+              <div class="message">
+                Klik tombol di atas untuk memulai proses pendaftaran. Proses pendaftaran hanya membutuhkan waktu 5 menit!
+              </div>
+
+              <div class="message">
+                Jika Anda memiliki pertanyaan, silakan hubungi tim support kami di support@danamasjid.com atau WhatsApp: 0812-3456-7890
+              </div>
+            </div>
+            
+            <div class="footer">
+              <p>Email ini dikirim secara otomatis, mohon tidak membalas email ini.</p>
+              <div class="footer-links">
+                <a href="#">Bantuan</a>
+                <a href="#">Kebijakan Privasi</a>
+                <a href="#">Syarat & Ketentuan</a>
+              </div>
+              <p style="margin-top: 20px;">&copy; 2025 DanaMasjid. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Subscription email sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error: any) {
+    console.error('❌ Error sending subscription email:', error);
+    return { success: false, error: error.message };
+  }
+};

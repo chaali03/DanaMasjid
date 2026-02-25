@@ -137,7 +137,7 @@ export default function LoginPage() {
         >
           <div className="relative w-full h-full">
             <Image
-              src="/images/login/loginnnn.jpeg"
+              src="/images/login/loginnnn.webp"
               alt="DanaMasjid Login"
               fill
               className="object-cover"
@@ -193,7 +193,7 @@ export default function LoginPage() {
             className="lg:hidden w-full h-48 relative rounded-2xl overflow-hidden mt-16 mb-6"
           >
             <Image
-              src="/images/login/loginnnn.jpeg"
+              src="/images/login/loginnnn.webp"
               alt="DanaMasjid Login"
               fill
               className="object-cover"

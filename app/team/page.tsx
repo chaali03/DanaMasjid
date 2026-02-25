@@ -1,10 +1,10 @@
 "use client"
 
-import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
-import { HeroSection } from "@/components/hero-section-2"
-import { TeamInfoSection } from "@/components/team-info-section"
-import { TeamMembersSection } from "@/components/team-members-section"
+import { Footer } from "@/components/layout"
+import { Header } from "@/components/layout"
+import { HeroSection2 } from "@/components/sections"
+import { TeamInfoSection } from "@/components/sections"
+import { TeamMembersSection } from "@/components/sections"
 import { motion } from "framer-motion"
 
 export default function TeamPage() {
@@ -17,7 +17,7 @@ export default function TeamPage() {
       <div className="h-24" />
 
       {/* Hero Section */}
-      <HeroSection
+      <HeroSection2
         title={
           <>
             Kenali <span className="text-primary">Tim</span> <span className="relative inline-block">
@@ -38,8 +38,8 @@ export default function TeamPage() {
           text: "LIHAT TIM →",
           href: "#team",
         }}
-        backgroundImage="/images/hero/sky2.jpeg"
-        rightImage="/images/tim/heroo.png"
+        backgroundImage="/images/hero/sky2.webp"
+        rightImage="/images/tim/heroo.webp"
         contactInfo={{
           website: "",
           phone: "",

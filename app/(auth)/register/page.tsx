@@ -329,7 +329,7 @@ export default function RegisterPage() {
             className="lg:hidden w-full h-48 relative rounded-2xl overflow-hidden mt-16 mb-6"
           >
             <Image
-              src="/images/login/loginnn.jpeg"
+              src="/images/login/loginnn.webp"
               alt="DanaMasjid Register"
               fill
               className="object-cover"
@@ -748,7 +748,7 @@ export default function RegisterPage() {
           className="hidden lg:block lg:w-1/2 relative overflow-hidden"
         >
           <Image
-            src="/images/login/loginnn.jpeg"
+            src="/images/login/loginnn.webp"
             alt="DanaMasjid Register"
             fill
             className="object-cover"
