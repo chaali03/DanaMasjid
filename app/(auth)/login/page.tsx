@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
@@ -8,13 +8,7 @@ import Image from "next/image"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const [animationKey, setAnimationKey] = useState(0)
   const router = useRouter()
-
-  // Reset animation setiap kali halaman di-mount
-  useEffect(() => {
-    setAnimationKey(prev => prev + 1)
-  }, [])
 
   const handleRegisterClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -102,7 +96,6 @@ export default function LoginPage() {
 
   return (
     <motion.div 
-      key={animationKey}
       initial="hidden"
       animate="visible"
       className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-white"

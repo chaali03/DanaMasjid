@@ -1,13 +1,13 @@
 import { Pool, type QueryResult, type QueryResultRow } from 'pg';
 
 const pool = new Pool({
-    connectionString: Bun.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
     max: 10,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 5000,
 });
 
-pool.on('error', (err) => {
+pool.on('error', (err: Error) => {
     console.error('Error tak terduga dari client server', err);
 });
 
@@ -19,7 +19,7 @@ export async function query<T extends QueryResultRow = QueryResultRow>(
     const result = await pool.query<T>(text, params);
     const duration = Date.now() - start;
 
-    if (Bun.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development') {
         console.log('[DB]', { text: text.substring(0, 80), duration: `${duration}ms`, rows: result.rowCount });
     }
 

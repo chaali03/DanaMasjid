@@ -1,6 +1,7 @@
 import { pool, query } from './connection';
-import { readdir } from 'node:fs/promises';
-import { join } from 'node:path';
+import { readdir, readFile } from 'node:fs/promises';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 async function migrate() {
     console.log('🚀 Starting database migration...\n');
@@ -13,7 +14,10 @@ async function migrate() {
         );
     `);
 
-    const migrationsDir = join(import.meta.dir, 'migrations');
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const migrationsDir = join(__dirname, 'migrations');
+    
     const files = await readdir(migrationsDir);
     const sqlFiles = files
         .filter((f) => f.endsWith('.sql'))
@@ -33,7 +37,7 @@ async function migrate() {
         console.log(`📄 Applying migration: ${file}`);
 
         const filePath = join(migrationsDir, file);
-        const sql = await Bun.file(filePath).text();
+        const sql = await readFile(filePath, 'utf-8');
 
         try {
             await query('BEGIN');

@@ -11,7 +11,7 @@ export default function AuthLayout({
   const pathname = usePathname()
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <AnimatePresence mode="wait">
       <div key={pathname}>
         {children}
       </div>
