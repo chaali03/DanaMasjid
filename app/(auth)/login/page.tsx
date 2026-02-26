@@ -1,3 +1,4 @@
+﻿// @ts-nocheck
 "use client"
 
 import { useState } from "react"
@@ -6,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { useAuth } from "@/lib/auth-context"
+import { VideoBackground } from "@/components/auth/video-background"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -16,7 +18,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const [isHovered, setIsHovered] = useState<string | null>(null)
 
   const handleRegisterClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -190,33 +191,13 @@ export default function LoginPage() {
       variants={containerVariants}
       className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-cyan-50"
     >
-      {/* Video Background with Fade In */}
-      <motion.div
-        variants={videoOverlayVariants}
-        className="absolute inset-0 w-full h-full"
-      >
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/vidio/login.mp4" type="video/mp4" />
-        </video>
-      </motion.div>
-
-      {/* Overlay with Fade In */}
-      <motion.div
-        variants={videoOverlayVariants}
-        transition={{ delay: 0.2 }}
-        className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-sky-900/30 to-cyan-900/40 backdrop-blur-[2px]"
-      />
+      {/* Video Background with Reverse Playback */}
+      <VideoBackground videoSrc="/vidio/login.mp4" duration={14} />
 
       {/* Main Login Card - Split Screen */}
       <motion.div
         variants={cardVariants}
-        className="relative z-20 w-full max-w-7xl min-h-[700px] bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row"
+        className="relative z-20 w-full max-w-7xl min-h-[700px] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row"
       >
         {/* Left Side - Full Background Image */}
         <motion.div
@@ -268,17 +249,32 @@ export default function LoginPage() {
               href="/"
               className="absolute top-8 left-8 z-20 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group focus:outline-none"
             >
-              <motion.svg 
-                className="w-5 h-5 group-hover:-translate-x-1 transition-transform" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-                whileHover={{ x: -3 }}
-                transition={{ type: "spring", stiffness: 400 }}
+              <motion.div
+                className="flex items-center gap-2"
+                whileHover={{ x: -5, scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </motion.svg>
-              <span className="text-base font-medium">Kembali</span>
+                <motion.svg 
+                  className="w-5 h-5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  animate={{ x: [0, -3, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </motion.svg>
+                <span className="text-base font-medium relative">
+                  Kembali
+                  <motion.span 
+                    className="absolute bottom-0 left-0 h-0.5 bg-gray-900"
+                    initial={{ width: 0 }}
+                    whileHover={{ width: "100%" }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </span>
+              </motion.div>
             </Link>
           </motion.div>
 
@@ -304,8 +300,8 @@ export default function LoginPage() {
               variants={itemVariants} 
               className="text-center mb-6"
             >
-              <h1 className="text-2xl lg:text-4xl font-bold text-white mb-3">Masuk Admin</h1>
-              <p className="text-white/80 text-base">
+              <h1 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-3">Masuk Admin</h1>
+              <p className="text-gray-500 text-base">
                 Halo, Masukkan detail Anda untuk masuk ke akun
               </p>
             </motion.div>
@@ -340,8 +336,6 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  onFocus={() => setIsHovered('email')}
-                  onBlur={() => setIsHovered(null)}
                   className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-base"
                 />
                 <motion.button
@@ -370,8 +364,6 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  onFocus={() => setIsHovered('password')}
-                  onBlur={() => setIsHovered(null)}
                   className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-base"
                 />
                 <motion.button

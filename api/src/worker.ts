@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { sendEmail, generateOTP, getOTPEmailHTML, getWelcomeEmailHTML, getSubscribeWelcomeEmailHTML } from './utils/emailWorker'
+import { hashPassword, comparePassword, validatePasswordStrength } from './utils/password'
 import { 
   advancedRateLimit, 
   sqlInjectionProtection, 
@@ -320,12 +321,18 @@ app.post('/api/auth/register/complete', async (c) => {
       )
     }
 
-    if (password.length < 6) {
+    // Validate password strength
+    const passwordValidation = validatePasswordStrength(password)
+    if (!passwordValidation.isValid) {
       return c.json(
-        { success: false, message: 'Password minimal 6 karakter' },
+        { success: false, message: passwordValidation.message },
         400
       )
     }
+
+    // Hash password using bcrypt
+    const hashedPassword = await hashPassword(password)
+    console.log(`Password hashed successfully for: ${email}`)
 
     // Clear OTP after successful registration
     otpStorage.delete(email)
@@ -338,8 +345,9 @@ app.post('/api/auth/register/complete', async (c) => {
       resendApiKey: c.env.RESEND_API_KEY
     })
 
-    // TODO: Save user and mosque to database
+    // TODO: Save user and mosque to database with hashed password
     console.log(`Registration completed for: ${email}`)
+    console.log(`Mosque: ${mosqueName}, ${mosqueCity}`)
 
     return c.json({
       success: true,
@@ -373,18 +381,27 @@ app.post('/api/auth/login',
     // Validation
     if (!email || !password) {
       return c.json(
-        { success: false, message: 'Email and password are required' },
+        { success: false, message: 'Email dan password harus diisi' },
         400
       )
     }
 
-    // TODO: Implement authentication with database
-    // For now, return mock response
+    // TODO: Get user from database
+    // For now, return mock response with password comparison example
     console.log(`Login attempt: ${email}`)
+    
+    // Example: In production, you would:
+    // 1. Get user from database by email
+    // 2. Compare password with stored hash using comparePassword()
+    // const user = await getUserByEmail(email)
+    // const isPasswordValid = await comparePassword(password, user.hashedPassword)
+    // if (!isPasswordValid) {
+    //   return c.json({ success: false, message: 'Email atau password salah' }, 401)
+    // }
 
     return c.json({
       success: true,
-      message: 'Login successful',
+      message: 'Login berhasil',
       token: 'mock-jwt-token',
       user: {
         email,
@@ -394,7 +411,7 @@ app.post('/api/auth/login',
   } catch (error) {
     console.error('Login error:', error)
     return c.json(
-      { success: false, message: 'Login failed' },
+      { success: false, message: 'Login gagal' },
       500
     )
   }
@@ -521,9 +538,11 @@ app.post('/api/auth/reset-password', async (c) => {
       )
     }
 
-    if (password.length < 6) {
+    // Validate password strength
+    const passwordValidation = validatePasswordStrength(password)
+    if (!passwordValidation.isValid) {
       return c.json(
-        { success: false, message: 'Password minimal 6 karakter' },
+        { success: false, message: passwordValidation.message },
         400
       )
     }
@@ -537,10 +556,14 @@ app.post('/api/auth/reset-password', async (c) => {
       )
     }
 
+    // Hash new password using bcrypt
+    const hashedPassword = await hashPassword(password)
+    console.log(`Password hashed successfully for reset: ${email}`)
+
     // Clear OTP after successful reset
     otpStorage.delete(`reset_${email}`)
 
-    // TODO: Update password in database
+    // TODO: Update password in database with hashed password
     console.log(`Password reset completed for: ${email}`)
 
     return c.json({
