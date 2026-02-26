@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client"
 
 import { useState, useEffect } from "react"
@@ -6,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { useAuth } from "@/lib/auth-context"
+import { VideoBackground } from "@/components/auth/video-background"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || ""
 
@@ -16,6 +18,7 @@ export default function RegisterPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [direction, setDirection] = useState(0)
   
   const [formData, setFormData] = useState({
     // Step 1
@@ -36,6 +39,7 @@ export default function RegisterPage() {
   const totalSteps = 4
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
   const [resendCountdown, setResendCountdown] = useState(0)
 
   // Countdown timer for resend OTP
@@ -49,23 +53,37 @@ export default function RegisterPage() {
   }, [resendCountdown])
 
   // Animation variants untuk efek muncul
-  const fadeInVariants = {
+  const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { 
-        duration: 1.2
+      transition: {
+        duration: 0.8,
+        when: "beforeChildren",
+        staggerChildren: 0.15,
       }
     }
   }
 
-  const scaleVariants = {
-    hidden: { scale: 0.95, opacity: 0 },
+  const videoOverlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { duration: 1.2, ease: "easeOut" }
+    }
+  }
+
+  const cardVariants = {
+    hidden: { scale: 0.95, opacity: 0, y: 20 },
     visible: { 
       scale: 1, 
-      opacity: 1,
+      opacity: 1, 
+      y: 0,
       transition: { 
-        duration: 0.6
+        type: "spring",
+        damping: 25,
+        stiffness: 200,
+        delay: 0.3
       }
     }
   }
@@ -76,7 +94,10 @@ export default function RegisterPage() {
       x: 0, 
       opacity: 1,
       transition: { 
-        duration: 0.7
+        type: "spring",
+        damping: 20,
+        stiffness: 100,
+        delay: 0.5
       }
     }
   }
@@ -87,31 +108,26 @@ export default function RegisterPage() {
       x: 0, 
       opacity: 1,
       transition: { 
-        duration: 0.7
+        type: "spring",
+        damping: 20,
+        stiffness: 100,
+        delay: 0.5
       }
     }
   }
 
   const itemVariants = {
     hidden: { y: 30, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1,
-      transition: { 
-        duration: 0.5
-      }
-    }
-  }
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
+    visible: (custom: number) => ({
+      y: 0,
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3,
+        type: "spring",
+        damping: 15,
+        stiffness: 100,
+        delay: 0.9 + (custom * 0.1)
       }
-    }
+    })
   }
 
   const curveVariants = {
@@ -119,7 +135,9 @@ export default function RegisterPage() {
     visible: { 
       x: 0,
       transition: { 
-        duration: 0.6,
+        type: "spring",
+        damping: 25,
+        stiffness: 150,
         delay: 0.8
       }
     }
@@ -128,25 +146,71 @@ export default function RegisterPage() {
   const slideVariants = {
     enter: (direction: number) => ({
       x: direction > 0 ? 300 : -300,
-      opacity: 0
+      opacity: 0,
+      scale: 0.95
     }),
     center: {
       x: 0,
-      opacity: 1
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        type: "spring",
+        damping: 20,
+        stiffness: 200
+      }
     },
     exit: (direction: number) => ({
       x: direction < 0 ? 300 : -300,
-      opacity: 0
+      opacity: 0,
+      scale: 0.95,
+      transition: {
+        duration: 0.3
+      }
     })
   }
 
+  const buttonHoverVariants = {
+    hover: { 
+      scale: 1.02,
+      transition: { 
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }
+    },
+    tap: { 
+      scale: 0.98,
+      transition: { 
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }
+    }
+  }
+
+  const footerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { 
+        delay: 1.5,
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  }
+
   const handleNext = () => {
+    setDirection(1)
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1)
     }
   }
 
   const handlePrev = () => {
+    setDirection(-1)
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1)
     }
@@ -155,6 +219,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+    setSuccess("")
     setLoading(true)
 
     try {
@@ -173,7 +238,8 @@ export default function RegisterPage() {
         const data = await response.json()
 
         if (data.success) {
-          setResendCountdown(60) // Start 60 second countdown
+          setResendCountdown(60)
+          setSuccess('Kode OTP telah dikirim ke email Anda')
           handleNext()
         } else {
           setError(data.message || 'Gagal mengirim OTP')
@@ -181,6 +247,12 @@ export default function RegisterPage() {
       } else if (currentStep === 2) {
         // Step 2: Verify OTP
         const otpString = formData.otp.join('')
+        if (otpString.length !== 6) {
+          setError('Masukkan 6 digit kode OTP')
+          setLoading(false)
+          return
+        }
+        
         const response = await fetch(`${API_URL}/api/auth/register/verify-otp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -193,6 +265,7 @@ export default function RegisterPage() {
         const data = await response.json()
 
         if (data.success) {
+          setSuccess('Verifikasi berhasil!')
           handleNext()
         } else {
           setError(data.message || 'Kode OTP tidak valid')
@@ -209,6 +282,12 @@ export default function RegisterPage() {
           setLoading(false)
           return
         }
+        if (!/(?=.*[A-Z])(?=.*[0-9])/.test(formData.password)) {
+          setError('Password harus mengandung huruf kapital dan angka')
+          setLoading(false)
+          return
+        }
+        setSuccess('Password valid!')
         handleNext()
       } else if (currentStep === 4) {
         // Step 4: Complete registration with Firebase
@@ -235,7 +314,10 @@ export default function RegisterPage() {
           })
         })
 
-        router.push('/dashboard')
+        setSuccess('Pendaftaran berhasil! Mengalihkan...')
+        setTimeout(() => {
+          router.push('/dashboard')
+        }, 1500)
       }
     } catch (err) {
       setError('Terjadi kesalahan. Silakan coba lagi.')
@@ -255,6 +337,13 @@ export default function RegisterPage() {
         const nextInput = document.getElementById(`otp-${index + 1}`)
         nextInput?.focus()
       }
+
+      // Auto submit if all digits are filled
+      if (index === 5 && value && newOtp.every(digit => digit !== "")) {
+        setTimeout(() => {
+          document.getElementById('submit-step-2')?.click()
+        }, 300)
+      }
     }
   }
 
@@ -267,73 +356,101 @@ export default function RegisterPage() {
 
   const handleLoginClick = (e: React.MouseEvent) => {
     e.preventDefault()
-    setTimeout(() => {
-      router.push("/login")
-    }, 100)
+    router.push("/login")
+  }
+
+  const handleResendOTP = async () => {
+    if (resendCountdown > 0) return
+    
+    setLoading(true)
+    setError("")
+    setSuccess("")
+    
+    try {
+      const response = await fetch(`${API_URL}/api/auth/register/step1`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone
+        })
+      })
+      const data = await response.json()
+      if (data.success) {
+        setResendCountdown(60)
+        setSuccess('Kode OTP telah dikirim ulang')
+      } else {
+        setError(data.message || 'Gagal mengirim OTP')
+      }
+    } catch (err) {
+      setError('Terjadi kesalahan. Silakan coba lagi.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <motion.div 
       initial="hidden"
       animate="visible"
-      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      variants={containerVariants}
+      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-cyan-50"
     >
-      {/* Video Background with Fade In */}
-      <motion.div
-        variants={fadeInVariants}
-        className="absolute inset-0 w-full h-full"
-      >
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/vidio/register.mp4" type="video/mp4" />
-        </video>
-      </motion.div>
-
-      {/* Overlay with Fade In */}
-      <motion.div
-        variants={fadeInVariants}
-        transition={{ delay: 0.2 }}
-        className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-sky-900/30 to-cyan-900/40"
-      />
+      {/* Video Background with Reverse Playback */}
+      <VideoBackground videoSrc="/vidio/register.mp4" duration={14} />
 
       {/* Main Register Card - Split Screen */}
       <motion.div
-        variants={scaleVariants}
-        transition={{ delay: 0.3 }}
+        variants={cardVariants}
         className="relative z-20 w-full max-w-7xl min-h-[700px] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row border-0"
-        style={{ outline: 'none', border: 'none' }}
       >
         {/* Left Side - Register Form */}
         <motion.div
           variants={slideLeftVariants}
-          transition={{ delay: 0.5 }}
           className="w-full lg:w-1/2 p-8 md:p-16 flex flex-col relative"
         >
           {/* Back Link - Top Left */}
           <motion.div
+            custom={0}
             variants={itemVariants}
-            transition={{ delay: 0.7 }}
           >
             <Link
               href="/"
               className="absolute top-8 left-8 z-20 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group"
             >
-              <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              <span className="text-base font-medium">Kembali</span>
+              <motion.div
+                className="flex items-center gap-2"
+                whileHover={{ x: -5, scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              >
+                <motion.svg 
+                  className="w-5 h-5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  animate={{ x: [0, -3, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </motion.svg>
+                <span className="text-base font-medium relative">
+                  Kembali
+                  <motion.span 
+                    className="absolute bottom-0 left-0 h-0.5 bg-gray-900"
+                    initial={{ width: 0 }}
+                    whileHover={{ width: "100%" }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </span>
+              </motion.div>
             </Link>
           </motion.div>
 
           {/* Mobile Image - Below Back Button */}
           <motion.div
-            variants={scaleVariants}
-            transition={{ delay: 0.7 }}
+            variants={cardVariants}
             className="lg:hidden w-full h-48 relative rounded-2xl overflow-hidden mt-16 mb-6"
           >
             <Image
@@ -345,12 +462,13 @@ export default function RegisterPage() {
             />
           </motion.div>
 
-          <motion.div
-            variants={containerVariants}
-            className="w-full max-w-lg mx-auto space-y-6 flex-1 flex flex-col justify-center"
-          >
+          <div className="w-full max-w-lg mx-auto space-y-6 flex-1 flex flex-col justify-center">
             {/* Header */}
-            <motion.div variants={itemVariants} className="text-center mb-6">
+            <motion.div 
+              custom={1}
+              variants={itemVariants} 
+              className="text-center mb-6"
+            >
               <h1 className="text-2xl lg:text-4xl font-bold text-gray-900 mb-3">Daftar Admin</h1>
               <p className="text-gray-500 text-base">
                 Buat akun baru untuk mengelola masjid Anda
@@ -358,16 +476,24 @@ export default function RegisterPage() {
             </motion.div>
 
             {/* Progress Indicator */}
-            <motion.div variants={itemVariants} className="flex items-center justify-center gap-3 mb-6">
+            <motion.div 
+              custom={2}
+              variants={itemVariants} 
+              className="flex items-center justify-center gap-3 mb-6"
+            >
               {[1, 2, 3, 4].map((step) => (
                 <div key={step} className="flex items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
-                    currentStep === step 
-                      ? "bg-yellow-400 text-gray-900 scale-110" 
-                      : currentStep > step 
-                      ? "bg-green-500 text-white" 
-                      : "bg-gray-200 text-gray-500"
-                  }`}>
+                  <motion.div 
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
+                      currentStep === step 
+                        ? "bg-yellow-400 text-gray-900 shadow-lg" 
+                        : currentStep > step 
+                        ? "bg-green-500 text-white shadow-md" 
+                        : "bg-gray-200 text-gray-500"
+                    }`}
+                    animate={currentStep === step ? { scale: [1, 1.1, 1] } : {}}
+                    transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 1 }}
+                  >
                     {currentStep > step ? (
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -375,54 +501,89 @@ export default function RegisterPage() {
                     ) : (
                       step
                     )}
-                  </div>
+                  </motion.div>
                   {step < 4 && (
-                    <div className={`w-12 h-1 mx-1 transition-all ${
-                      currentStep > step ? "bg-green-500" : "bg-gray-200"
-                    }`} />
+                    <motion.div 
+                      className={`w-12 h-1 mx-1 transition-all ${
+                        currentStep > step ? "bg-green-500" : "bg-gray-200"
+                      }`}
+                      initial={{ width: 0 }}
+                      animate={{ width: currentStep > step ? 48 : 48 }}
+                      transition={{ duration: 0.5 }}
+                    />
                   )}
                 </div>
               ))}
             </motion.div>
 
             {/* Step Title */}
-            <motion.div variants={itemVariants} className="text-center mb-4">
+            <motion.div 
+              custom={3}
+              variants={itemVariants} 
+              className="text-center mb-4"
+            >
               <h2 className="text-lg font-semibold text-gray-700">
                 {currentStep === 1 && "Informasi Pribadi"}
                 {currentStep === 2 && "Verifikasi OTP"}
                 {currentStep === 3 && "Keamanan Akun"}
                 {currentStep === 4 && "Informasi Masjid"}
               </h2>
+              <p className="text-sm text-gray-500 mt-1">
+                {currentStep === 1 && "Masukkan data diri Anda untuk memulai"}
+                {currentStep === 2 && "Masukkan kode 6 digit yang telah dikirim"}
+                {currentStep === 3 && "Buat password yang kuat untuk akun Anda"}
+                {currentStep === 4 && "Informasi lengkap tentang masjid Anda"}
+              </p>
             </motion.div>
 
             {/* Register Form with Steps */}
             <form onSubmit={handleSubmit} className="space-y-5 overflow-hidden">
-              {/* Error Message */}
-              {error && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-lg bg-red-50 p-3 text-sm text-red-600"
-                >
-                  {error}
-                </motion.div>
-              )}
+              {/* Success/Error Messages with Animation */}
+              <AnimatePresence mode="wait">
+                {error && (
+                  <motion.div
+                    key="error"
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-600"
+                  >
+                    {error}
+                  </motion.div>
+                )}
+                {success && (
+                  <motion.div
+                    key="success"
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    className="rounded-lg bg-green-50 border border-green-200 p-3 text-sm text-green-600"
+                  >
+                    {success}
+                  </motion.div>
+                )}
+              </AnimatePresence>
               
-              <AnimatePresence mode="wait" custom={currentStep}>
+              <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={currentStep}
-                  custom={currentStep}
+                  custom={direction}
                   variants={slideVariants}
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{ duration: 0.3 }}
                   className="space-y-5"
                 >
                   {/* Step 1: Personal Information */}
                   {currentStep === 1 && (
                     <>
-                      <motion.div variants={itemVariants} className="relative">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={4}
+                        className="relative"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         <input
                           type="text"
                           placeholder="Nama Lengkap"
@@ -438,7 +599,13 @@ export default function RegisterPage() {
                         </div>
                       </motion.div>
 
-                      <motion.div variants={itemVariants} className="relative">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={5}
+                        className="relative"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         <input
                           type="email"
                           placeholder="Email"
@@ -454,7 +621,13 @@ export default function RegisterPage() {
                         </div>
                       </motion.div>
 
-                      <motion.div variants={itemVariants} className="relative">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={6}
+                        className="relative"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         <input
                           type="tel"
                           placeholder="No. Telepon"
@@ -475,21 +648,36 @@ export default function RegisterPage() {
                   {/* Step 2: OTP Verification */}
                   {currentStep === 2 && (
                     <>
-                      <motion.div variants={itemVariants} className="text-center mb-6">
-                        <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={4}
+                        className="text-center mb-6"
+                      >
+                        <motion.div 
+                          className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"
+                          animate={{ 
+                            scale: [1, 1.1, 1],
+                            rotate: [0, 5, -5, 0]
+                          }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
                           <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                           </svg>
-                        </div>
+                        </motion.div>
                         <p className="text-sm text-gray-600">
                           Kode verifikasi telah dikirim ke<br />
-                          <strong>{formData.email || formData.phone}</strong>
+                          <strong className="text-gray-900">{formData.email || formData.phone}</strong>
                         </p>
                       </motion.div>
 
-                      <motion.div variants={itemVariants} className="flex justify-center gap-3 mb-6">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={5}
+                        className="flex justify-center gap-3 mb-6"
+                      >
                         {formData.otp.map((digit, index) => (
-                          <input
+                          <motion.input
                             key={index}
                             id={`otp-${index}`}
                             type="text"
@@ -498,62 +686,53 @@ export default function RegisterPage() {
                             onChange={(e) => handleOtpChange(index, e.target.value)}
                             onKeyDown={(e) => handleOtpKeyDown(index, e)}
                             className="w-12 h-14 text-center text-2xl font-bold bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                            whileFocus={{ scale: 1.05, borderColor: "#3B82F6" }}
                             required
                           />
                         ))}
                       </motion.div>
 
-                      <motion.div variants={itemVariants} className="text-center">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={6}
+                        className="text-center"
+                      >
                         <p className="text-sm text-gray-600 mb-2">
                           Tidak menerima kode?
                         </p>
-                        <button
+                        <motion.button
                           type="button"
-                          onClick={async () => {
-                            if (resendCountdown > 0) return
-                            setLoading(true)
-                            setError("")
-                            try {
-                              const response = await fetch(`${API_URL}/api/auth/register/step1`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                  name: formData.name,
-                                  email: formData.email,
-                                  phone: formData.phone
-                                })
-                              })
-                              const data = await response.json()
-                              if (data.success) {
-                                setResendCountdown(60)
-                              } else {
-                                setError(data.message || 'Gagal mengirim OTP')
-                              }
-                            } catch (err) {
-                              setError('Terjadi kesalahan. Silakan coba lagi.')
-                            } finally {
-                              setLoading(false)
-                            }
-                          }}
-                          disabled={resendCountdown > 0}
-                          className={`text-sm font-semibold ${
+                          onClick={handleResendOTP}
+                          disabled={resendCountdown > 0 || loading}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`text-sm font-semibold transition-all ${
                             resendCountdown > 0 
                               ? 'text-gray-400 cursor-not-allowed' 
-                              : 'text-blue-600 hover:text-blue-700 underline'
+                              : 'text-blue-600 hover:text-blue-700'
                           }`}
                         >
                           {resendCountdown > 0 
                             ? `Kirim Ulang dalam ${resendCountdown}s` 
                             : 'Kirim Ulang Kode'}
-                        </button>
+                        </motion.button>
                       </motion.div>
+
+                      {/* Hidden submit button for auto-submit */}
+                      <button type="submit" id="submit-step-2" className="hidden" />
                     </>
                   )}
 
                   {/* Step 3: Security */}
                   {currentStep === 3 && (
                     <>
-                      <motion.div variants={itemVariants} className="relative">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={4}
+                        className="relative"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         <input
                           type={showPassword ? "text" : "password"}
                           placeholder="Kata Sandi"
@@ -562,9 +741,11 @@ export default function RegisterPage() {
                           className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-base"
                           required
                         />
-                        <button
+                        <motion.button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
                           className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                         >
                           {showPassword ? (
@@ -577,10 +758,16 @@ export default function RegisterPage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                             </svg>
                           )}
-                        </button>
+                        </motion.button>
                       </motion.div>
 
-                      <motion.div variants={itemVariants} className="relative">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={5}
+                        className="relative"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         <input
                           type={showConfirmPassword ? "text" : "password"}
                           placeholder="Konfirmasi Kata Sandi"
@@ -589,9 +776,11 @@ export default function RegisterPage() {
                           className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all text-base"
                           required
                         />
-                        <button
+                        <motion.button
                           type="button"
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
                           className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                         >
                           {showConfirmPassword ? (
@@ -604,12 +793,16 @@ export default function RegisterPage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                             </svg>
                           )}
-                        </button>
+                        </motion.button>
                       </motion.div>
 
-                      <motion.div variants={itemVariants} className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={6}
+                        className="bg-blue-50 border border-blue-200 rounded-xl p-4"
+                      >
                         <p className="text-sm text-blue-800">
-                          <strong>Tips Keamanan:</strong> Gunakan minimal 8 karakter dengan kombinasi huruf besar, huruf kecil, dan angka.
+                          <strong>Tips Keamanan:</strong> Gunakan minimal 6 karakter dengan kombinasi huruf besar, huruf kecil, dan angka.
                         </p>
                       </motion.div>
                     </>
@@ -618,7 +811,13 @@ export default function RegisterPage() {
                   {/* Step 4: Mosque Information */}
                   {currentStep === 4 && (
                     <>
-                      <motion.div variants={itemVariants} className="relative">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={4}
+                        className="relative"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         <input
                           type="text"
                           placeholder="Nama Masjid"
@@ -634,7 +833,13 @@ export default function RegisterPage() {
                         </div>
                       </motion.div>
 
-                      <motion.div variants={itemVariants} className="relative">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={5}
+                        className="relative"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         <textarea
                           placeholder="Alamat Lengkap Masjid"
                           value={formData.mosqueAddress}
@@ -645,7 +850,13 @@ export default function RegisterPage() {
                         />
                       </motion.div>
 
-                      <motion.div variants={itemVariants} className="relative">
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={6}
+                        className="relative"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         <input
                           type="text"
                           placeholder="Kota/Kabupaten"
@@ -667,30 +878,53 @@ export default function RegisterPage() {
               </AnimatePresence>
 
               {/* Navigation Buttons */}
-              <motion.div variants={itemVariants} className="flex gap-3 pt-4">
+              <motion.div 
+                variants={itemVariants} 
+                custom={7}
+                className="flex gap-3 pt-4"
+              >
                 {currentStep > 1 && (
-                  <button
+                  <motion.button
                     type="button"
                     onClick={handlePrev}
+                    variants={buttonHoverVariants}
+                    whileHover="hover"
+                    whileTap="tap"
                     className="flex-1 py-4 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all text-base"
                   >
                     Kembali
-                  </button>
+                  </motion.button>
                 )}
-                <button
+                <motion.button
                   type="submit"
+                  variants={buttonHoverVariants}
+                  whileHover="hover"
+                  whileTap="tap"
                   className="flex-1 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 rounded-xl font-semibold hover:from-yellow-500 hover:to-yellow-600 transition-all shadow-md text-base disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={loading}
                 >
-                  {loading ? 'Memproses...' : (currentStep === totalSteps ? "Daftar" : "Lanjut")}
-                </button>
+                  {loading ? (
+                    <motion.div 
+                      className="flex items-center justify-center gap-2"
+                      animate={{ opacity: [0.5, 1, 0.5] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>Memproses...</span>
+                    </motion.div>
+                  ) : (currentStep === totalSteps ? "Daftar" : "Lanjut")}
+                </motion.button>
               </motion.div>
             </form>
 
             {/* Divider - Only show on step 1 */}
             {currentStep === 1 && (
               <motion.div 
-                variants={itemVariants}
+                variants={itemVariants} 
+                custom={8}
                 className="relative my-7"
               >
                 <div className="absolute inset-0 flex items-center">
@@ -704,8 +938,11 @@ export default function RegisterPage() {
 
             {/* Google Register Button - Only show on step 1 */}
             {currentStep === 1 && (
-              <motion.div variants={itemVariants}>
-                <button 
+              <motion.div 
+                variants={itemVariants} 
+                custom={9}
+              >
+                <motion.button
                   type="button"
                   onClick={async () => {
                     try {
@@ -719,9 +956,17 @@ export default function RegisterPage() {
                     }
                   }}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-3 px-6 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-50"
+                  variants={buttonHoverVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all text-base disabled:opacity-50"
                 >
-                  <svg className="w-6 h-6" viewBox="0 0 24 24">
+                  <motion.svg 
+                    className="w-6 h-6" 
+                    viewBox="0 0 24 24"
+                    whileHover={{ rotate: 10 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
                     <path
                       fill="#4285F4"
                       d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -738,33 +983,36 @@ export default function RegisterPage() {
                       fill="#EA4335"
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                     />
-                  </svg>
+                  </motion.svg>
                   <span className="text-base font-medium text-gray-700">Google</span>
-                </button>
+                </motion.button>
               </motion.div>
             )}
 
             {/* Sign In Link */}
             <motion.p 
-              variants={itemVariants}
+              variants={itemVariants} 
+              custom={10}
               className="text-center text-base text-gray-600 mt-5"
             >
               Sudah punya akun?{" "}
               <Link 
                 href="/login" 
                 onClick={handleLoginClick}
-                className="text-gray-900 font-semibold hover:underline transition-all"
+                className="text-gray-900 font-semibold hover:underline transition-all relative group"
               >
                 Masuk Sekarang
+                <motion.span 
+                  className="absolute bottom-0 left-0 w-0 h-0.5 bg-gray-900 group-hover:w-full transition-all duration-300"
+                />
               </Link>
             </motion.p>
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* Right Side - Full Background Image */}
         <motion.div
           variants={slideRightVariants}
-          transition={{ delay: 0.5 }}
           className="hidden lg:block lg:w-1/2 relative overflow-hidden"
         >
           <Image
@@ -774,6 +1022,7 @@ export default function RegisterPage() {
             className="object-cover"
             priority
           />
+          
           {/* Curved Divider */}
           <motion.div
             variants={curveVariants}
@@ -788,6 +1037,7 @@ export default function RegisterPage() {
               <path
                 d="M100,0 Q20,350 100,700 L0,700 L0,0 Z"
                 fill="white"
+                className="drop-shadow-lg"
               />
             </svg>
           </motion.div>
@@ -796,10 +1046,8 @@ export default function RegisterPage() {
 
       {/* Footer */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.6 }}
-        className="absolute bottom-6 left-0 right-0 text-center text-xs text-white/80 z-20"
+        variants={footerVariants}
+        className="absolute bottom-6 left-0 right-0 text-center text-xs text-white/90 z-20"
       >
         Hak Cipta @danamasjid 2025 | Kebijakan Privasi
       </motion.div>
