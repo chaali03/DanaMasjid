@@ -74,7 +74,7 @@ const nextConfig = {
             key: 'Cross-Origin-Resource-Policy',
             value: 'same-site'
           },
-          // Content Security Policy with Trusted Types
+          // Content Security Policy
           {
             key: 'Content-Security-Policy',
             value: [
@@ -83,7 +83,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "connect-src 'self' https://www.google.com https://va.vercel-scripts.com https://vercel.live wss://ws-us3.pusher.com https://danamasjid-api.danamsjid-api.workers.dev https://accounts.google.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com",
+              "connect-src 'self' https://www.google.com https://va.vercel-scripts.com https://vercel.live wss://ws-us3.pusher.com https://danamasjid-api.danamsjid-api.workers.dev https://accounts.google.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com wss://*.pusher.com",
               "frame-src 'self' https://www.google.com https://vercel.live https://accounts.google.com https://*.firebaseapp.com",
               "media-src 'self'",
               "object-src 'none'",
@@ -91,8 +91,7 @@ const nextConfig = {
               "form-action 'self'",
               "frame-ancestors 'self'",
               "upgrade-insecure-requests",
-              "block-all-mixed-content",
-              "require-trusted-types-for 'script'"
+              "block-all-mixed-content"
             ].join('; ')
           }
         ],
