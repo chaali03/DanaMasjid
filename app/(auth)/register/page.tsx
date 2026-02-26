@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 "use client"
 
 import { useState, useEffect } from "react"
@@ -589,7 +589,7 @@ export default function RegisterPage() {
                           placeholder="Nama Lengkap"
                           value={formData.name}
                           onChange={(e) => setFormData({...formData, name: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-base shadow-sm"
+                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base shadow-sm"
                           autoComplete="name"
                           required
                         />
@@ -612,7 +612,7 @@ export default function RegisterPage() {
                           placeholder="Email"
                           value={formData.email}
                           onChange={(e) => setFormData({...formData, email: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-base shadow-sm"
+                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base shadow-sm"
                           autoComplete="email"
                           required
                         />
@@ -635,7 +635,7 @@ export default function RegisterPage() {
                           placeholder="No. Telepon"
                           value={formData.phone}
                           onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-base shadow-sm"
+                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base shadow-sm"
                           autoComplete="tel"
                           required
                         />
@@ -688,7 +688,7 @@ export default function RegisterPage() {
                             value={digit}
                             onChange={(e) => handleOtpChange(index, e.target.value)}
                             onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                            className="w-12 h-14 text-center text-2xl font-bold bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
+                            className="w-12 h-14 text-center text-2xl font-bold bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
                             whileFocus={{ scale: 1.05, borderColor: "#3B82F6" }}
                             required
                           />
@@ -741,7 +741,7 @@ export default function RegisterPage() {
                           placeholder="Kata Sandi"
                           value={formData.password}
                           onChange={(e) => setFormData({...formData, password: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-base shadow-sm"
+                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base shadow-sm"
                           autoComplete="new-password"
                           required
                         />
@@ -777,7 +777,7 @@ export default function RegisterPage() {
                           placeholder="Konfirmasi Kata Sandi"
                           value={formData.confirmPassword}
                           onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-base shadow-sm"
+                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base shadow-sm"
                           autoComplete="new-password"
                           required
                         />
@@ -828,7 +828,7 @@ export default function RegisterPage() {
                           placeholder="Nama Masjid"
                           value={formData.mosqueName}
                           onChange={(e) => setFormData({...formData, mosqueName: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-base shadow-sm"
+                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base shadow-sm"
                           autoComplete="organization"
                           required
                         />
@@ -850,7 +850,7 @@ export default function RegisterPage() {
                           placeholder="Alamat Lengkap Masjid"
                           value={formData.mosqueAddress}
                           onChange={(e) => setFormData({...formData, mosqueAddress: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-base resize-none shadow-sm"
+                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base resize-none shadow-sm"
                           autoComplete="street-address"
                           rows={3}
                           required
@@ -869,7 +869,7 @@ export default function RegisterPage() {
                           placeholder="Kota/Kabupaten"
                           value={formData.mosqueCity}
                           onChange={(e) => setFormData({...formData, mosqueCity: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-base shadow-sm"
+                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base shadow-sm"
                           autoComplete="address-level2"
                           required
                         />
@@ -939,7 +939,7 @@ export default function RegisterPage() {
                   <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500">— Atau Daftar dengan —</span>
+                  <span className="px-4 bg-white text-gray-500">â€” Atau Daftar dengan â€”</span>
                 </div>
               </motion.div>
             )}

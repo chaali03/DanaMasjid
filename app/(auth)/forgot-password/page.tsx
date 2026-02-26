@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -578,7 +578,7 @@ export default function ForgotPasswordPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         onFocus={() => setIsHovered('email')}
                         onBlur={() => setIsHovered(null)}
-                        className="pl-10 h-12 border-gray-300 focus:border-yellow-400 focus:ring-yellow-400 transition-all"
+                        className="pl-10 h-12 border-gray-900 focus:border-blue-500 focus:ring-blue-500 transition-all"
                         required
                       />
                       <motion.div 
@@ -633,7 +633,7 @@ export default function ForgotPasswordPage() {
                           value={digit}
                           onChange={(e) => handleOtpChange(index, e.target.value)}
                           onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                          className="w-12 h-14 text-center text-2xl font-bold bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                          className="w-12 h-14 text-center text-2xl font-bold bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                           whileFocus={{ scale: 1.05, borderColor: "#FBBF24" }}
                           required
                         />
@@ -705,7 +705,7 @@ export default function ForgotPasswordPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         onFocus={() => setIsHovered('password')}
                         onBlur={() => setIsHovered(null)}
-                        className="pl-10 pr-10 h-12 border-gray-300 focus:border-yellow-400 focus:ring-yellow-400 transition-all"
+                        className="pl-10 pr-10 h-12 border-gray-900 focus:border-blue-500 focus:ring-blue-500 transition-all"
                         required
                       />
                       <motion.button
@@ -738,7 +738,7 @@ export default function ForgotPasswordPage() {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         onFocus={() => setIsHovered('confirmPassword')}
                         onBlur={() => setIsHovered(null)}
-                        className="pl-10 pr-10 h-12 border-gray-300 focus:border-yellow-400 focus:ring-yellow-400 transition-all"
+                        className="pl-10 pr-10 h-12 border-gray-900 focus:border-blue-500 focus:ring-blue-500 transition-all"
                         required
                       />
                       <motion.button
@@ -764,7 +764,7 @@ export default function ForgotPasswordPage() {
                         <strong>Kekuatan Password:</strong>{' '}
                         {password.length < 6 && 'Terlalu pendek'}
                         {password.length >= 6 && !/(?=.*[A-Z])(?=.*[0-9])/.test(password) && 'Sedang'}
-                        {password.length >= 6 && /(?=.*[A-Z])(?=.*[0-9])/.test(password) && 'Kuat ✓'}
+                        {password.length >= 6 && /(?=.*[A-Z])(?=.*[0-9])/.test(password) && 'Kuat âœ“'}
                       </p>
                     </motion.div>
                   )}
