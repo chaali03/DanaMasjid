@@ -169,3 +169,25 @@ body {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* Video performance optimization */
+video {
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+/* Smooth scroll performance */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* GPU acceleration for animations */
+.will-change-transform {
+  will-change: transform;
+  transform: translateZ(0);
+}

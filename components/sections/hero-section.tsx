@@ -15,21 +15,41 @@ export function HeroSection() {
     return () => clearTimeout(timer)
   }, [])
 
-  // Control video to play forward 0-14s, then reverse 14-0s
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
 
+    // Optimize video performance
+    video.playbackRate = 1.0
+    
+    // Preload and buffer optimization
+    video.preload = 'auto'
+    
+    // Reduce quality on mobile for better performance
+    if (window.innerWidth < 768) {
+      video.playbackRate = 0.9 // Slightly slower on mobile
+    }
+
     let isReversing = false
     let animationFrameId: number
+    let lastTime = 0
+    const fps = 30 // Target 30fps for smoother performance
+    const frameInterval = 1000 / fps
 
-    const reverseVideo = () => {
-      if (video.currentTime <= 0) {
-        isReversing = false
-        video.play()
-        return
+    const reverseVideo = (currentTime: number) => {
+      if (!lastTime) lastTime = currentTime
+      const deltaTime = currentTime - lastTime
+
+      if (deltaTime >= frameInterval) {
+        if (video.currentTime <= 0) {
+          isReversing = false
+          video.play()
+          return
+        }
+        video.currentTime -= 0.033 // ~30fps backwards
+        lastTime = currentTime - (deltaTime % frameInterval)
       }
-      video.currentTime -= 0.033 // ~30fps backwards
+      
       animationFrameId = requestAnimationFrame(reverseVideo)
     }
 
@@ -37,7 +57,8 @@ export function HeroSection() {
       if (video.currentTime >= 14 && !isReversing) {
         isReversing = true
         video.pause()
-        reverseVideo()
+        lastTime = 0
+        animationFrameId = requestAnimationFrame(reverseVideo)
       }
     }
 
@@ -91,11 +112,13 @@ export function HeroSection() {
     <section className="pt-32 pb-12 px-6 min-h-screen flex items-center relative overflow-hidden max-w-full">
       <div className="absolute inset-0 top-0 max-w-full">
         <div
-          className="w-full will-change-transform overflow-hidden"
+          className="w-full overflow-hidden"
           style={{
-            transform: `scale(${scale})`,
+            transform: `scale(${scale}) translateZ(0)`, // Add translateZ for GPU acceleration
             borderRadius: `${borderRadius}px`,
             height: `${heightVh}vh`,
+            willChange: 'transform, border-radius',
+            backfaceVisibility: 'hidden', // Prevent flickering
           }}
         >
           <video 
@@ -103,9 +126,14 @@ export function HeroSection() {
             autoPlay 
             loop 
             muted 
-            playsInline 
-            className="w-full h-full object-cover" 
-            src="/vidio/vidio1.mp4" 
+            playsInline
+            preload="auto"
+            className="w-full h-full object-cover"
+            style={{
+              willChange: 'transform',
+              transform: 'translateZ(0)', // Force GPU acceleration
+            }}
+            src="/vidio/vidio1.mp4"
           />
         </div>
       </div>
