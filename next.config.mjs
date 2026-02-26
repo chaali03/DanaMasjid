@@ -20,7 +20,6 @@ const nextConfig = {
     ],
   },
   // Optimize production build
-  swcMinify: true,
   compress: true,
   poweredByHeader: false,
   
