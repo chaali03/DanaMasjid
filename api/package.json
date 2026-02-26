@@ -38,7 +38,7 @@
     "hono": "^4.0.0",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^6.9.7",
+    "nodemailer": "^8.0.1",
     "pg": "^8.11.3",
     "xss-clean": "^0.1.4"
   },
@@ -57,6 +57,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.3.3",
-    "wrangler": "^3.78.0"
+    "wrangler": "^4.68.1"
   }
 }
