@@ -9,6 +9,8 @@ import { ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
   const [email, setEmail] = useState('');
@@ -127,7 +129,7 @@ export default function ForgotPasswordPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/forgot-password', {
+      const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -153,7 +155,7 @@ export default function ForgotPasswordPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/verify-reset-otp', {
+      const response = await fetch(`${API_URL}/api/auth/verify-reset-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),
@@ -190,7 +192,7 @@ export default function ForgotPasswordPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/reset-password', {
+      const response = await fetch(`${API_URL}/api/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp, password }),

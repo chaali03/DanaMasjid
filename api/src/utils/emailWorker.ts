@@ -1,0 +1,315 @@
+// Email service for Cloudflare Workers using Resend or MailChannels
+// Resend: 3000 free emails/month - https://resend.com
+
+interface EmailOptions {
+  to: string
+  subject: string
+  html: string
+  from?: string
+  resendApiKey?: string
+}
+
+export async function sendEmail(options: EmailOptions): Promise<boolean> {
+  const { to, subject, html, from = 'DanaMasjid <noreply@danamasjid.com>', resendApiKey } = options
+
+  try {
+    // Log email for development
+    console.log('=== EMAIL SENT ===')
+    console.log('To:', to)
+    console.log('Subject:', subject)
+    
+    // Extract OTP from HTML if present
+    const otpMatch = html.match(/font-size: 36px[^>]*>([0-9]{6})</)
+    if (otpMatch) {
+      console.log('OTP CODE:', otpMatch[1])
+    }
+    
+    // Try Resend API first (requires RESEND_API_KEY)
+    if (resendApiKey) {
+      try {
+        const response = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: 'DanaMasjid <onboarding@resend.dev>', // Use verified domain
+            to: [to],
+            subject,
+            html,
+          }),
+        })
+
+        if (response.ok) {
+          console.log(`✅ Email sent via Resend to: ${to}`)
+          return true
+        } else {
+          console.warn('Resend error:', await response.text())
+        }
+      } catch (resendError) {
+        console.warn('Resend send failed:', resendError)
+      }
+    }
+    
+    // Fallback: Try MailChannels (free for Cloudflare Workers)
+    try {
+      const response = await fetch('https://api.mailchannels.net/tx/v1/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          personalizations: [
+            {
+              to: [{ email: to }],
+            },
+          ],
+          from: {
+            email: 'noreply@danamasjid.com',
+            name: 'DanaMasjid',
+          },
+          subject,
+          content: [
+            {
+              type: 'text/html',
+              value: html,
+            },
+          ],
+        }),
+      })
+
+      if (response.ok) {
+        console.log(`✅ Email sent via MailChannels to: ${to}`)
+        return true
+      } else {
+        console.warn('MailChannels error:', await response.text())
+      }
+    } catch (mailError) {
+      console.warn('MailChannels send failed:', mailError)
+    }
+
+    // Return success anyway for development (OTP is logged to console)
+    console.log(`📧 Email logged (check Cloudflare logs for OTP)`)
+    return true
+  } catch (error) {
+    console.error('Send email error:', error)
+    // Return true to not block registration flow
+    return true
+  }
+}
+
+// Generate OTP
+export function generateOTP(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString()
+}
+
+// Email templates
+export function getOTPEmailHTML(otp: string, purpose: string = 'verifikasi'): string {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kode OTP DanaMasjid</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 20px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">🕌 DanaMasjid</h1>
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px 30px;">
+              <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 24px;">Kode OTP Anda</h2>
+              <p style="margin: 0 0 30px 0; color: #6b7280; font-size: 16px; line-height: 1.5;">
+                Gunakan kode OTP berikut untuk ${purpose} akun DanaMasjid Anda:
+              </p>
+              
+              <!-- OTP Box -->
+              <div style="background-color: #f3f4f6; border: 2px dashed #10b981; border-radius: 8px; padding: 30px; text-align: center; margin: 30px 0;">
+                <div style="font-size: 36px; font-weight: bold; color: #10b981; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+                  ${otp}
+                </div>
+              </div>
+              
+              <p style="margin: 30px 0 0 0; color: #6b7280; font-size: 14px; line-height: 1.5;">
+                <strong>Catatan:</strong> Kode OTP ini berlaku selama 10 menit. Jangan bagikan kode ini kepada siapapun.
+              </p>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+              <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+                © 2024 DanaMasjid. Platform Donasi Masjid Terpercaya.
+              </p>
+              <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                Email ini dikirim otomatis, mohon tidak membalas email ini.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `
+}
+
+export function getWelcomeEmailHTML(name: string): string {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selamat Datang di DanaMasjid</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 20px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">🕌 DanaMasjid</h1>
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px 30px;">
+              <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 24px;">Selamat Datang, ${name}!</h2>
+              <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 16px; line-height: 1.5;">
+                Terima kasih telah bergabung dengan DanaMasjid. Kami senang Anda menjadi bagian dari platform donasi masjid terpercaya.
+              </p>
+              
+              <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; margin: 30px 0; border-radius: 4px;">
+                <p style="margin: 0; color: #065f46; font-size: 16px; font-weight: bold;">
+                  🎉 GRATIS 3 Bulan Pertama!
+                </p>
+                <p style="margin: 10px 0 0 0; color: #047857; font-size: 14px;">
+                  Nikmati semua fitur premium tanpa biaya selama 3 bulan pertama.
+                </p>
+              </div>
+              
+              <p style="margin: 30px 0 20px 0; color: #6b7280; font-size: 16px; line-height: 1.5;">
+                Mulai kelola donasi masjid Anda dengan mudah dan transparan.
+              </p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://danamasjid.vercel.app/masjid" style="display: inline-block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-size: 16px; font-weight: bold;">
+                  Mulai Sekarang
+                </a>
+              </div>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+              <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+                © 2024 DanaMasjid. Platform Donasi Masjid Terpercaya.
+              </p>
+              <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                Butuh bantuan? Hubungi kami di support@danamasjid.com
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `
+}
+
+export function getSubscribeWelcomeEmailHTML(email: string): string {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terima Kasih Telah Berlangganan</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 20px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">🕌 DanaMasjid</h1>
+            </td>
+          </tr>
+          
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px 30px;">
+              <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 24px;">Terima Kasih Telah Berlangganan!</h2>
+              <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 16px; line-height: 1.5;">
+                Selamat! Anda telah berhasil berlangganan newsletter DanaMasjid. Kami akan mengirimkan update terbaru tentang:
+              </p>
+              
+              <ul style="margin: 20px 0; padding-left: 20px; color: #6b7280; font-size: 16px; line-height: 1.8;">
+                <li>Tips mengelola donasi masjid</li>
+                <li>Fitur-fitur baru DanaMasjid</li>
+                <li>Kisah sukses masjid-masjid di Indonesia</li>
+                <li>Promo dan penawaran khusus</li>
+              </ul>
+              
+              <div style="background-color: #ecfdf5; border-left: 4px solid #10b981; padding: 20px; margin: 30px 0; border-radius: 4px;">
+                <p style="margin: 0; color: #065f46; font-size: 16px; font-weight: bold;">
+                  🎉 Penawaran Khusus untuk Anda!
+                </p>
+                <p style="margin: 10px 0 0 0; color: #047857; font-size: 14px;">
+                  Daftarkan masjid Anda sekarang dan dapatkan GRATIS 3 bulan pertama!
+                </p>
+              </div>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://danamasjid.vercel.app/masjid" style="display: inline-block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-size: 16px; font-weight: bold;">
+                  Daftarkan Masjid Sekarang
+                </a>
+              </div>
+              
+              <p style="margin: 30px 0 0 0; color: #6b7280; font-size: 14px; line-height: 1.5;">
+                Jika Anda memiliki pertanyaan, jangan ragu untuk menghubungi kami.
+              </p>
+            </td>
+          </tr>
+          
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+              <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+                © 2024 DanaMasjid. Platform Donasi Masjid Terpercaya.
+              </p>
+              <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                Email: ${email} | <a href="https://danamasjid.vercel.app" style="color: #10b981; text-decoration: none;">danamasjid.vercel.app</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `
+}

@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
 export default function RegisterPage() {
   const [currentStep, setCurrentStep] = useState(1)
   const [showPassword, setShowPassword] = useState(false)
@@ -155,7 +157,7 @@ export default function RegisterPage() {
     try {
       if (currentStep === 1) {
         // Step 1: Send OTP
-        const response = await fetch('http://localhost:3001/api/auth/register/step1', {
+        const response = await fetch(`${API_URL}/api/auth/register/step1`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -176,7 +178,7 @@ export default function RegisterPage() {
       } else if (currentStep === 2) {
         // Step 2: Verify OTP
         const otpString = formData.otp.join('')
-        const response = await fetch('http://localhost:3001/api/auth/register/verify-otp', {
+        const response = await fetch(`${API_URL}/api/auth/register/verify-otp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -207,7 +209,7 @@ export default function RegisterPage() {
         handleNext()
       } else if (currentStep === 4) {
         // Step 4: Complete registration
-        const response = await fetch('http://localhost:3001/api/auth/register/complete', {
+        const response = await fetch(`${API_URL}/api/auth/register/complete`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -506,7 +508,7 @@ export default function RegisterPage() {
                             setLoading(true)
                             setError("")
                             try {
-                              const response = await fetch('http://localhost:3001/api/auth/register/step1', {
+                              const response = await fetch(`${API_URL}/api/auth/register/step1`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({

@@ -18,7 +18,8 @@ export function MasjidHeroV2() {
     setMessage("")
 
     try {
-      const response = await fetch("/api/subscribe", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+      const response = await fetch(`${apiUrl}/api/subscribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -126,7 +127,7 @@ export function MasjidHeroV2() {
                     <motion.p
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`mt-3 text-sm ${message.includes("✅") ? "text-green-600" : "text-red-600"}`}
+                      className={`mt-3 text-sm ${message.includes("❌") ? "text-red-600" : "text-green-600"}`}
                     >
                       {message}
                     </motion.p>

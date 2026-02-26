@@ -68,7 +68,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "connect-src 'self' https://www.google.com https://va.vercel-scripts.com https://vercel.live wss://ws-us3.pusher.com",
+              "connect-src 'self' https://www.google.com https://va.vercel-scripts.com https://vercel.live wss://ws-us3.pusher.com https://danamasjid-api.danamsjid-api.workers.dev",
               "frame-src 'self' https://www.google.com https://vercel.live",
               "media-src 'self'",
               "object-src 'none'",

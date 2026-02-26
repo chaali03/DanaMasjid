@@ -18,7 +18,8 @@ export function MasjidHeroV2() {
     setMessage("")
 
     try {
-      const response = await fetch("/api/subscribe", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+      const response = await fetch(`${apiUrl}/api/subscribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -41,10 +42,10 @@ export function MasjidHeroV2() {
 
   return (
     <main>
-      <section className="overflow-hidden">
-        <div className="relative mx-auto max-w-7xl px-6 py-28 lg:py-32">
+      <section className="overflow-hidden min-h-screen">
+        <div className="relative mx-auto max-w-7xl px-6 py-32 lg:py-40">
           <div className="lg:flex lg:items-center lg:gap-12">
-            <div className="relative z-10 mx-auto max-w-xl text-center lg:ml-0 lg:w-1/2 lg:text-left">
+            <div className="relative z-10 mx-auto max-w-2xl text-center lg:ml-0 lg:w-3/5 lg:text-left">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -126,7 +127,7 @@ export function MasjidHeroV2() {
                     <motion.p
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`mt-3 text-sm ${message.includes("✅") ? "text-green-600" : "text-red-600"}`}
+                      className={`mt-3 text-sm ${message.includes("❌") ? "text-red-600" : "text-green-600"}`}
                     >
                       {message}
                     </motion.p>
@@ -166,7 +167,7 @@ export function MasjidHeroV2() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="absolute inset-0 -mx-4 rounded-3xl p-3 lg:col-span-3"
           >
-            <div aria-hidden className="absolute z-[1] inset-0 bg-gradient-to-r from-white from-35%" />
+            <div aria-hidden className="absolute z-[1] inset-0 bg-gradient-to-r from-white from-25%" />
             <div className="relative h-full w-full">
               <Image
                 className="rounded-2xl shadow-2xl object-cover"

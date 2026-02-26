@@ -31,8 +31,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Get backend API URL from environment variable
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+
     // Send email via backend API
-    const response = await fetch("http://localhost:3001/api/subscribe", {
+    const response = await fetch(`${apiUrl}/api/subscribe`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
