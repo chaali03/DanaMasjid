@@ -255,13 +255,13 @@ export function DonationProgramsSection() {
                     <div className="text-lg font-bold text-slate-900">Rp 2.5M</div>
                     <div className="text-xs text-green-600">↑ 12%</div>
                   </div>
-                  <div className="bg-slate-50 rounded-xl p-3">
-                    <div className="text-xs text-slate-500">Donatur</div>
+                  <div className="bg-slate-50 rounded-xl p-4">
+                    <div className="text-xs text-slate-500 mb-1">Donatur</div>
                     <div className="text-lg font-bold text-slate-900">1,234</div>
                     <div className="text-xs text-green-600">↑ 8%</div>
                   </div>
-                  <div className="bg-slate-50 rounded-xl p-3 col-span-2 md:col-span-1 max-w-[50%] md:max-w-none mx-auto">
-                    <div className="text-xs text-slate-500">Masjid</div>
+                  <div className="bg-slate-50 rounded-xl p-4 col-span-2 md:col-span-1 max-w-[50%] md:max-w-none mx-auto">
+                    <div className="text-xs text-slate-900 mb-1">Masjid</div>
                     <div className="text-lg font-bold text-slate-900">156</div>
                     <div className="text-xs text-green-600">↑ 5%</div>
                   </div>
