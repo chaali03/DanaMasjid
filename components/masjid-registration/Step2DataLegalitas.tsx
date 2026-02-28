@@ -34,16 +34,58 @@ export default function Step2DataLegalitas({ formData, setFormData }: Step2Props
 
   const handleFileChange = (fieldName: string, file: File | null) => {
     if (file) {
+      // Validate file size (max 2MB)
       if (file.size > 2 * 1024 * 1024) {
         alert("Ukuran file maksimal 2MB")
         return
       }
+      
+      // Validate file type
       const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "application/pdf"]
       if (!allowedTypes.includes(file.type)) {
         alert("Format file harus PDF atau JPG/PNG")
         return
       }
-      setFormData({ ...formData, [fieldName]: file })
+      
+      // For images, validate dimensions and quality
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          const img = new Image()
+          img.onload = () => {
+            // Check minimum dimensions (at least 800x600)
+            if (img.width < 800 || img.height < 600) {
+              alert("Resolusi gambar minimal 800x600 pixels untuk kualitas yang baik")
+              return
+            }
+            
+            // Check maximum dimensions (max 4000x4000)
+            if (img.width > 4000 || img.height > 4000) {
+              alert("Resolusi gambar maksimal 4000x4000 pixels")
+              return
+            }
+            
+            // Check aspect ratio (should be reasonable)
+            const aspectRatio = img.width / img.height
+            if (aspectRatio < 0.5 || aspectRatio > 2) {
+              alert("Rasio aspek gambar tidak wajar. Pastikan gambar tidak terlalu panjang atau lebar")
+              return
+            }
+            
+            // All validations passed
+            console.log(`Image validated: ${img.width}x${img.height}, ${(file.size / 1024).toFixed(0)}KB`)
+            setFormData({ ...formData, [fieldName]: file })
+          }
+          img.onerror = () => {
+            alert("File gambar rusak atau tidak valid")
+          }
+          img.src = e.target?.result as string
+        }
+        reader.readAsDataURL(file)
+      } else {
+        // For PDF, just set it
+        setFormData({ ...formData, [fieldName]: file })
+      }
     }
   }
 
@@ -194,7 +236,7 @@ export default function Step2DataLegalitas({ formData, setFormData }: Step2Props
         <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl p-6 border-2 border-amber-100">
           <div className="mb-6">
             <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-2">
-              <Shield className="w-5 h-5 text-amber-600" />
+              <FileText className="w-5 h-5 text-amber-600" />
               NPWP Masjid (Tax Number)
             </h3>
             <p className="text-xs text-gray-600">
