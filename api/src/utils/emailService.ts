@@ -15,6 +15,12 @@ interface MasjidRegistrationData {
   termsUrl?: string;
 }
 
+interface OTPVerificationData {
+  email: string;
+  otpCode: string;
+  logoUrl?: string;
+}
+
 export class EmailService {
   private static loadTemplate(templateName: string): string {
     const templatePath = path.join(__dirname, '../templates', `${templateName}.html`);
@@ -44,6 +50,22 @@ export class EmailService {
 
     return {
       subject: '🕌 Selamat Datang di DanaMasjid - GRATIS 3 Bulan Pertama!',
+      html,
+    };
+  }
+
+  static getOTPVerificationEmail(data: OTPVerificationData): EmailTemplate {
+    const template = this.loadTemplate('otp-verification');
+    
+    const variables = {
+      otp_code: data.otpCode,
+      logo_url: data.logoUrl || 'https://danamasjid.com/logo.png',
+    };
+
+    const html = this.replaceVariables(template, variables);
+
+    return {
+      subject: 'Kode OTP DanaMasjid - Verifikasi Akun Anda',
       html,
     };
   }
