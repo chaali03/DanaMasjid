@@ -31,11 +31,15 @@ if (typeof window !== 'undefined') {
   const originalError = console.error
   console.error = (...args) => {
     // Filter out Google API loading errors that don't affect functionality
-    if (
-      args[0]?.includes?.('apis.google.com') ||
-      args[0]?.includes?.('ERR_CONNECTION_CLOSED')
-    ) {
-      return
+    const firstArg = args[0]
+    if (typeof firstArg === 'string') {
+      // Use exact string matching instead of substring check
+      if (
+        firstArg === 'Failed to load https://apis.google.com/js/api.js' ||
+        firstArg.startsWith('ERR_CONNECTION_CLOSED:')
+      ) {
+        return
+      }
     }
     originalError.apply(console, args)
   }

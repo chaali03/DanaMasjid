@@ -9,7 +9,7 @@ export function sanitizeInput(input: string): string {
   // Remove HTML tags
   let sanitized = input.replace(/<[^>]*>/g, '')
   
-  // Escape special characters
+  // Escape special characters - order matters to prevent double escaping
   sanitized = sanitized
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -17,6 +17,12 @@ export function sanitizeInput(input: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;')
     .replace(/\//g, '&#x2F;')
+  
+  // Second pass to catch any remaining dangerous characters
+  sanitized = sanitized
+    .replace(/&(?!amp;|lt;|gt;|quot;|#x27;|#x2F;)/g, '&amp;')
+    .replace(/<(?!&lt;)/g, '&lt;')
+    .replace(/>(?!&gt;)/g, '&gt;')
   
   // Remove null bytes
   sanitized = sanitized.replace(/\0/g, '')
