@@ -27,7 +27,6 @@ export default function RegisterPage() {
     // Step 1
     name: "",
     email: "",
-    phone: "",
     // Step 2
     otp: ["", "", "", "", "", ""],
     // Step 3
@@ -42,6 +41,8 @@ export default function RegisterPage() {
   const [resendCountdown, setResendCountdown] = useState(0)
   const [passwordStrength, setPasswordStrength] = useState<'weak' | 'medium' | 'strong' | null>(null)
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null)
+  const [emailChecking, setEmailChecking] = useState(false)
+  const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null)
 
   // Countdown timer for resend OTP
   useEffect(() => {
@@ -86,6 +87,35 @@ export default function RegisterPage() {
       setPasswordMatch(null)
     }
   }, [formData.password, formData.confirmPassword])
+
+  // Check email availability with debounce
+  useEffect(() => {
+    if (!formData.email || !formData.email.includes('@')) {
+      setEmailAvailable(null)
+      return
+    }
+
+    const checkEmail = async () => {
+      setEmailChecking(true)
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/check-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: formData.email })
+        })
+        const data = await response.json()
+        setEmailAvailable(data.available)
+      } catch (error) {
+        console.error('Error checking email:', error)
+        setEmailAvailable(null)
+      } finally {
+        setEmailChecking(false)
+      }
+    }
+
+    const timer = setTimeout(checkEmail, 500)
+    return () => clearTimeout(timer)
+  }, [formData.email])
 
   // Animation variants untuk efek muncul
   const containerVariants = {
@@ -266,12 +296,24 @@ export default function RegisterPage() {
 
     try {
       if (currentStep === 1) {
+        // Validate email availability
+        if (emailAvailable === false) {
+          setError('Email sudah terdaftar. Silakan gunakan email lain atau login.')
+          setLoading(false)
+          return
+        }
+        
+        if (!emailAvailable) {
+          setError('Mohon tunggu pengecekan email selesai')
+          setLoading(false)
+          return
+        }
+        
         // Step 1: Send OTP using TanStack Query
         console.log('Step 1: Sending OTP...')
         const result = await registerStep1Mutation.mutateAsync({
           name: formData.name,
-          email: formData.email,
-          phone: formData.phone
+          email: formData.email
         })
 
         if (result.success) {
@@ -337,13 +379,11 @@ export default function RegisterPage() {
         // Complete registration with Firebase
         console.log('Step 3: Starting Firebase registration...', {
           email: formData.email,
-          name: formData.name,
-          phone: formData.phone
+          name: formData.name
         })
         
         const user = await signUpWithEmail(formData.email, formData.password, {
-          name: formData.name,
-          phone: formData.phone
+          name: formData.name
         })
 
         console.log('Step 3: Firebase registration successful! User ID:', user.uid)
@@ -410,8 +450,7 @@ export default function RegisterPage() {
     try {
       const result = await registerStep1Mutation.mutateAsync({
         name: formData.name,
-        email: formData.email,
-        phone: formData.phone
+        email: formData.email
       })
       
       if (result.success) {
@@ -647,38 +686,37 @@ export default function RegisterPage() {
                           placeholder="Email"
                           value={formData.email}
                           onChange={(e) => setFormData({...formData, email: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base shadow-sm"
+                          className={`w-full px-5 py-4 bg-white border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-base shadow-sm ${
+                            emailAvailable === false ? 'border-red-500' : 
+                            emailAvailable === true ? 'border-green-500' : 
+                            'border-gray-900 focus:border-blue-500'
+                          }`}
                           autoComplete="email"
                           required
                         />
-                        <div className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400">
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                          </svg>
+                        <div className="absolute right-5 top-1/2 -translate-y-1/2">
+                          {emailChecking ? (
+                            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                          ) : emailAvailable === false ? (
+                            <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          ) : emailAvailable === true ? (
+                            <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                            </svg>
+                          )}
                         </div>
-                      </motion.div>
-
-                      <motion.div 
-                        variants={itemVariants} 
-                        custom={6}
-                        className="relative"
-                        whileHover={{ scale: 1.01 }}
-                        transition={{ type: "spring", stiffness: 400 }}
-                      >
-                        <input
-                          type="tel"
-                          placeholder="No. Telepon"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                          className="w-full px-5 py-4 bg-white border-2 border-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base shadow-sm"
-                          autoComplete="tel"
-                          required
-                        />
-                        <div className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400">
-                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                          </svg>
-                        </div>
+                        {emailAvailable === false && (
+                          <p className="text-xs text-red-500 mt-1.5 ml-1">Email sudah terdaftar</p>
+                        )}
+                        {emailAvailable === true && (
+                          <p className="text-xs text-green-500 mt-1.5 ml-1">Email tersedia</p>
+                        )}
                       </motion.div>
                     </>
                   )}
@@ -722,7 +760,7 @@ export default function RegisterPage() {
                         </motion.div>
                         <p className="text-sm text-gray-600">
                           Kode verifikasi telah dikirim ke<br />
-                          <strong className="text-gray-900">{formData.email || formData.phone}</strong>
+                          <strong className="text-gray-900">{formData.email}</strong>
                         </p>
                       </motion.div>
 
