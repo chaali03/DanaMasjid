@@ -162,6 +162,16 @@ export function Header() {
             >
               Tim
             </a>
+            
+            {/* Donasi Link */}
+            <a
+              href="/donasi"
+              className={`text-sm transition-colors cursor-pointer ${
+                isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Donasi
+            </a>
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
@@ -230,7 +240,8 @@ export function Header() {
               )}
             </div>
 
-            <button
+            <a
+              href="/donasi"
               className={`relative flex items-center gap-0 border rounded-full pl-5 pr-1 py-1 transition-all duration-300 group overflow-hidden ${
                 isScrolled ? "border-zinc-300" : "border-border"
               }`}
@@ -259,7 +270,7 @@ export function Header() {
                   }`}
                 />
               </span>
-            </button>
+            </a>
           </div>
 
           <button
@@ -353,6 +364,16 @@ export function Header() {
               }`}
             >
               Tim
+            </a>
+            
+            {/* Donasi Link */}
+            <a
+              href="/donasi"
+              className={`transition-colors cursor-pointer font-medium ${
+                isScrolled ? "text-zinc-700 hover:text-black" : "text-foreground hover:text-foreground"
+              }`}
+            >
+              Donasi
             </a>
             
             <div

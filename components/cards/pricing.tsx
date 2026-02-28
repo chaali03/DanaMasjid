@@ -36,7 +36,7 @@ export function Pricing({
 }: PricingProps) {
   const [isMonthly, setIsMonthly] = useState(true);
   const [isDesktop, setIsDesktop] = useState(false);
-  const switchRef = useRef<HTMLButtonElement>(null);
+  const switchContainerRef = useRef<HTMLDivElement>(null);
 
   // Check if desktop on mount
   useEffect(() => {
@@ -46,32 +46,54 @@ export function Pricing({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleToggle = (checked: boolean) => {
-    setIsMonthly(!checked);
-    if (checked && switchRef.current) {
-      const rect = switchRef.current.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
+  const fireConfetti = () => {
+    console.log('🎉 Firing confetti!');
+    
+    // Get switch position for confetti origin
+    const rect = switchContainerRef.current?.getBoundingClientRect();
+    if (!rect) {
+      console.log('❌ No rect found');
+      return;
+    }
+    
+    const x = (rect.left + rect.width / 2) / window.innerWidth;
+    const y = (rect.top + rect.height / 2) / window.innerHeight;
+    
+    console.log('📍 Confetti origin:', { x, y });
 
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: {
-          x: x / window.innerWidth,
-          y: y / window.innerHeight,
-        },
-        colors: [
-          "hsl(var(--primary))",
-          "hsl(var(--accent))",
-          "hsl(var(--secondary))",
-          "hsl(var(--muted))",
-        ],
-        ticks: 200,
-        gravity: 1.2,
-        decay: 0.94,
-        startVelocity: 30,
-        shapes: ["circle"],
-      });
+    // Fire multiple bursts with different colors
+    const colors = [
+      ['#FFD700', '#FFA500', '#FF6347'], // Gold, Orange, Red
+      ['#3b82f6', '#60a5fa', '#93c5fd'], // Blue shades
+      ['#fbbf24', '#f59e0b', '#eab308'], // Yellow shades
+      ['#10b981', '#34d399', '#6ee7b7'], // Green shades
+      ['#8b5cf6', '#a78bfa', '#c4b5fd'], // Purple shades
+    ];
+
+    colors.forEach((colorSet, index) => {
+      setTimeout(() => {
+        confetti({
+          particleCount: 50,
+          spread: 70,
+          origin: { x, y },
+          colors: colorSet,
+          startVelocity: 30,
+          gravity: 1,
+          drift: 0,
+          ticks: 200,
+          scalar: 1.2,
+        });
+      }, index * 100);
+    });
+  };
+
+  const handleToggle = (checked: boolean) => {
+    console.log('Toggle changed:', checked);
+    setIsMonthly(!checked);
+    
+    // Trigger confetti when switching to annual (checked = true)
+    if (checked) {
+      fireConfetti();
     }
   };
 
@@ -86,19 +108,30 @@ export function Pricing({
         </p>
       </div>
 
-      <div className="flex justify-center mb-10 text-sm md:text-base">
-        <label className="relative inline-flex items-center cursor-pointer">
+      <div className="flex justify-center items-center mb-10 text-sm md:text-base gap-4">
+        <span className={cn(
+          "font-semibold transition-all duration-300",
+          isMonthly ? "text-foreground scale-105" : "text-muted-foreground scale-100"
+        )}>
+          Bulanan
+        </span>
+        <div ref={switchContainerRef} className="relative inline-flex items-center cursor-pointer">
           <Label>
             <Switch
-              ref={switchRef as any}
               checked={!isMonthly}
               onCheckedChange={handleToggle}
-              className="relative"
+              className="relative data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-yellow-400 data-[state=checked]:to-orange-500"
             />
           </Label>
-        </label>
-        <span className="ml-2 font-semibold">
-          Annual billing <span className="text-primary">(Save 20%)</span>
+        </div>
+        <span className={cn(
+          "font-semibold transition-all duration-300 flex items-center gap-2",
+          !isMonthly ? "text-foreground scale-105" : "text-muted-foreground scale-100"
+        )}>
+          Tahunan
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg animate-pulse">
+            Hemat 20%
+          </span>
         </span>
       </div>
 
@@ -152,27 +185,38 @@ export function Pricing({
                 {plan.name}
               </p>
               <div className="mt-4 md:mt-6 flex items-center justify-center gap-x-1 md:gap-x-2">
+                <span className="text-base md:text-lg text-muted-foreground">Rp</span>
                 <span className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
-                  <NumberFlow
-                    value={
-                      isMonthly ? Number(plan.price) : Number(plan.yearlyPrice)
-                    }
-                    transformTiming={{
-                      duration: 500,
-                      easing: "ease-out",
-                    }}
-                    willChange
-                  />
+                  {plan.price === "Custom" || plan.yearlyPrice === "Custom" ? (
+                    <span>Custom</span>
+                  ) : (
+                    <NumberFlow
+                      value={
+                        isMonthly ? Number(plan.price) : Number(plan.yearlyPrice)
+                      }
+                      format={{ notation: "compact" }}
+                      transformTiming={{
+                        duration: 500,
+                        easing: "ease-out",
+                      }}
+                      willChange
+                    />
+                  )}
                 </span>
-                {plan.period !== "Next 3 months" && (
+                {plan.period !== "Next 3 months" && plan.price !== "Custom" && (
                   <span className="text-xs md:text-sm font-semibold leading-6 tracking-wide text-muted-foreground">
-                    / {plan.period}
+                    {isMonthly ? "/ bulan" : "/ tahun"}
                   </span>
                 )}
               </div>
 
               <p className="text-xs leading-5 text-muted-foreground mb-3 md:mb-4">
-                {isMonthly ? "billed monthly" : "billed annually"}
+                {plan.price === "Custom" || plan.yearlyPrice === "Custom" 
+                  ? "Hubungi kami untuk penawaran khusus"
+                  : isMonthly 
+                    ? "dibayar bulanan" 
+                    : `dibayar tahunan • Hemat Rp ${(Number(plan.price) * 12 * 0.2).toLocaleString('id-ID')}`
+                }
               </p>
 
               <ul className="mt-2 md:mt-3 gap-1.5 md:gap-2 flex flex-col text-left">

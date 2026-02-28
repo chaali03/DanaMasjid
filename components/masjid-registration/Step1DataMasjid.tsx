@@ -1,6 +1,7 @@
 // @ts-nocheck
-import { Building2, MapPin, CheckCircle, XCircle } from "lucide-react"
+import { Building2, MapPin, CheckCircle, XCircle, Navigation, Map as MapIcon, Search, Crosshair } from "lucide-react"
 import { useState, useEffect } from "react"
+import dynamic from "next/dynamic"
 import { 
   getProvinces, 
   getRegencies, 
@@ -13,6 +14,12 @@ import {
   type Village
 } from "@/lib/indonesia-regions"
 
+// Dynamic import to avoid SSR issues with Leaflet
+const MapPicker = dynamic(
+  () => import("@/components/maps/MapPicker").then((mod) => mod.MapPicker),
+  { ssr: false }
+)
+
 interface Step1Props {
   formData: any
   setFormData: (data: any) => void
@@ -23,6 +30,9 @@ export default function Step1DataMasjid({ formData, setFormData }: Step1Props) {
   const [regencies, setRegencies] = useState<Regency[]>([])
   const [districts, setDistricts] = useState<District[]>([])
   const [villages, setVillages] = useState<Village[]>([])
+  const [loadingLocation, setLoadingLocation] = useState(false)
+  const [coordinates, setCoordinates] = useState({ lat: -6.2088, lng: 106.8456 }) // Default Jakarta
+  const [showMap, setShowMap] = useState(false)
   
   const [validation, setValidation] = useState({
     province: { valid: false, message: '' },
@@ -186,6 +196,73 @@ export default function Step1DataMasjid({ formData, setFormData }: Step1Props) {
   const handlePostalCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 5)
     setFormData({ ...formData, postalCode: value })
+  }
+
+  const getCurrentLocation = () => {
+    setLoadingLocation(true)
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords
+          setCoordinates({ lat: latitude, lng: longitude })
+          setShowMap(true)
+          setFormData({ 
+            ...formData, 
+            latitude: latitude.toString(), 
+            longitude: longitude.toString() 
+          })
+          setLoadingLocation(false)
+        },
+        (error) => {
+          console.error("Error getting location:", error)
+          alert("Tidak dapat mengakses lokasi. Pastikan Anda memberikan izin lokasi.")
+          setLoadingLocation(false)
+        }
+      )
+    } else {
+      alert("Browser Anda tidak mendukung geolocation")
+      setLoadingLocation(false)
+    }
+  }
+
+  const searchCoordinates = async () => {
+    const fullAddress = `${formData.mosqueAddress}, ${formData.village}, ${formData.district}, ${formData.regency}, ${formData.province}`
+    
+    try {
+      // Use Nominatim (OpenStreetMap) Geocoding API - Free and no API key needed
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&countrycodes=id&limit=1`
+      )
+      const data = await response.json()
+      
+      if (data && data.length > 0) {
+        const { lat, lon } = data[0]
+        const latitude = parseFloat(lat)
+        const longitude = parseFloat(lon)
+        
+        setCoordinates({ lat: latitude, lng: longitude })
+        setFormData({ 
+          ...formData, 
+          latitude: latitude.toString(), 
+          longitude: longitude.toString() 
+        })
+        setShowMap(true)
+      } else {
+        alert("Lokasi tidak ditemukan. Coba gunakan 'Lokasi Terkini' atau masukkan koordinat manual.")
+      }
+    } catch (error) {
+      console.error("Error geocoding:", error)
+      alert("Gagal mencari koordinat. Silakan coba lagi.")
+    }
+  }
+
+  const handleMapLocationChange = (lat: number, lng: number) => {
+    setCoordinates({ lat, lng })
+    setFormData({ 
+      ...formData, 
+      latitude: lat.toString(), 
+      longitude: lng.toString() 
+    })
   }
 
   return (
@@ -405,6 +482,122 @@ export default function Step1DataMasjid({ formData, setFormData }: Step1Props) {
                 {validation.postalCode.message}
               </p>
             )}
+          </div>
+        </div>
+
+        {/* Location & Maps Section */}
+        <div className="mt-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="font-semibold text-gray-900 flex items-center gap-2">
+              <MapIcon className="w-5 h-5 text-blue-600" />
+              Lokasi & Koordinat
+            </h4>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={getCurrentLocation}
+                disabled={loadingLocation}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
+              >
+                {loadingLocation ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Mengambil...</span>
+                  </>
+                ) : (
+                  <>
+                    <Navigation className="w-4 h-4" />
+                    <span>Lokasi Terkini</span>
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={searchCoordinates}
+                className="flex items-center gap-2 px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-all text-sm font-semibold"
+              >
+                <Search className="w-4 h-4" />
+                <span>Cari Koordinat</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Coordinates Display */}
+          {(formData.latitude || coordinates.lat) && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Latitude
+                </label>
+                <input
+                  type="text"
+                  value={formData.latitude || coordinates.lat}
+                  onChange={(e) => {
+                    setFormData({ ...formData, latitude: e.target.value })
+                    setCoordinates({ ...coordinates, lat: parseFloat(e.target.value) || coordinates.lat })
+                  }}
+                  className="w-full px-4 py-2 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  placeholder="-6.2088"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Longitude
+                </label>
+                <input
+                  type="text"
+                  value={formData.longitude || coordinates.lng}
+                  onChange={(e) => {
+                    setFormData({ ...formData, longitude: e.target.value })
+                    setCoordinates({ ...coordinates, lng: parseFloat(e.target.value) || coordinates.lng })
+                  }}
+                  className="w-full px-4 py-2 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  placeholder="106.8456"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Map Preview */}
+          {showMap && (
+            <div className="bg-white rounded-xl border-2 border-blue-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 px-4 py-3 border-b border-blue-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-blue-900 flex items-center gap-2">
+                      <Crosshair className="w-4 h-4" />
+                      Preview Lokasi Interaktif
+                    </p>
+                    <p className="text-xs text-blue-700 mt-0.5">Klik pada peta untuk mengubah posisi marker</p>
+                  </div>
+                  <a
+                    href={`https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition-all font-semibold"
+                  >
+                    Buka di Google Maps
+                  </a>
+                </div>
+              </div>
+              <div className="p-4">
+                <MapPicker
+                  center={[coordinates.lat, coordinates.lng]}
+                  onLocationChange={handleMapLocationChange}
+                />
+                <div className="mt-3 bg-slate-50 rounded-lg p-3 border border-slate-200">
+                  <p className="text-xs text-slate-700">
+                    <strong>Koordinat Terpilih:</strong> {coordinates.lat.toFixed(6)}, {coordinates.lng.toFixed(6)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <p className="text-xs text-blue-900">
+              <strong>Tips:</strong> Gunakan tombol "Lokasi Terkini" untuk mendapatkan koordinat otomatis, atau "Cari Koordinat" untuk mencari berdasarkan alamat yang diisi.
+            </p>
           </div>
         </div>
       </div>

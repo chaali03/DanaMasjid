@@ -4,6 +4,8 @@ export { HeroSection as HeroSection2 } from "./hero-section-2"
 export { HeroSection as HeroSection6 } from "./hero-section-6"
 export { default as MasjidHero } from "./masjid-hero"
 export { MasjidHeroV2 } from "./masjid-hero-v2"
+export { DonationHeroSection } from "./donation-hero-section"
+export { DonationCategoriesSection } from "./donation-categories-section"
 
 // Feature Sections
 export { FeaturesSection } from "./features-section"

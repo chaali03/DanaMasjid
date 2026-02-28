@@ -5,6 +5,8 @@ import { CookieConsentBanner } from "@/components/cookie-consent"
 import { QueryProvider } from "@/components/providers"
 import { RecaptchaProvider } from "@/components/providers"
 import { AuthProvider } from "@/lib/auth-context"
+import { ScrollProgress } from "@/components/ui/scroll-progress"
+import { BackToTop } from "@/components/ui/back-to-top"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -72,11 +74,13 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
       </head>
       <body className={`font-sans antialiased`}>
+        <ScrollProgress />
         <AuthProvider>
           <QueryProvider>
             <RecaptchaProvider>
               {children}
               <CookieConsentBanner />
+              <BackToTop />
               <Analytics />
             </RecaptchaProvider>
           </QueryProvider>

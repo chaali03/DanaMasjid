@@ -15,8 +15,9 @@ import {
   Step1DataMasjid,
   Step2DataLegalitas,
   Step3PerwakilanResmi,
-  Step4ReviewData,
-  Step5AkunAdmin
+  Step4Security2FA,
+  Step5ReviewData,
+  Step6AkunAdmin
 } from "@/components/masjid-registration"
 import {
   sanitizeInput,
@@ -116,7 +117,7 @@ export default function DaftarMasjidPage() {
     recaptchaToken: "",
   })
 
-  const totalSteps = 5
+  const totalSteps = 6
 
   const provinces = [
     "DKI Jakarta", "Jawa Barat", "Jawa Tengah", "Jawa Timur", "Banten",
@@ -792,18 +793,26 @@ export default function DaftarMasjidPage() {
                       />
                     )}
 
-                    {/* STEP 4: Review Data */}
+                    {/* STEP 4: Security 2FA */}
                     {currentStep === 4 && (
-                      <Step4ReviewData 
+                      <Step4Security2FA 
+                        onNext={() => setCurrentStep(5)}
+                        onBack={() => setCurrentStep(3)}
+                      />
+                    )}
+
+                    {/* STEP 5: Review Data */}
+                    {currentStep === 5 && (
+                      <Step5ReviewData 
                         formData={formData}
                         setFormData={setFormData}
                         setCurrentStep={setCurrentStep}
                       />
                     )}
 
-                    {/* STEP 5: Akun Admin */}
-                    {currentStep === 5 && (
-                      <Step5AkunAdmin 
+                    {/* STEP 6: Akun Admin */}
+                    {currentStep === 6 && (
+                      <Step6AkunAdmin 
                         formData={formData}
                         setFormData={setFormData}
                         showPassword={showPassword}

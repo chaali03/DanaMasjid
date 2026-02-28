@@ -109,7 +109,7 @@ export function TestimonialsSection() {
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-50 via-slate-50 to-transparent z-10 pointer-events-none" />
 
             <div className="overflow-x-hidden">
-              <div className="flex gap-6 animate-scroll-right hover:[animation-play-state:paused]">
+              <div className="flex gap-6 animate-scroll-right">
                 {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => (
                   <div
                     key={`row1-${index}`}
@@ -157,7 +157,7 @@ export function TestimonialsSection() {
             <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-50 via-slate-50 to-transparent z-10 pointer-events-none" />
 
             <div className="overflow-x-hidden">
-              <div className="flex gap-6 animate-scroll-left hover:[animation-play-state:paused]">
+              <div className="flex gap-6 animate-scroll-left">
                 {[...testimonials2, ...testimonials2, ...testimonials2].map((testimonial, index) => (
                   <div
                     key={`row2-${index}`}
@@ -221,11 +221,11 @@ export function TestimonialsSection() {
         }
 
         .animate-scroll-right {
-          animation: scroll-right 40s linear infinite;
+          animation: scroll-right 40s linear infinite alternate;
         }
 
         .animate-scroll-left {
-          animation: scroll-left 40s linear infinite;
+          animation: scroll-left 40s linear infinite alternate;
         }
       `}</style>
     </section>
