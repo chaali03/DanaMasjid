@@ -312,22 +312,22 @@ export default function DaftarMasjidPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 py-4 md:py-8 px-4 lg:px-8">
-      <div className="w-full mx-auto flex gap-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 py-3 sm:py-4 md:py-8 px-3 sm:px-4 lg:px-8">
+      <div className="w-full mx-auto flex gap-4 sm:gap-6 lg:gap-8">
         {/* Sidebar Navigation - Desktop Only (XL and above) */}
-        <div className="hidden xl:block w-80 flex-shrink-0">
-          <div className="sticky top-8">
+        <div className="hidden xl:block w-72 2xl:w-80 flex-shrink-0">
+          <div className="sticky top-6 lg:top-8">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
               className="bg-white rounded-2xl shadow-lg p-6"
             >
-              <h3 className="text-lg font-bold text-gray-900 mb-6">Progress Pendaftaran</h3>
+              <h3 className="text-base lg:text-lg font-bold text-gray-900 mb-4 lg:mb-6">Progress Pendaftaran</h3>
               
-              <div className="space-y-6 relative">
+              <div className="space-y-5 lg:space-y-6 relative">
                 {/* Vertical Line - More subtle */}
-                <div className="absolute left-4 top-4 bottom-4 w-px bg-gray-200">
+                <div className="absolute left-4 top-4 w-px bg-gray-200" style={{ height: 'calc(100% - 2rem)' }}>
                   <motion.div 
                     className="w-full bg-blue-600"
                     initial={{ height: 0 }}
@@ -626,12 +626,12 @@ export default function DaftarMasjidPage() {
               </div>
 
               {/* Progress Percentage */}
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center justify-between text-sm mb-2">
+              <div className="mt-5 lg:mt-6 pt-5 lg:pt-6 border-t border-gray-200">
+                <div className="flex items-center justify-between text-xs sm:text-sm mb-2">
                   <span className="text-gray-600">Progress</span>
                   <span className="font-bold text-blue-600">{Math.round((currentStep / totalSteps) * 100)}%</span>
                 </div>
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-1.5 sm:h-2 bg-gray-200 rounded-full overflow-hidden">
                   <motion.div 
                     className="h-full bg-gradient-to-r from-blue-600 to-cyan-600"
                     initial={{ width: 0 }}
@@ -653,28 +653,28 @@ export default function DaftarMasjidPage() {
             transition={{ duration: 0.5 }}
             className="mb-8"
           >
-            <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 rounded-2xl md:rounded-3xl p-6 md:p-8 text-white shadow-2xl">
-              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                  <Building2 className="w-6 h-6 md:w-8 md:h-8" />
+            <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-2xl">
+              <div className="flex items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-white/20 rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center backdrop-blur-sm flex-shrink-0">
+                  <Building2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
                 </div>
-                <div>
-                  <h1 className="text-2xl md:text-3xl xl:text-4xl font-bold">Pendaftaran Masjid</h1>
-                  <p className="text-blue-100 mt-1 text-sm md:text-base">Bergabunglah dengan ribuan masjid di Indonesia</p>
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-lg sm:text-2xl md:text-3xl xl:text-4xl font-bold truncate">Pendaftaran Masjid</h1>
+                  <p className="text-blue-100 mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base">Bergabunglah dengan ribuan masjid di Indonesia</p>
                 </div>
               </div>
               
               {/* Progress Bar */}
-              <div className="space-y-2 md:space-y-3">
-                <div className="flex items-center justify-between text-xs md:text-sm">
+              <div className="space-y-1.5 sm:space-y-2 md:space-y-3">
+                <div className="flex items-center justify-between text-[10px] sm:text-xs md:text-sm">
                   <span className="font-medium">Progress Pendaftaran</span>
                   <span className="font-bold">{currentStep} dari {totalSteps}</span>
                 </div>
-                <div className="flex items-center gap-1.5 md:gap-2">
+                <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
                   {[1, 2, 3, 4, 5].map((step) => (
                     <div key={step} className="flex-1">
                       <motion.div 
-                        className={`h-2 md:h-2.5 rounded-full transition-all duration-500 ${
+                        className={`h-1.5 sm:h-2 md:h-2.5 rounded-full transition-all duration-500 ${
                           currentStep >= step ? "bg-yellow-400 shadow-lg shadow-yellow-400/50" : "bg-white/30"
                         }`}
                         initial={{ scaleX: 0 }}
@@ -717,10 +717,9 @@ export default function DaftarMasjidPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-white rounded-3xl shadow-xl overflow-hidden"
-          >
+            className="bg-white rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden">
             {/* Form Content */}
-            <div className="p-4 md:p-8 lg:p-12">
+            <div className="p-4 sm:p-6 md:p-8 lg:p-12">
               {/* Error/Success Messages */}
               <AnimatePresence mode="wait">
                 {error && (
@@ -728,10 +727,10 @@ export default function DaftarMasjidPage() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3"
+                    className="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg sm:rounded-xl flex items-start gap-2 sm:gap-3"
                   >
-                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-red-700">{error}</p>
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs sm:text-sm text-red-700">{error}</p>
                   </motion.div>
                 )}
                 {success && (
@@ -739,10 +738,10 @@ export default function DaftarMasjidPage() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3"
+                    className="mb-4 sm:mb-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg sm:rounded-xl flex items-start gap-2 sm:gap-3"
                   >
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-green-700">{success}</p>
+                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs sm:text-sm text-green-700">{success}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -805,44 +804,48 @@ export default function DaftarMasjidPage() {
                 </AnimatePresence>
 
                 {/* Navigation Buttons */}
-                <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={handlePrev}
                     disabled={currentStep === 1}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
+                    className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all ${
                       currentStep === 1
                         ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                     }`}
                   >
-                    <ArrowLeft className="w-5 h-5" />
-                    Sebelumnya
+                    <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="hidden sm:inline">Sebelumnya</span>
+                    <span className="sm:hidden">Kembali</span>
                   </button>
 
-                  <div className="text-sm text-gray-600">
+                  <div className="text-xs sm:text-sm text-gray-600 text-center sm:text-left order-first sm:order-none">
                     Tahap {currentStep} dari {totalSteps}
                   </div>
 
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold hover:from-blue-700 hover:to-blue-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Memproses...
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span className="hidden sm:inline">Memproses...</span>
+                        <span className="sm:hidden">Proses...</span>
                       </>
                     ) : currentStep === totalSteps ? (
                       <>
-                        <CheckCircle2 className="w-5 h-5" />
-                        Kirim Pendaftaran
+                        <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">Kirim Pendaftaran</span>
+                        <span className="sm:hidden">Kirim</span>
                       </>
                     ) : (
                       <>
-                        Selanjutnya
-                        <ArrowRight className="w-5 h-5" />
+                        <span className="hidden sm:inline">Selanjutnya</span>
+                        <span className="sm:hidden">Lanjut</span>
+                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                       </>
                     )}
                   </button>
@@ -851,14 +854,14 @@ export default function DaftarMasjidPage() {
             </div>
 
             {/* Footer Info */}
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-8 md:px-12 py-6 border-t border-gray-200">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-600">
-                <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-blue-600" />
+            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-5 md:py-6 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 flex-shrink-0" />
                   <span>Data Anda aman dan terenkripsi</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-blue-600" />
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 flex-shrink-0" />
                   <span>Verifikasi 1-3 hari kerja</span>
                 </div>
               </div>
