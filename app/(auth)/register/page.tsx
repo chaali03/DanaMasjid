@@ -26,6 +26,7 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({
     // Step 1
     name: "",
+    nickname: "",
     email: "",
     // Step 2
     otp: ["", "", "", "", "", ""],
@@ -43,6 +44,8 @@ export default function RegisterPage() {
   const [passwordMatch, setPasswordMatch] = useState<boolean | null>(null)
   const [emailChecking, setEmailChecking] = useState(false)
   const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null)
+  const [nicknameChecking, setNicknameChecking] = useState(false)
+  const [nicknameAvailable, setNicknameAvailable] = useState<boolean | null>(null)
 
   // Countdown timer for resend OTP
   useEffect(() => {
@@ -121,6 +124,38 @@ export default function RegisterPage() {
     const timer = setTimeout(checkEmail, 500)
     return () => clearTimeout(timer)
   }, [formData.email])
+
+  // Check nickname availability in Firestore
+  useEffect(() => {
+    if (!formData.nickname || formData.nickname.length < 3) {
+      setNicknameAvailable(null)
+      return
+    }
+
+    const checkNickname = async () => {
+      setNicknameChecking(true)
+      try {
+        const { collection, query, where, getDocs } = await import('firebase/firestore')
+        const { db } = await import('@/lib/firebase')
+        
+        // Query Firestore for existing nickname
+        const usersRef = collection(db, 'users')
+        const q = query(usersRef, where('nickname', '==', formData.nickname.toLowerCase()))
+        const querySnapshot = await getDocs(q)
+        
+        // If no documents found, nickname is available
+        setNicknameAvailable(querySnapshot.empty)
+      } catch (error) {
+        console.error('Error checking nickname:', error)
+        setNicknameAvailable(null)
+      } finally {
+        setNicknameChecking(false)
+      }
+    }
+
+    const timer = setTimeout(checkNickname, 500)
+    return () => clearTimeout(timer)
+  }, [formData.nickname])
 
   // Animation variants untuk efek muncul
   const containerVariants = {
@@ -301,6 +336,25 @@ export default function RegisterPage() {
 
     try {
       if (currentStep === 1) {
+        // Validate nickname availability
+        if (!formData.nickname || formData.nickname.length < 3) {
+          setError('Nickname minimal 3 karakter')
+          setLoading(false)
+          return
+        }
+        
+        if (nicknameAvailable === false) {
+          setError('Nickname sudah digunakan. Silakan pilih nickname lain.')
+          setLoading(false)
+          return
+        }
+        
+        if (!nicknameAvailable) {
+          setError('Mohon tunggu pengecekan nickname selesai')
+          setLoading(false)
+          return
+        }
+        
         // Validate email availability
         if (emailAvailable === false) {
           setError('Email sudah terdaftar. Silakan gunakan email lain atau login.')
@@ -318,6 +372,7 @@ export default function RegisterPage() {
         console.log('Step 1: Sending OTP...')
         const result = await registerStep1Mutation.mutateAsync({
           name: formData.name,
+          nickname: formData.nickname,
           email: formData.email
         })
 
@@ -388,7 +443,8 @@ export default function RegisterPage() {
         })
         
         const user = await signUpWithEmail(formData.email, formData.password, {
-          name: formData.name
+          name: formData.name,
+          nickname: formData.nickname.toLowerCase()
         })
 
         console.log('Step 3: Firebase registration successful! User ID:', user.uid)
@@ -455,6 +511,7 @@ export default function RegisterPage() {
     try {
       const result = await registerStep1Mutation.mutateAsync({
         name: formData.name,
+        nickname: formData.nickname,
         email: formData.email
       })
       
@@ -682,6 +739,56 @@ export default function RegisterPage() {
                       <motion.div 
                         variants={itemVariants} 
                         custom={5}
+                        className="relative"
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        <input
+                          type="text"
+                          placeholder="Nickname (Username)"
+                          value={formData.nickname}
+                          onChange={(e) => setFormData({...formData, nickname: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '')})}
+                          className={`w-full px-5 py-4 bg-white border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-base shadow-sm ${
+                            nicknameAvailable === false ? 'border-red-500' : 
+                            nicknameAvailable === true ? 'border-green-500' : 
+                            'border-gray-900 focus:border-blue-500'
+                          }`}
+                          autoComplete="username"
+                          minLength={3}
+                          maxLength={20}
+                          required
+                        />
+                        <div className="absolute right-5 top-1/2 -translate-y-1/2">
+                          {nicknameChecking ? (
+                            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                          ) : nicknameAvailable === false ? (
+                            <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          ) : nicknameAvailable === true ? (
+                            <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                          )}
+                        </div>
+                        {nicknameAvailable === false && (
+                          <p className="text-xs text-red-500 mt-1.5 ml-1">Nickname sudah digunakan</p>
+                        )}
+                        {nicknameAvailable === true && (
+                          <p className="text-xs text-green-500 mt-1.5 ml-1">Nickname tersedia</p>
+                        )}
+                        {formData.nickname && formData.nickname.length < 3 && (
+                          <p className="text-xs text-gray-500 mt-1.5 ml-1">Minimal 3 karakter</p>
+                        )}
+                      </motion.div>
+
+                      <motion.div 
+                        variants={itemVariants} 
+                        custom={6}
                         className="relative"
                         whileHover={{ scale: 1.01 }}
                         transition={{ type: "spring", stiffness: 400 }}
