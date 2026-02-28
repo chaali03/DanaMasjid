@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app'
 import { getAuth, GoogleAuthProvider } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -24,6 +24,20 @@ if (typeof window !== 'undefined') {
 }
 
 const db = getFirestore(app)
+
+// Enable offline persistence
+if (typeof window !== 'undefined') {
+  enableIndexedDbPersistence(db).catch((err) => {
+    if (err.code === 'failed-precondition') {
+      // Multiple tabs open, persistence can only be enabled in one tab at a time
+      console.warn('Firebase persistence failed: Multiple tabs open')
+    } else if (err.code === 'unimplemented') {
+      // The current browser doesn't support persistence
+      console.warn('Firebase persistence not supported in this browser')
+    }
+  })
+}
+
 const googleProvider = new GoogleAuthProvider()
 
 // Suppress console errors for Google API loading issues
@@ -36,7 +50,8 @@ if (typeof window !== 'undefined') {
       // Use exact string matching instead of substring check
       if (
         firstArg === 'Failed to load https://apis.google.com/js/api.js' ||
-        firstArg.startsWith('ERR_CONNECTION_CLOSED:')
+        firstArg.startsWith('ERR_CONNECTION_CLOSED:') ||
+        firstArg.includes('Failed to get document because the client is offline')
       ) {
         return
       }

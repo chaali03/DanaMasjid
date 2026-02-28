@@ -235,8 +235,8 @@ export default function LoginPage() {
       variants={containerVariants}
       className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-cyan-50"
     >
-      {/* Video Background with Reverse Playback */}
-      <VideoBackground videoSrc="/vidio/login.mp4" duration={14} />
+      {/* Video Background */}
+      <VideoBackground videoSrc="/vidio/login.mp4" />
 
       {/* Main Login Card - Split Screen */}
       <motion.div
