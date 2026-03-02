@@ -62,9 +62,14 @@ export default function DaftarMasjidPage() {
   // Initialize session and device fingerprint
   useEffect(() => {
     const initSession = async () => {
-      // Generate device fingerprint
-      const fingerprint = await generateDeviceFingerprint()
-      saveDeviceFingerprint(fingerprint)
+      try {
+        // Generate device fingerprint
+        const fingerprint = await generateDeviceFingerprint()
+        saveDeviceFingerprint(fingerprint)
+      } catch (error) {
+        console.error('Failed to generate device fingerprint:', error)
+        // Continue without fingerprint
+      }
 
       // Check existing session
       const existingSession = getRegistrationSession()
