@@ -91,7 +91,7 @@ export default function RegisterPage() {
     }
   }, [formData.password, formData.confirmPassword])
 
-  // Check email availability with Firestore (more reliable than Firebase Auth)
+  // Check email availability with both Firestore and Firebase Auth
   useEffect(() => {
     if (!formData.email || !formData.email.includes('@')) {
       setEmailAvailable(null)
@@ -102,14 +102,13 @@ export default function RegisterPage() {
       setEmailChecking(true)
       console.log('Checking email availability:', formData.email)
       try {
-        // Check in Firestore users collection
+        const emailLower = formData.email.toLowerCase().trim()
+        
+        // Method 1: Check in Firestore users collection
         const { collection, query, where, getDocs, limit } = await import('firebase/firestore')
         const { db } = await import('@/lib/firebase')
         
         const usersRef = collection(db, 'users')
-        
-        // Try both lowercase and original email to be safe
-        const emailLower = formData.email.toLowerCase()
         const q = query(
           usersRef, 
           where('email', '==', emailLower),
@@ -117,12 +116,31 @@ export default function RegisterPage() {
         )
         const querySnapshot = await getDocs(q)
         
-        // If no documents found, email is available
-        const available = querySnapshot.empty
-        console.log('Email check result for', emailLower, ':', available ? 'Available ✓' : 'Already registered ✗')
-        console.log('Documents found:', querySnapshot.size)
+        console.log('Firestore check - Documents found:', querySnapshot.size)
         
-        setEmailAvailable(available)
+        // If found in Firestore, email is taken
+        if (!querySnapshot.empty) {
+          console.log('Email check result:', 'Already registered in Firestore ✗')
+          setEmailAvailable(false)
+          setEmailChecking(false)
+          return
+        }
+        
+        // Method 2: Check in Firebase Auth as backup
+        const { fetchSignInMethodsForEmail } = await import('firebase/auth')
+        const { auth } = await import('@/lib/firebase')
+        
+        const signInMethods = await fetchSignInMethodsForEmail(auth, emailLower)
+        console.log('Firebase Auth check - Sign-in methods found:', signInMethods.length)
+        
+        // If found in Firebase Auth, email is taken
+        if (signInMethods.length > 0) {
+          console.log('Email check result:', 'Already registered in Firebase Auth ✗')
+          setEmailAvailable(false)
+        } else {
+          console.log('Email check result:', 'Available ✓')
+          setEmailAvailable(true)
+        }
       } catch (error: any) {
         console.error('Error checking email:', error)
         setEmailAvailable(null)

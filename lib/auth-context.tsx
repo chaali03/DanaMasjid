@@ -90,9 +90,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('Saving user data to Firestore...')
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
-        email: user.email,
+        email: user.email?.toLowerCase().trim() || email.toLowerCase().trim(), // Ensure lowercase
         name: userData.name,
-        nickname: userData.nickname,
+        nickname: userData.nickname.toLowerCase().trim(), // Ensure lowercase
         createdAt: new Date().toISOString(),
         provider: 'email',
         registrationCompleted: false, // Track if mosque registration is completed
