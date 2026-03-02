@@ -11,7 +11,7 @@ import hpp from 'hpp';
 // Aggressive rate limiter for login attempts
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 attempts per window
+  max: 20, // 20 attempts per window (increased for testing)
   skipSuccessfulRequests: true, // Don't count successful logins
   message: {
     success: false,
@@ -39,7 +39,7 @@ export const loginSpeedLimiter = slowDown({
 // Rate limiter for OTP requests - Very strict
 export const otpLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 3, // 3 OTP requests per 5 minutes
+  max: 10, // 10 OTP requests per 5 minutes (increased for testing)
   skipSuccessfulRequests: false,
   message: {
     success: false,
@@ -59,7 +59,7 @@ export const otpLimiter = rateLimit({
 // Rate limiter for registration - Prevent spam accounts
 export const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, // 3 registration attempts per hour per IP
+  max: 10, // 10 registration attempts per hour per IP (increased for testing)
   skipSuccessfulRequests: false,
   message: {
     success: false,
@@ -79,7 +79,7 @@ export const registerLimiter = rateLimit({
 // General API rate limiter - Protect all endpoints
 export const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // 100 requests per window
+  max: 300, // 300 requests per window (increased for testing)
   message: {
     success: false,
     message: 'Terlalu banyak permintaan. Silakan coba lagi nanti.'
@@ -98,7 +98,7 @@ export const apiLimiter = rateLimit({
 // Strict rate limiter for password reset
 export const passwordResetLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, // 3 password reset attempts per hour
+  max: 10, // 10 password reset attempts per hour (increased for testing)
   skipSuccessfulRequests: false,
   message: {
     success: false,

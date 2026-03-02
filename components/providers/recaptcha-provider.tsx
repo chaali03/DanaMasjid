@@ -13,7 +13,6 @@ export function RecaptchaProvider({ children }: RecaptchaProviderProps) {
   
   // If no valid key, render children without reCAPTCHA
   if (!recaptchaSiteKey || recaptchaSiteKey === 'your_recaptcha_site_key') {
-    console.warn('reCAPTCHA is disabled: No valid NEXT_PUBLIC_RECAPTCHA_SITE_KEY found');
     return <>{children}</>;
   }
 
