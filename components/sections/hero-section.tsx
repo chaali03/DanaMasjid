@@ -94,7 +94,6 @@ export function HeroSection() {
             transform: `scale(${scale}) translate3d(0, 0, 0)`,
             borderRadius: `${borderRadius}px`,
             height: `${heightVh}vh`,
-            willChange: 'transform',
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             perspective: 1000,
@@ -110,7 +109,6 @@ export function HeroSection() {
             preload="auto"
             className="w-full h-full object-cover"
             style={{
-              willChange: 'transform',
               transform: 'translate3d(0, 0, 0)', // Force GPU acceleration
               backfaceVisibility: 'hidden',
             }}
@@ -162,7 +160,7 @@ export function HeroSection() {
         <div className="flex flex-col items-center justify-center gap-8">
           <div className="relative">
             <div
-              className={`relative w-[200px] md:w-[250px] lg:w-[300px] xl:w-[350px] will-change-transform transition-all duration-[1500ms] ease-out delay-500 ${
+              className={`relative w-[200px] md:w-[250px] lg:w-[300px] xl:w-[350px] transition-all duration-[1500ms] ease-out delay-500 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[400px]"
               }`}
             >

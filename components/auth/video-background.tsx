@@ -97,11 +97,6 @@ export function VideoBackground({ videoSrc, posterSrc, className = '' }: VideoBa
             playsInline
             preload="auto"
             poster={posterSrc}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-              willChange: 'opacity',
-            }}
-          >
             <source src={videoSrc} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
