@@ -51,6 +51,5 @@
       ]
     }
   ],
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ./",
   "trailingSlash": false
 }
