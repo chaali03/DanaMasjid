@@ -4,7 +4,6 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Shield, Mail, CheckCircle, XCircle, Loader2 } from "lucide-react";
-import { apiClient } from "@/lib/api-client";
 
 function VerifyDeviceContent() {
   const router = useRouter();
@@ -40,14 +39,21 @@ function VerifyDeviceContent() {
 
   const verifyDevice = async () => {
     try {
-      const response = await apiClient.post("/auth/verify-device", { token });
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+      const response = await fetch(`${API_URL}/api/auth/verify-device`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
       
-      if (response.success) {
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
         setStatus("success");
         setMessage("Perangkat berhasil diverifikasi! Anda akan diarahkan ke halaman login.");
       } else {
         setStatus("error");
-        setMessage(response.message || "Verifikasi gagal");
+        setMessage(data.message || "Verifikasi gagal");
       }
     } catch (error: any) {
       setStatus("error");
