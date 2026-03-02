@@ -372,22 +372,22 @@ export default function DaftarMasjidPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 py-3 sm:py-4 md:py-8 px-3 sm:px-4 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 py-2 sm:py-3 md:py-6 lg:py-8 px-2 sm:px-3 md:px-4 lg:px-6 xl:px-8">
       {/* Toast Container */}
       <Toaster />
       
       {/* Session Timer - Temporarily disabled */}
       {/* {sessionInitialized && <SessionTimer />} */}
       
-      <div className="w-full mx-auto flex gap-4 sm:gap-6 lg:gap-8">
+      <div className="w-full max-w-[1600px] mx-auto flex flex-col xl:flex-row gap-3 sm:gap-4 md:gap-6 lg:gap-8">
         {/* Sidebar Navigation - Desktop Only (XL and above) */}
-        <div className="hidden xl:block w-72 2xl:w-80 flex-shrink-0">
-          <div className="sticky top-6 lg:top-8">
+        <div className="hidden xl:block w-64 2xl:w-72 flex-shrink-0">
+          <div className="sticky top-4 lg:top-6">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-2xl shadow-lg p-6"
+              className="bg-white rounded-xl lg:rounded-2xl shadow-lg p-4 lg:p-6"
             >
               <h3 className="text-base lg:text-lg font-bold text-gray-900 mb-4 lg:mb-6">Progress Pendaftaran</h3>
               
@@ -713,16 +713,16 @@ export default function DaftarMasjidPage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-8"
+            className="mb-4 sm:mb-6 md:mb-8"
           >
-            <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-2xl">
-              <div className="flex items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-white/20 rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center backdrop-blur-sm flex-shrink-0">
-                  <Building2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
+            <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl p-3 sm:p-4 md:p-6 lg:p-8 text-white shadow-2xl">
+              <div className="flex items-center gap-2 sm:gap-3 md:gap-4 mb-2 sm:mb-3 md:mb-4 lg:mb-6">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 bg-white/20 rounded-md sm:rounded-lg md:rounded-xl lg:rounded-2xl flex items-center justify-center backdrop-blur-sm flex-shrink-0">
+                  <Building2 className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-8 lg:h-8" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h1 className="text-lg sm:text-2xl md:text-3xl xl:text-4xl font-bold truncate">Pendaftaran Masjid</h1>
-                  <p className="text-blue-100 mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base">Bergabunglah dengan ribuan masjid di Indonesia</p>
+                  <h1 className="text-base sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold truncate">Pendaftaran Masjid</h1>
+                  <p className="text-blue-100 mt-0.5 sm:mt-1 text-[10px] sm:text-xs md:text-sm lg:text-base">Bergabunglah dengan ribuan masjid di Indonesia</p>
                 </div>
               </div>
               
@@ -778,9 +778,10 @@ export default function DaftarMasjidPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-white rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden">
+            className="bg-white rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-xl overflow-hidden"
+          >
             {/* Form Content */}
-            <div className="p-4 sm:p-6 md:p-8 lg:p-12">
+            <div className="p-3 sm:p-4 md:p-6 lg:p-8 xl:p-10">
               <form onSubmit={handleSubmit}>
                 <AnimatePresence mode="wait" custom={direction}>
                   <motion.div
