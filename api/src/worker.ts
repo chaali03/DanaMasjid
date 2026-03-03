@@ -46,10 +46,10 @@ app.use('*', xssProtection())
 // SQL Injection Protection
 app.use('*', sqlInjectionProtection())
 
-// Rate limiting - 300 requests per minute (increased for testing)
+// Rate limiting - 500 requests per minute (relaxed for normal usage)
 app.use('*', advancedRateLimit({
   windowMs: 60 * 1000, // 1 minute
-  maxRequests: 300
+  maxRequests: 500 // Increased from 300
 }))
 
 app.use('*', async (c, next) => {
@@ -97,7 +97,7 @@ app.get('/health', (c) => {
 // SUBSCRIBE ENDPOINT
 // ============================================
 app.post('/api/subscribe', 
-  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 20 }), // 20 per minute (increased for testing)
+  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 50 }), // 50 per minute
   validateInput({
     email: { required: true, type: 'string', pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ }
   }),
@@ -198,7 +198,7 @@ app.post('/api/auth/register', async (c) => {
 
 // Register Step 1 - Send OTP
 app.post('/api/auth/register/step1',
-  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 20 }), // 20 per minute (increased for testing)
+  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 50 }), // 50 per minute
   validateInput({
     email: { required: true, type: 'string', pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
     name: { required: true, type: 'string', minLength: 2, maxLength: 100 },
@@ -368,7 +368,7 @@ app.post('/api/auth/register/complete', async (c) => {
 
 // Login
 app.post('/api/auth/login',
-  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 20 }), // 20 per minute (increased for testing)
+  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 50 }), // 50 per minute
   validateInput({
     email: { required: true, type: 'string', pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
     password: { required: true, type: 'string', minLength: 6 }
@@ -418,7 +418,7 @@ app.post('/api/auth/login',
 
 // Forgot Password
 app.post('/api/auth/forgot-password',
-  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 20 }), // 20 per minute (increased for testing)
+  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 50 }), // 50 per minute
   validateInput({
     email: { required: true, type: 'string', pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ }
   }),
@@ -636,7 +636,7 @@ app.get('/api/masjid/:id', async (c) => {
 
 // Register Masjid - Multi-step verification
 app.post('/api/masjid/register',
-  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 10 }), // 10 per minute (increased for testing)
+  advancedRateLimit({ windowMs: 60 * 1000, maxRequests: 30 }), // 30 per minute
   validateInput({
     mosqueName: { required: true, type: 'string', minLength: 3, maxLength: 100 },
     mosqueAddress: { required: true, type: 'string', minLength: 10, maxLength: 500 },
