@@ -43,7 +43,7 @@ DanaMasjid dibangun dengan standar keamanan tertinggi:
 - **UI:** React 19, TailwindCSS, shadcn/ui
 - **Animation:** Framer Motion
 - **Auth:** Firebase Authentication
-- **Deployment:** Vercel
+- **Deployment:** Netlify
 
 ### Backend
 - **Runtime:** Cloudflare Workers
@@ -98,10 +98,13 @@ npx wrangler deploy
 
 ## 📚 Documentation
 
-- [Security Documentation](./api/SECURITY.md) - Comprehensive security guide
-- [Deployment Guide](./DEPLOYMENT.md) - Step-by-step deployment
-- [Security Summary](./SECURITY-SUMMARY.md) - Quick security overview
-- [API Documentation](./api/README.md) - API endpoints & usage
+- [🚀 Deploy Instructions](./DEPLOY_INSTRUCTIONS.md) - **START HERE!**
+- [🔧 Troubleshooting](./NETLIFY_TROUBLESHOOTING.md) - Fix common issues
+- [Migration Complete](./MIGRATION_COMPLETE.md) - What changed
+- [Quick Deploy](./QUICK_DEPLOY.md) - Alternative method
+- [Netlify Guide](./NETLIFY_DEPLOYMENT.md) - Full documentation
+- [Security Docs](./api/SECURITY.md) - Security guide
+- [API Docs](./api/README.md) - API endpoints
 
 ## 🏗️ Project Structure
 
@@ -152,7 +155,7 @@ npm audit
 - **Core Web Vitals:** Passing
 - **Image Optimization:** WebP format
 - **Code Splitting:** Automatic
-- **CDN:** Vercel Edge Network
+- **CDN:** Netlify Edge Network
 
 ## 🔐 Security Features
 
@@ -196,7 +199,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **Website:** https://danamasjid.vercel.app
+- **Website:** https://danamasjid.netlify.app
 - **Email:** support@danamasjid.com
 - **Security:** security@danamasjid.com
 
@@ -205,7 +208,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Next.js team for the amazing framework
 - Cloudflare for Workers platform
 - Firebase for authentication
-- Vercel for hosting
+- Netlify for hosting
 - All contributors
 
 ## 📊 Status

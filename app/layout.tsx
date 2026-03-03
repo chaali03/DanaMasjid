@@ -1,6 +1,5 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Analytics } from "@vercel/analytics/next"
 import { CookieConsentBanner } from "@/components/cookie-consent"
 import { QueryProvider, RecaptchaProvider, SecurityProvider } from "@/components/providers"
 import { AuthProvider } from "@/lib/auth-context"
@@ -16,16 +15,6 @@ export const metadata: Metadata = {
   creator: "DanaMasjid",
   publisher: "DanaMasjid",
   generator: 'v0.app',
-  icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon_io/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon_io/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/favicon_io/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
   manifest: '/favicon_io/site.webmanifest',
   openGraph: {
     type: 'website',
@@ -81,7 +70,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://www.google.com" />
         <link rel="preconnect" href="https://www.gstatic.com" />
-        <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
         
         {/* Preload auth page videos for faster loading */}
         <link rel="preload" href="/vidio/login.mp4" as="video" type="video/mp4" />
@@ -96,7 +84,6 @@ export default function RootLayout({
                 {children}
                 <CookieConsentBanner />
                 <BackToTop />
-                <Analytics />
               </RecaptchaProvider>
             </QueryProvider>
           </AuthProvider>
