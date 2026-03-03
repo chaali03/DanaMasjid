@@ -21,9 +21,6 @@
     # Prevent clickjacking
     X-Frame-Options = "DENY"
     
-    # Prevent MIME type sniffing
-    X-Content-Type-Options = "nosniff"
-    
     # XSS Protection
     X-XSS-Protection = "1; mode=block"
     
@@ -71,27 +68,23 @@
   for = "/_next/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-    X-Content-Type-Options = "nosniff"
 
 [[headers]]
   for = "/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-    X-Content-Type-Options = "nosniff"
 
 # Images - 7 days cache
 [[headers]]
   for = "/images/*"
   [headers.values]
     Cache-Control = "public, max-age=604800, must-revalidate"
-    X-Content-Type-Options = "nosniff"
 
 # Videos - 7 days cache
 [[headers]]
   for = "/vidio/*"
   [headers.values]
     Cache-Control = "public, max-age=604800, must-revalidate"
-    X-Content-Type-Options = "nosniff"
 
 # API proxy to Cloudflare Workers
 [[redirects]]
