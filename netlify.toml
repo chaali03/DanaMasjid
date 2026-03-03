@@ -10,10 +10,6 @@
 # Next.js plugin for Netlify
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  
-[plugins.inputs]
-  # Disable Next.js image optimization (we already set unoptimized: true)
-  disableNextImageOptimization = true
 
 # Security headers
 [[headers]]
