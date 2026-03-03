@@ -19,6 +19,11 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   
+  // Generate unique build IDs to prevent cache issues
+  generateBuildId: async () => {
+    return `build-${Date.now()}`
+  },
+  
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts', 'framer-motion'],
   },
