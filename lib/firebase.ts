@@ -1,6 +1,6 @@
-import { initializeApp, getApps } from 'firebase/app'
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore'
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
+import { getAuth, GoogleAuthProvider, Auth } from 'firebase/auth'
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, Firestore } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,39 +12,50 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 }
 
-// Initialize Firebase
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+// Check if we're in a browser environment and have valid config
+const isValidConfig = firebaseConfig.apiKey && firebaseConfig.projectId
+const isBrowser = typeof window !== 'undefined'
 
-// Initialize Auth
-const auth = getAuth(app)
-
-// Set device language for better UX
-if (typeof window !== 'undefined') {
-  auth.useDeviceLanguage()
+// Initialize Firebase only if we have valid config
+let app: FirebaseApp | null = null
+if (isValidConfig) {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
 }
 
-// Initialize Firestore with modern cache settings
-let db: ReturnType<typeof getFirestore>
+// Initialize Auth only if app is initialized
+let auth: Auth | null = null
+let db: Firestore | null = null
+let googleProvider: GoogleAuthProvider | null = null
 
-if (getApps().length === 1) {
-  // First initialization - use modern cache API
-  try {
-    db = initializeFirestore(app, {
-      localCache: persistentLocalCache({
-        tabManager: persistentMultipleTabManager()
+if (app) {
+  auth = getAuth(app)
+
+  // Set device language for better UX
+  if (isBrowser) {
+    auth.useDeviceLanguage()
+  }
+
+  // Initialize Firestore with modern cache settings
+  if (getApps().length === 1) {
+    // First initialization - use modern cache API
+    try {
+      db = initializeFirestore(app, {
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager()
+        })
       })
-    })
-  } catch (error) {
-    // Fallback to default if cache initialization fails
-    console.warn('Failed to initialize Firestore with cache, using default:', error)
+    } catch (error) {
+      // Fallback to default if cache initialization fails
+      console.warn('Failed to initialize Firestore with cache, using default:', error)
+      db = getFirestore(app)
+    }
+  } else {
+    // Already initialized
     db = getFirestore(app)
   }
-} else {
-  // Already initialized
-  db = getFirestore(app)
-}
 
-const googleProvider = new GoogleAuthProvider()
+  googleProvider = new GoogleAuthProvider()
+}
 
 // Suppress console errors and warnings
 if (typeof window !== 'undefined') {

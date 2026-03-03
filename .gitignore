@@ -21,12 +21,11 @@ yarn-error.log*
 !.env.example
 !.env.local.example
 !.env.docker.example
-
-# vercel
-.vercel
+!.env.netlify.example
 
 # netlify
-.netlify
+.netlify/
+!.netlify/state.json
 
 # typescript
 *.tsbuildinfo
