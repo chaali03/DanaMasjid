@@ -60,12 +60,6 @@
   status = 301
   force = true
 
-# Image optimization
-[[redirects]]
-  from = "/_next/image"
-  to = "/.netlify/images?url=:url&w=:width&q=:quality"
-  status = 200
-
 # Functions configuration
 [functions]
   node_bundler = "esbuild"

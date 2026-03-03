@@ -98,11 +98,10 @@ npx wrangler deploy
 
 ## 📚 Documentation
 
-- [🚀 Deploy Instructions](./DEPLOY_INSTRUCTIONS.md) - **START HERE!**
-- [🔧 Troubleshooting](./NETLIFY_TROUBLESHOOTING.md) - Fix common issues
+- [⚡ FINAL STEPS](./FINAL_STEPS.md) - **Fix images & complete deploy**
+- [🖼️ Image Fix](./IMAGE_FIX.md) - Image optimization solution
+- [🚀 Deploy Instructions](./DEPLOY_INSTRUCTIONS.md) - Full deploy guide
 - [Migration Complete](./MIGRATION_COMPLETE.md) - What changed
-- [Quick Deploy](./QUICK_DEPLOY.md) - Alternative method
-- [Netlify Guide](./NETLIFY_DEPLOYMENT.md) - Full documentation
 - [Security Docs](./api/SECURITY.md) - Security guide
 - [API Docs](./api/README.md) - API endpoints
 
