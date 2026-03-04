@@ -1,12 +1,20 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 
 export function BerkahStatsSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
   const [textAnimationComplete, setTextAnimationComplete] = useState(false)
+  const [berAnimationComplete, setBerAnimationComplete] = useState(false)
+
+  // Effect untuk mengecek ketika kedua animasi strip selesai
+  useEffect(() => {
+    if (berAnimationComplete && textAnimationComplete) {
+      // Kedua strip sudah selesai animasi
+    }
+  }, [berAnimationComplete, textAnimationComplete])
 
   const stats = [
     { label: "Donasi Umum", value: "Rp 22.663.582", percentage: 46.7, color: "#3B82F6" },
@@ -34,14 +42,15 @@ export function BerkahStatsSection() {
                 className="relative"
               >
                 {/* BER Text */}
-                <div className="relative inline-block pb-2 sm:pb-4">
-                  {/* Animated Strip for BER - Behind text */}
+                <div className="relative pb-2 sm:pb-4">
+                  {/* Animated Strip for BER - Behind text - SAME AS KAH STRIP */}
                   <motion.div
-                    className="absolute inset-x-0 bottom-0 h-6 sm:h-8 md:h-10 lg:h-12 bg-blue-600 rounded-sm pointer-events-none"
+                    className="absolute left-0 right-0 bottom-0 h-6 sm:h-8 md:h-10 lg:h-12 xl:h-14 bg-blue-600 rounded-sm pointer-events-none"
                     initial={{ scaleX: 0 }}
                     animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
                     transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
                     style={{ transformOrigin: 'left', zIndex: 0 }}
+                    onAnimationComplete={() => setBerAnimationComplete(true)}
                   />
                   
                   <motion.h2 
@@ -55,10 +64,10 @@ export function BerkahStatsSection() {
                 </div>
 
                 {/* KAH Text */}
-                <div className="relative inline-block pb-2 sm:pb-4">
+                <div className="relative pb-2 sm:pb-4">
                   {/* Animated Strip for KAH - Behind text */}
                   <motion.div
-                    className="absolute inset-x-0 bottom-0 h-6 sm:h-8 md:h-10 lg:h-12 bg-yellow-500 rounded-sm pointer-events-none"
+                    className="absolute left-0 right-0 bottom-0 h-6 sm:h-8 md:h-10 lg:h-12 xl:h-14 bg-yellow-500 rounded-sm pointer-events-none"
                     initial={{ scaleX: 0 }}
                     animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
                     transition={{ duration: 0.8, delay: 0.7, ease: "easeInOut" }}
@@ -89,9 +98,9 @@ export function BerkahStatsSection() {
             </div>
           </div>
 
-          {/* Right Side - Chart (Only show on desktop after text animation completes) */}
+          {/* Right Side - Chart (Show after text animations complete) */}
           <div className="hidden md:block">
-            {textAnimationComplete ? (
+            {(berAnimationComplete && textAnimationComplete) ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -198,11 +207,11 @@ export function BerkahStatsSection() {
             )}
           </div>
 
-          {/* Mobile Chart (Show immediately without waiting for text animation) */}
+          {/* Mobile Chart (Show immediately when in view, but with its own animations) */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.5 }}
+            transition={{ duration: 0.6, delay: 1.2 }} // Delay lebih lama untuk menunggu strip selesai
             className="md:hidden"
           >
             <div className="bg-white rounded-3xl p-6 shadow-xl">
@@ -216,30 +225,54 @@ export function BerkahStatsSection() {
                 <p className="text-sm text-slate-500 mt-1">Kuartal Ini</p>
               </div>
 
-              {/* Stats List (Mobile) */}
-              <div className="space-y-3">
+              {/* Simple Progress Bars for Mobile */}
+              <div className="space-y-4 mb-6">
                 {stats.map((stat, index) => (
                   <motion.div
                     key={stat.label}
                     initial={{ opacity: 0, x: -20 }}
                     animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
-                    className="flex items-center justify-between"
+                    transition={{ duration: 0.4, delay: 1.4 + index * 0.1 }}
                   >
-                    <div className="flex items-center gap-3">
-                      <div 
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: stat.color }}
-                      />
-                      <span className="text-sm text-slate-700">{stat.label}</span>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: stat.color }}
+                        />
+                        <span className="text-sm text-slate-700">{stat.label}</span>
+                      </div>
+                      <span className="text-sm font-semibold text-slate-900">{stat.percentage}%</span>
                     </div>
-                    <div className="text-right">
-                      <div className="text-sm font-semibold text-slate-900">{stat.value}</div>
-                      <div className="text-xs text-slate-500">{stat.percentage}%</div>
+                    <div className="w-full bg-slate-100 rounded-full h-2">
+                      <motion.div
+                        className="h-2 rounded-full"
+                        style={{ backgroundColor: stat.color }}
+                        initial={{ width: 0 }}
+                        animate={isInView ? { width: `${stat.percentage}%` } : { width: 0 }}
+                        transition={{ duration: 0.8, delay: 1.6 + index * 0.1, ease: "easeOut" }}
+                      />
+                    </div>
+                    <div className="text-right mt-1">
+                      <span className="text-xs text-slate-500">{stat.value}</span>
                     </div>
                   </motion.div>
                 ))}
               </div>
+
+              {/* Total Stats */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={isInView ? { opacity: 1 } : {}}
+                transition={{ duration: 0.4, delay: 2.0 }}
+                className="border-t border-slate-100 pt-4"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600">Total Donasi</span>
+                  <span className="text-sm font-semibold text-green-600">{totalPercentage}</span>
+                </div>
+                <div className="text-lg font-bold text-slate-900 mt-1">{totalDonasi}</div>
+              </motion.div>
             </div>
           </motion.div>
 

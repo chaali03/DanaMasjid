@@ -194,10 +194,10 @@ export default function IntroAnimation() {
     const containerRef = useRef<HTMLDivElement>(null);
     const pinnedRef = useRef<HTMLDivElement>(null);
 
-    // Check if desktop/tablet on mount (exclude only mobile phones)
+    // Check if desktop on mount (exclude tablet and mobile)
     useEffect(() => {
         const checkDesktop = () => {
-            setIsDesktop(window.innerWidth >= 768); // Changed from 1024 to 768 to include tablets
+            setIsDesktop(window.innerWidth >= 1024); // Changed back to 1024 to exclude tablets
         };
         checkDesktop();
         window.addEventListener('resize', checkDesktop);
@@ -314,7 +314,7 @@ export default function IntroAnimation() {
     const contentOpacity = useTransform(smoothMorph, [0.8, 1], [0, 1]);
     const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
 
-    // Don't render on mobile phones only (tablets and desktop will render)
+    // Don't render on tablet and mobile (desktop only)
     if (!isDesktop) {
         return null;
     }
