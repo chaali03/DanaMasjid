@@ -114,6 +114,7 @@ export function HeroSection() {
             }}
           >
             <source src="/vidio/vidio1.mp4" type="video/mp4" />
+            <track kind="captions" srcLang="id" label="Indonesian" />
           </video>
         </div>
       </div>

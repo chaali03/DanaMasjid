@@ -37,24 +37,28 @@ export function Footer() {
             <div className="flex gap-4">
               <Link
                 href="#"
+                aria-label="Twitter"
                 className="w-10 h-10 border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
               >
                 <Twitter className="w-4 h-4" />
               </Link>
               <Link
                 href="#"
+                aria-label="LinkedIn"
                 className="w-10 h-10 border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
               >
                 <Linkedin className="w-4 h-4" />
               </Link>
               <Link
                 href="#"
+                aria-label="Instagram"
                 className="w-10 h-10 border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
               >
                 <Instagram className="w-4 h-4" />
               </Link>
               <Link
                 href="#"
+                aria-label="Facebook"
                 className="w-10 h-10 border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
               >
                 <Facebook className="w-4 h-4" />
