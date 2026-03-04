@@ -82,7 +82,7 @@ export function ServicesSection() {
     <section id="how-it-works" className="py-32 px-6 pb-24 relative overflow-hidden max-w-full">
       <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-0 max-w-full overflow-hidden">
         <span className="relative inline-block">
-          <span className="relative z-10 font-bold text-center text-[18vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none tracking-tighter text-white whitespace-nowrap px-4">
+          <span className="relative z-10 font-bold text-center text-[18vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none tracking-tighter text-white whitespace-nowrap px-4" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.3)' }}>
             AMANAH
           </span>
           <motion.span

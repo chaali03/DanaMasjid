@@ -342,7 +342,7 @@ export default function IntroAnimation() {
                         initial={{ opacity: 0 }}
                         animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mt-4 text-xs font-bold tracking-[0.2em] text-gray-700"
+                        className="mt-4 text-xs font-bold tracking-[0.2em] text-gray-800"
                     >
                         SCROLL UNTUK MENJELAJAH
                     </motion.p>
@@ -356,7 +356,7 @@ export default function IntroAnimation() {
                     <h2 className="text-3xl md:text-5xl font-semibold text-gray-900 tracking-tight mb-4">
                         Jelajahi Misi DanaMasjid
                     </h2>
-                    <p className="text-sm md:text-base text-gray-700 max-w-lg leading-relaxed">
+                    <p className="text-sm md:text-base text-gray-800 max-w-lg leading-relaxed">
                         Transparansi donasi, laporan real-time, dan program yang berdampak. <br className="hidden md:block" />
                         Gulir untuk melihat program unggulan dan fitur yang memudahkan berdonasi.
                     </p>
