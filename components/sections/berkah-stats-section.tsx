@@ -34,7 +34,16 @@ export function BerkahStatsSection() {
                 className="relative"
               >
                 {/* BER Text */}
-                <div className="relative inline-block overflow-hidden">
+                <div className="relative inline-block pb-2 sm:pb-4">
+                  {/* Animated Strip for BER - Behind text */}
+                  <motion.div
+                    className="absolute inset-x-0 bottom-0 h-4 sm:h-6 md:h-8 bg-blue-600 rounded-sm pointer-events-none"
+                    initial={{ scaleX: 0 }}
+                    animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
+                    style={{ transformOrigin: 'left', zIndex: 0 }}
+                  />
+                  
                   <motion.h2 
                     className="text-[80px] sm:text-[120px] md:text-[160px] lg:text-[200px] font-black leading-none text-blue-600 relative z-10"
                     initial={{ opacity: 0, y: 20 }}
@@ -43,19 +52,20 @@ export function BerkahStatsSection() {
                   >
                     BER
                   </motion.h2>
-                  
-                  {/* Animated Strip for BER */}
-                  <motion.div
-                    className="absolute bottom-2 sm:bottom-4 left-0 right-0 h-4 sm:h-6 md:h-8 bg-blue-600 rounded-sm z-0"
-                    initial={{ scaleX: 0 }}
-                    animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
-                    style={{ transformOrigin: 'left' }}
-                  />
                 </div>
 
                 {/* KAH Text */}
-                <div className="relative inline-block overflow-hidden">
+                <div className="relative inline-block pb-2 sm:pb-4">
+                  {/* Animated Strip for KAH - Behind text */}
+                  <motion.div
+                    className="absolute inset-x-0 bottom-0 h-4 sm:h-6 md:h-8 bg-yellow-500 rounded-sm pointer-events-none"
+                    initial={{ scaleX: 0 }}
+                    animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+                    transition={{ duration: 0.8, delay: 0.7, ease: "easeInOut" }}
+                    style={{ transformOrigin: 'left', zIndex: 0 }}
+                    onAnimationComplete={() => setTextAnimationComplete(true)}
+                  />
+                  
                   <motion.h2 
                     className="text-[80px] sm:text-[120px] md:text-[160px] lg:text-[200px] font-black leading-none text-yellow-500 relative z-10"
                     initial={{ opacity: 0, y: 20 }}
@@ -64,16 +74,6 @@ export function BerkahStatsSection() {
                   >
                     KAH
                   </motion.h2>
-                  
-                  {/* Animated Strip for KAH */}
-                  <motion.div
-                    className="absolute bottom-2 sm:bottom-4 left-0 right-0 h-4 sm:h-6 md:h-8 bg-yellow-500 rounded-sm z-0"
-                    initial={{ scaleX: 0 }}
-                    animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
-                    transition={{ duration: 0.8, delay: 0.7, ease: "easeInOut" }}
-                    style={{ transformOrigin: 'left' }}
-                    onAnimationComplete={() => setTextAnimationComplete(true)}
-                  />
                 </div>
               </motion.div>
 
