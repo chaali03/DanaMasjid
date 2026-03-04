@@ -46,9 +46,9 @@ export function BerkahStatsSection() {
                   
                   {/* Animated Strip for BER */}
                   <motion.div
-                    className="absolute bottom-2 sm:bottom-4 left-0 h-4 sm:h-6 md:h-8 bg-blue-600 rounded-sm"
+                    className="absolute bottom-2 sm:bottom-4 left-0 h-4 sm:h-6 md:h-8 bg-blue-600 rounded-sm z-10"
                     initial={{ width: 0 }}
-                    animate={isInView ? { width: "100%" } : {}}
+                    animate={isInView ? { width: "100%" } : { width: 0 }}
                     transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
                   />
                 </div>
@@ -66,9 +66,9 @@ export function BerkahStatsSection() {
                   
                   {/* Animated Strip for KAH */}
                   <motion.div
-                    className="absolute bottom-2 sm:bottom-4 left-0 h-4 sm:h-6 md:h-8 bg-yellow-500 rounded-sm"
+                    className="absolute bottom-2 sm:bottom-4 left-0 h-4 sm:h-6 md:h-8 bg-yellow-500 rounded-sm z-10"
                     initial={{ width: 0 }}
-                    animate={isInView ? { width: "100%" } : {}}
+                    animate={isInView ? { width: "100%" } : { width: 0 }}
                     transition={{ duration: 0.8, delay: 0.7, ease: "easeInOut" }}
                     onAnimationComplete={() => setTextAnimationComplete(true)}
                   />

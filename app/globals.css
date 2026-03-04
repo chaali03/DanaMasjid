@@ -87,32 +87,6 @@ html, body {
 
   html::-webkit-scrollbar-track {
     background: #fef3c7;
-    position: relative;
-  }
-
-  /* Create visual separation with decorative caps at top */
-  html::-webkit-scrollbar-track::before {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 3px;
-    width: 6px;
-    height: 6px;
-    background: #fbbf24;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
-  }
-
-  html::-webkit-scrollbar-track::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    right: 3px;
-    width: 6px;
-    height: 6px;
-    background: #fbbf24;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
   }
 
   /* Main scrollbar thumb - Split into 2 bars visually */
