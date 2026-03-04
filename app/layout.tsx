@@ -70,10 +70,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://www.google.com" />
         <link rel="preconnect" href="https://www.gstatic.com" />
-        
-        {/* Preload auth page videos for faster loading */}
-        <link rel="preload" href="/vidio/login.mp4" as="video" type="video/mp4" />
-        <link rel="preload" href="/vidio/register.mp4" as="video" type="video/mp4" />
       </head>
       <body className={`font-sans antialiased`}>
         <ScrollProgress />

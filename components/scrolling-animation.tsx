@@ -137,7 +137,7 @@ export function HomePage() {
   const bottomStyle = getBottomStripStyle()
 
   return (
-    <div ref={containerRef} className={`h-[180vh] bg-background ${isMobile ? 'hidden' : ''}`}>
+    <div ref={containerRef} className={`relative h-[180vh] bg-background ${isMobile ? 'hidden' : ''}`}>
       <div className="h-screen relative sticky top-0 px-4 py-12">
         {/* TRANSPARAN - Pojok Kanan Atas */}
         <div 
