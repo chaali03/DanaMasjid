@@ -48,7 +48,7 @@ function FlipCard({
                 setCardSize({ width: IMG_WIDTH, height: IMG_HEIGHT });
             }
         };
-        
+
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
@@ -194,10 +194,10 @@ export default function IntroAnimation() {
     const containerRef = useRef<HTMLDivElement>(null);
     const pinnedRef = useRef<HTMLDivElement>(null);
 
-    // Check if desktop on mount
+    // Check if desktop/tablet on mount (exclude only mobile phones)
     useEffect(() => {
         const checkDesktop = () => {
-            setIsDesktop(window.innerWidth >= 1024);
+            setIsDesktop(window.innerWidth >= 768); // Changed from 1024 to 768 to include tablets
         };
         checkDesktop();
         window.addEventListener('resize', checkDesktop);
@@ -207,7 +207,7 @@ export default function IntroAnimation() {
     // --- Container Size ---
     useEffect(() => {
         if (!isDesktop) return; // Skip if not desktop
-        
+
         const targetEl = pinnedRef.current || containerRef.current;
         if (!targetEl) {
             if (typeof window !== "undefined") {
@@ -314,7 +314,7 @@ export default function IntroAnimation() {
     const contentOpacity = useTransform(smoothMorph, [0.8, 1], [0, 1]);
     const contentY = useTransform(smoothMorph, [0.8, 1], [20, 0]);
 
-    // Don't render on tablet and mobile
+    // Don't render on mobile phones only (tablets and desktop will render)
     if (!isDesktop) {
         return null;
     }

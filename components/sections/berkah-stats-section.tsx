@@ -37,7 +37,7 @@ export function BerkahStatsSection() {
                 <div className="relative inline-block pb-2 sm:pb-4">
                   {/* Animated Strip for BER - Behind text */}
                   <motion.div
-                    className="absolute inset-x-0 bottom-0 h-4 sm:h-6 md:h-8 bg-blue-600 rounded-sm pointer-events-none"
+                    className="absolute inset-x-0 bottom-0 h-6 sm:h-8 md:h-10 lg:h-12 bg-blue-600 rounded-sm pointer-events-none"
                     initial={{ scaleX: 0 }}
                     animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
                     transition={{ duration: 0.8, delay: 0.4, ease: "easeInOut" }}
@@ -58,7 +58,7 @@ export function BerkahStatsSection() {
                 <div className="relative inline-block pb-2 sm:pb-4">
                   {/* Animated Strip for KAH - Behind text */}
                   <motion.div
-                    className="absolute inset-x-0 bottom-0 h-4 sm:h-6 md:h-8 bg-yellow-500 rounded-sm pointer-events-none"
+                    className="absolute inset-x-0 bottom-0 h-6 sm:h-8 md:h-10 lg:h-12 bg-yellow-500 rounded-sm pointer-events-none"
                     initial={{ scaleX: 0 }}
                     animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
                     transition={{ duration: 0.8, delay: 0.7, ease: "easeInOut" }}
