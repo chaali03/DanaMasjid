@@ -8,10 +8,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
         hostname: 'i.pravatar.cc',
       },
     ],
@@ -87,14 +83,14 @@ const nextConfig = {
             key: 'Cross-Origin-Resource-Policy',
             value: 'cross-origin'
           },
-          // Comprehensive CSP with nonce support
+          // Comprehensive CSP with Trusted Types
           {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com https://maps.googleapis.com https://apis.google.com https://accounts.google.com https://ssl.gstatic.com https://www.google-analytics.com https://tagmanager.google.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com https://tagmanager.google.com",
-              "img-src 'self' data: blob: https: http: https://www.google-analytics.com https://www.googletagmanager.com https://ssl.gstatic.com",
+              "img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com https://ssl.gstatic.com https://i.pravatar.cc",
               "font-src 'self' data: https://fonts.gstatic.com",
               "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com wss://*.firebaseio.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.googletagmanager.com",
               "frame-src 'self' https://www.google.com https://www.recaptcha.net https://recaptcha.net https://*.firebaseapp.com https://accounts.google.com",
@@ -106,6 +102,8 @@ const nextConfig = {
               "frame-ancestors 'self'",
               "manifest-src 'self'",
               "media-src 'self' blob: data:",
+              "require-trusted-types-for 'script'",
+              "trusted-types 'none'",
               "upgrade-insecure-requests"
             ].join('; ')
           },

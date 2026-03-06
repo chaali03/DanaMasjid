@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   authors: [{ name: "DanaMasjid" }],
   creator: "DanaMasjid",
   publisher: "DanaMasjid",
-  generator: 'v0.app',
+  generator: 'byHidupTebe',
   manifest: '/favicon_io/site.webmanifest',
   openGraph: {
     type: 'website',
@@ -67,7 +67,6 @@ export default function RootLayout({
         {/* Preconnect to external domains for better performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://www.google.com" />
         <link rel="preconnect" href="https://www.gstatic.com" />
       </head>
