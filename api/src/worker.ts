@@ -56,6 +56,7 @@ app.use('*', async (c, next) => {
   const origin = c.req.header('origin') || ''
   const allowedOrigins = [
     'http://localhost:3000',
+    'https://danamasjid.netlify.app',
     'https://danamasjid.vercel.app',
   ]
   
