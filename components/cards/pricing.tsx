@@ -162,7 +162,7 @@ export function Pricing({
             }}
             className={cn(
               `rounded-2xl border-[1px] p-5 md:p-6 bg-background text-center lg:flex lg:flex-col lg:justify-center relative`,
-              plan.isPopular ? "border-primary border-2" : "border-border",
+              plan.isPopular ? "border-blue-500 border-2 shadow-lg shadow-blue-200/50" : "border-border",
               "flex flex-col",
               !plan.isPopular && "md:mt-5",
               index === 0 || index === 2
@@ -173,9 +173,9 @@ export function Pricing({
             )}
           >
             {plan.isPopular && (
-              <div className="absolute top-0 right-0 bg-primary py-0.5 px-2 rounded-bl-xl rounded-tr-xl flex items-center z-20">
-                <Star className="text-primary-foreground h-4 w-4 fill-current" />
-                <span className="text-primary-foreground ml-1 font-sans font-semibold">
+              <div className="absolute top-0 right-0 bg-blue-600 py-0.5 px-2 rounded-bl-xl rounded-tr-xl flex items-center z-20">
+                <Star className="text-white h-4 w-4 fill-current" />
+                <span className="text-white ml-1 font-sans font-semibold">
                   Popular
                 </span>
               </div>
@@ -237,10 +237,10 @@ export function Pricing({
                     variant: "outline",
                   }),
                   "group relative w-full gap-2 overflow-hidden text-sm md:text-base lg:text-lg font-semibold tracking-tighter py-2 md:py-3",
-                  "transform-gpu ring-offset-current transition-all duration-300 ease-out hover:ring-2 hover:ring-primary hover:ring-offset-1 hover:bg-primary hover:text-primary-foreground",
+                  "transform-gpu ring-offset-current transition-all duration-300 ease-out",
                   plan.isPopular
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-background text-foreground"
+                    ? "bg-yellow-500 text-white border-0 hover:bg-yellow-600 hover:shadow-lg"
+                    : "bg-background text-foreground hover:ring-2 hover:ring-primary hover:ring-offset-1 hover:bg-primary hover:text-primary-foreground"
                 )}
               >
                 {plan.buttonText}

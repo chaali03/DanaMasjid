@@ -66,7 +66,7 @@ const nextConfig = {
           // Permissions Policy - Restrict browser features
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), ambient-light-sensor=()'
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()'
           },
           // COOP - Relaxed for GTM compatibility but still secure
           {
