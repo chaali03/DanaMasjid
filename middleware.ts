@@ -1,144 +1,109 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Rate limiting store (in-memory for demo, use Redis/KV in production)
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
+// Rate limiting store (in production, use Redis or similar)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 
-// Rate limit configuration
-const RATE_LIMITS = {
-  '/login': { limit: 10, window: 300000 }, // 10 requests per 5 minutes
-  '/register': { limit: 5, window: 300000 }, // 5 requests per 5 minutes
-  '/forgot-password': { limit: 3, window: 600000 }, // 3 requests per 10 minutes
-  '/api': { limit: 100, window: 60000 }, // 100 requests per minute
-  default: { limit: 200, window: 60000 }, // 200 requests per minute
-}
-
-function getRateLimit(pathname: string) {
-  for (const [path, config] of Object.entries(RATE_LIMITS)) {
-    if (pathname.startsWith(path)) {
-      return config
-    }
-  }
-  return RATE_LIMITS.default
-}
-
-function checkRateLimit(ip: string, pathname: string): { allowed: boolean; retryAfter?: number } {
-  const config = getRateLimit(pathname)
-  const key = `${ip}:${pathname}`
-  const now = Date.now()
-  
-  // Clean up old entries
-  for (const [k, v] of rateLimitStore.entries()) {
-    if (now > v.resetTime) {
-      rateLimitStore.delete(k)
-    }
-  }
-  
-  let entry = rateLimitStore.get(key)
-  
-  if (!entry || now > entry.resetTime) {
-    entry = { count: 0, resetTime: now + config.window }
-    rateLimitStore.set(key, entry)
-  }
-  
-  entry.count++
-  
-  if (entry.count > config.limit) {
-    return {
-      allowed: false,
-      retryAfter: Math.ceil((entry.resetTime - now) / 1000)
-    }
-  }
-  
-  return { allowed: true }
-}
-
+// Security middleware with advanced protection
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  const response = NextResponse.next()
   
-  // Skip middleware for static files
-  if (
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/static') ||
-    pathname.startsWith('/images') ||
-    pathname.startsWith('/vidio') ||
-    pathname.includes('.')
-  ) {
-    return NextResponse.next()
-  }
-  
-  // Skip rate limiting for GET requests to pages (only rate limit POST/API calls)
-  // This allows users to view the page even if rate limited, but prevents form submissions
-  if (request.method === 'GET' && !pathname.startsWith('/api')) {
-    return NextResponse.next()
-  }
-  
-  // Get client IP (Vercel provides this via headers)
+  // Get client IP (fallback to x-forwarded-for header)
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
              request.headers.get('x-real-ip') || 
              'unknown'
   
-  // Rate limiting
-  const rateCheck = checkRateLimit(ip, pathname)
+  // Rate Limiting (100 requests per minute per IP)
+  const now = Date.now()
+  const rateLimitWindow = 60000 // 1 minute
+  const maxRequests = 100
   
-  if (!rateCheck.allowed) {
-    return new NextResponse(
-      JSON.stringify({
-        error: 'Too Many Requests',
-        message: 'Terlalu banyak permintaan. Silakan coba lagi nanti.',
-        retryAfter: rateCheck.retryAfter
-      }),
-      {
-        status: 429,
-        headers: {
-          'Content-Type': 'application/json',
-          'Retry-After': String(rateCheck.retryAfter),
-          'X-RateLimit-Limit': String(getRateLimit(pathname).limit),
-          'X-RateLimit-Remaining': '0',
-        }
+  const clientData = rateLimitMap.get(ip)
+  
+  if (clientData) {
+    if (now < clientData.resetTime) {
+      if (clientData.count >= maxRequests) {
+        return new NextResponse('Too Many Requests', {
+          status: 429,
+          headers: {
+            'Retry-After': String(Math.ceil((clientData.resetTime - now) / 1000)),
+            'X-RateLimit-Limit': String(maxRequests),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': String(clientData.resetTime),
+          },
+        })
       }
-    )
+      clientData.count++
+    } else {
+      // Reset window
+      rateLimitMap.set(ip, { count: 1, resetTime: now + rateLimitWindow })
+    }
+  } else {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + rateLimitWindow })
   }
   
-  // Security headers
-  const response = NextResponse.next()
+  // Clean up old entries (every 100 requests)
+  if (Math.random() < 0.01) {
+    for (const [key, value] of rateLimitMap.entries()) {
+      if (now > value.resetTime + rateLimitWindow) {
+        rateLimitMap.delete(key)
+      }
+    }
+  }
   
   // Add rate limit headers
-  const config = getRateLimit(pathname)
-  const entry = rateLimitStore.get(`${ip}:${pathname}`)
-  response.headers.set('X-RateLimit-Limit', String(config.limit))
-  response.headers.set('X-RateLimit-Remaining', String(Math.max(0, config.limit - (entry?.count || 0))))
+  const currentData = rateLimitMap.get(ip)!
+  response.headers.set('X-RateLimit-Limit', String(maxRequests))
+  response.headers.set('X-RateLimit-Remaining', String(maxRequests - currentData.count))
+  response.headers.set('X-RateLimit-Reset', String(currentData.resetTime))
   
-  // Bot detection
-  const userAgent = request.headers.get('user-agent') || ''
-  const suspiciousPatterns = [
-    /bot/i,
-    /crawler/i,
-    /spider/i,
-    /scraper/i,
-  ]
+  // Additional Security Headers (complementing next.config.mjs)
+  response.headers.set('X-Request-ID', crypto.randomUUID())
+  response.headers.set('X-Robots-Tag', 'index, follow')
   
-  const legitimateBots = [
-    /googlebot/i,
-    /bingbot/i,
-    /slurp/i,
-  ]
+  // Prevent information disclosure
+  response.headers.delete('X-Powered-By')
+  response.headers.delete('Server')
   
-  const isSuspicious = suspiciousPatterns.some(pattern => pattern.test(userAgent))
-  const isLegitimate = legitimateBots.some(pattern => pattern.test(userAgent))
+  // Add timing information for monitoring
+  response.headers.set('X-Response-Time', String(Date.now() - now))
   
-  if (isSuspicious && !isLegitimate && !pathname.startsWith('/api')) {
-    return new NextResponse('Access Denied', {
-      status: 403,
-      headers: {
-        'Content-Type': 'text/plain',
-      }
-    })
+  // COOP relaxed for GTM but still secure
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups')
+  response.headers.set('Cross-Origin-Embedder-Policy', 'unsafe-none')
+  response.headers.set('Cross-Origin-Resource-Policy', 'cross-origin')
+  
+  // Security headers for specific paths
+  const pathname = request.nextUrl.pathname
+  
+  // API routes - stricter security
+  if (pathname.startsWith('/api/')) {
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+    response.headers.set('X-Frame-Options', 'DENY')
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+  }
+  
+  // Static assets - aggressive caching
+  if (
+    pathname.startsWith('/_next/static/') ||
+    pathname.startsWith('/images/') ||
+    pathname.startsWith('/vidio/') ||
+    pathname.match(/\.(jpg|jpeg|png|gif|svg|webp|ico|woff|woff2|ttf|eot)$/)
+  ) {
+    response.headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+  }
+  
+  // Prevent clickjacking on auth pages
+  if (pathname.startsWith('/login') || pathname.startsWith('/register')) {
+    response.headers.set('X-Frame-Options', 'DENY')
   }
   
   return response
 }
 
+// Configure which routes to run middleware on
 export const config = {
   matcher: [
     /*
@@ -146,8 +111,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder
+     * - public files (public folder)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
