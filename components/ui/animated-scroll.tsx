@@ -5,7 +5,7 @@ import { useScroll, useTransform, motion } from 'framer-motion';
 
 const pages = [
   {
-    leftBgImage: 'https://images.unsplash.com/photo-1748968218568-a5eac621e65c?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw1M3x8fGVufDB8fHx8fA%3D%3D',
+    leftBgImage: '/images/scroll/1.webp',
     rightBgImage: null,
     leftContent: null,
     rightContent: {
@@ -15,7 +15,7 @@ const pages = [
   },
   {
     leftBgImage: null,
-    rightBgImage: 'https://images.unsplash.com/photo-1749315099905-9cf6cabd9126?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw0Nnx8fGVufDB8fHx8fA%3D%3D',
+    rightBgImage: '/images/scroll/2.webp',
     leftContent: {
       heading: 'Mudah & Aman',
       description: 'Platform donasi yang mudah digunakan dan terpercaya',
@@ -23,7 +23,7 @@ const pages = [
     rightContent: null,
   },
   {
-    leftBgImage: 'https://images.unsplash.com/photo-1747893541442-a139096ea39c?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyMzZ8fHxlbnwwfHx8fHw%3D',
+    leftBgImage: '/images/scroll/3.webp',
     rightBgImage: null,
     leftContent: null,
     rightContent: {
@@ -33,7 +33,7 @@ const pages = [
   },
   {
     leftBgImage: null,
-    rightBgImage: 'https://images.unsplash.com/photo-1748164521179-ae3b61c6dd90?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyMjR8fHxlbnwwfHx8fHw%3D',
+    rightBgImage: '/images/scroll/4.webp',
     leftContent: {
       heading: 'Komunitas',
       description: 'Bergabung dengan ribuan donatur di seluruh Indonesia',
@@ -41,7 +41,7 @@ const pages = [
     rightContent: null,
   },
   {
-    leftBgImage: 'https://images.unsplash.com/photo-1742626157052-f5a373a727ef?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyMnx8fGVufDB8fHx8fA%3D%3D',
+    leftBgImage: '/images/scroll/5.webp',
     rightBgImage: null,
     leftContent: null,
     rightContent: {
