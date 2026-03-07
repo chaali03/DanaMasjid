@@ -113,35 +113,35 @@ export function TestimonialsSection() {
                 {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => (
                   <div
                     key={`row1-${index}`}
-                    className="flex-shrink-0 w-full sm:w-[450px] bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 relative overflow-hidden group"
+                    className="flex-shrink-0 w-[320px] sm:w-[400px] md:w-[450px] bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 relative overflow-hidden group"
                   >
                     <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-10 transition-opacity">
                       <Quote className="w-full h-full" style={{ color: testimonial.color }} />
                     </div>
                     
                     <div className="relative">
-                      <div className="flex items-center gap-4 mb-6">
+                      <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                         <div className="flex-shrink-0">
                           <Image
                             src={testimonial.avatar}
                             alt={testimonial.name}
                             width={56}
                             height={56}
-                            className="w-14 h-14 rounded-full object-cover ring-2 ring-slate-100"
+                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover ring-2 ring-slate-100"
                           />
                         </div>
-                        <div className="flex-1">
-                          <p className="text-slate-900 font-bold text-base">{testimonial.name}</p>
-                          <p className="text-slate-500 text-sm">{testimonial.role}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-slate-900 font-bold text-sm sm:text-base truncate">{testimonial.name}</p>
+                          <p className="text-slate-500 text-xs sm:text-sm truncate">{testimonial.role}</p>
                           <div className="flex gap-1 mt-1">
                             {Array.from({ length: testimonial.rating }).map((_, i) => (
-                              <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                              <Star key={i} className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-yellow-400 text-yellow-400" />
                             ))}
                           </div>
                         </div>
                       </div>
                       
-                      <p className="text-slate-700 leading-relaxed text-base">
+                      <p className="text-slate-700 leading-relaxed text-sm sm:text-base break-words">
                         &ldquo;{testimonial.content}&rdquo;
                       </p>
                     </div>
@@ -161,35 +161,35 @@ export function TestimonialsSection() {
                 {[...testimonials2, ...testimonials2, ...testimonials2].map((testimonial, index) => (
                   <div
                     key={`row2-${index}`}
-                    className="flex-shrink-0 w-full sm:w-[450px] bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 relative overflow-hidden group"
+                    className="flex-shrink-0 w-[320px] sm:w-[400px] md:w-[450px] bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 relative overflow-hidden group"
                   >
                     <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-10 transition-opacity">
                       <Quote className="w-full h-full" style={{ color: testimonial.color }} />
                     </div>
                     
                     <div className="relative">
-                      <div className="flex items-center gap-4 mb-6">
+                      <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                         <div className="flex-shrink-0">
                           <Image
                             src={testimonial.avatar}
                             alt={testimonial.name}
                             width={56}
                             height={56}
-                            className="w-14 h-14 rounded-full object-cover ring-2 ring-slate-100"
+                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover ring-2 ring-slate-100"
                           />
                         </div>
-                        <div className="flex-1">
-                          <p className="text-slate-900 font-bold text-base">{testimonial.name}</p>
-                          <p className="text-slate-500 text-sm">{testimonial.role}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-slate-900 font-bold text-sm sm:text-base truncate">{testimonial.name}</p>
+                          <p className="text-slate-500 text-xs sm:text-sm truncate">{testimonial.role}</p>
                           <div className="flex gap-1 mt-1">
                             {Array.from({ length: testimonial.rating }).map((_, i) => (
-                              <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                              <Star key={i} className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-yellow-400 text-yellow-400" />
                             ))}
                           </div>
                         </div>
                       </div>
                       
-                      <p className="text-slate-700 leading-relaxed text-base">
+                      <p className="text-slate-700 leading-relaxed text-sm sm:text-base break-words">
                         &ldquo;{testimonial.content}&rdquo;
                       </p>
                     </div>
@@ -201,7 +201,7 @@ export function TestimonialsSection() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{__html: `
         @keyframes scroll-right {
           0% {
             transform: translateX(0);
@@ -227,7 +227,7 @@ export function TestimonialsSection() {
         .animate-scroll-left {
           animation: scroll-left 40s linear infinite alternate;
         }
-      `}</style>
+      `}} />
     </section>
   )
 }

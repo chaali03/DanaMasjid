@@ -65,6 +65,7 @@ export function HomePage() {
 
   const dimensions = getDimensions()
   const [progress, setProgress] = useState(0)
+  const [expandedCard, setExpandedCard] = useState<number | null>(null)
   
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     // Smooth progression untuk mobile
@@ -202,6 +203,78 @@ export function HomePage() {
               TRANSPARAN
             </span>
           </div>
+          
+          {/* Collapsible Stats Cards - Below TRANSPARAN - Desktop Only */}
+          {topStyle.opacity > 0.8 && (
+            <div className="mt-4 space-y-2 hidden lg:block">
+              {[
+                { 
+                  value: "351K", 
+                  label: "Total Donasi Terkumpul", 
+                  color: "from-blue-100 to-cyan-100", 
+                  textColor: "text-blue-900",
+                  details: "Rp 351.234.567 terkumpul dari 1,234 donatur aktif yang tersebar di 156 masjid terdaftar di seluruh Indonesia"
+                },
+                { 
+                  value: "99%", 
+                  label: "Tingkat Kepuasan Pengguna", 
+                  color: "from-yellow-100 to-orange-100", 
+                  textColor: "text-orange-900",
+                  details: "Pengguna sangat puas dengan kemudahan berdonasi, transparansi laporan keuangan real-time, dan keamanan transaksi"
+                },
+                { 
+                  value: "4.89", 
+                  label: "Rating Aplikasi", 
+                  color: "from-pink-100 to-rose-100", 
+                  textColor: "text-rose-900",
+                  details: "Rating tinggi dari 5,678 ulasan pengguna di Google Play Store dan App Store dengan fitur yang terus berkembang"
+                }
+              ].map((stat, index) => (
+                <div
+                  key={index}
+                  className={`bg-gradient-to-r ${stat.color} rounded-xl sm:rounded-2xl shadow-lg border-2 border-white/50 backdrop-blur-sm overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl`}
+                  style={{
+                    opacity: topStyle.opacity,
+                    transform: `translateY(${topStyle.opacity < 1 ? 10 : 0}px)`,
+                    transition: `all 0.4s ease-out ${index * 0.1}s`,
+                  }}
+                  onClick={() => setExpandedCard(expandedCard === index ? null : index)}
+                >
+                  <div className="p-3 sm:p-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`text-2xl sm:text-3xl md:text-4xl font-bold ${stat.textColor}`}>
+                        {stat.value}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-[10px] sm:text-xs ${stat.textColor} opacity-80 leading-tight`}>
+                          {stat.label}
+                        </p>
+                      </div>
+                      <svg 
+                        className={`w-4 h-4 sm:w-5 sm:h-5 ${stat.textColor} transition-transform duration-300 ${expandedCard === index ? 'rotate-180' : ''}`}
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  {/* Expanded Content */}
+                  <div 
+                    className={`overflow-hidden transition-all duration-300 ${expandedCard === index ? 'max-h-20' : 'max-h-0'}`}
+                  >
+                    <div className={`px-3 sm:px-4 pb-3 sm:pb-4 pt-0`}>
+                      <p className={`text-[9px] sm:text-[10px] ${stat.textColor} opacity-70 leading-relaxed`}>
+                        {stat.details}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Center Circle with Images */}

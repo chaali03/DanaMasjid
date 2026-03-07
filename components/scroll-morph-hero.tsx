@@ -65,11 +65,9 @@ function FlipCard({
                 opacity: target.opacity,
             }}
             transition={{
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-                mass: 0.2,
-                restDelta: 0.001
+                type: "tween",
+                duration: 0.3,
+                ease: [0.25, 0.1, 0.25, 1]
             }}
 
             // Initial style
@@ -80,20 +78,20 @@ function FlipCard({
                 transformStyle: "preserve-3d",
                 perspective: "1000px",
             }}
-            className="cursor-pointer group"
-            onClick={() => setIsFlipped(!isFlipped)}
+            className="cursor-pointer group select-none"
+            onPointerDown={(e) => {
+                e.stopPropagation();
+                setIsFlipped(!isFlipped);
+            }}
             whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
         >
             <motion.div
                 className="relative h-full w-full"
                 style={{ transformStyle: "preserve-3d" }}
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
                 transition={{ 
-                    duration: 0.5, 
-                    type: "spring", 
-                    stiffness: 150, 
-                    damping: 20 
+                    duration: 0.1, 
+                    ease: "linear"
                 }}
             >
                 {/* Front Face */}
@@ -121,15 +119,15 @@ function FlipCard({
                 >
                     <div className="text-center space-y-0.5 sm:space-y-1">
                         {/* Arabic Text */}
-                        <p className="text-[10px] sm:text-sm font-bold text-yellow-300 mb-0.5 sm:mb-1" style={{ fontFamily: 'serif' }}>
+                        <p className="text-[8px] sm:text-[10px] md:text-xs font-bold text-yellow-300 mb-0.5 sm:mb-1" style={{ fontFamily: 'serif' }}>
                             {content.arabic}
                         </p>
                         {/* Indonesian Text */}
-                        <p className="text-[8px] sm:text-[10px] font-semibold text-white uppercase tracking-wide">
+                        <p className="text-[7px] sm:text-[8px] md:text-[9px] font-semibold text-white uppercase tracking-wide">
                             {content.indo}
                         </p>
                         {/* Description */}
-                        <p className="text-[6px] sm:text-[7px] text-emerald-100 leading-tight mt-0.5 sm:mt-1">
+                        <p className="text-[5px] sm:text-[6px] md:text-[7px] text-emerald-100 leading-tight mt-0.5 sm:mt-1">
                             {content.desc}
                         </p>
                     </div>
@@ -204,10 +202,10 @@ export default function IntroAnimation() {
 
     // Sponsor logos data
     const sponsors = [
-        { src: "/images/sponsor/alikhlas.webp", alt: "Al Ikhlas" },
+        { src: "/images/sponsor/alikhlas.webp", alt: "Masjid Al Ikhlas PIK" },
         { src: "/images/sponsor/pondokIT.webp", alt: "Pondok IT" },
-        { src: "/images/sponsor/tb.webp", alt: "TB" },
-        { src: "/images/sponsor/ysb.webp", alt: "YSB" },
+        { src: "/images/sponsor/tb.webp", alt: "SMK Taruna Bhakti" },
+        { src: "/images/sponsor/ysb.webp", alt: "Yayasan Setia Bhakti" },
     ];
 
     // Shuffle sponsor positions every 30 seconds
@@ -279,29 +277,31 @@ export default function IntroAnimation() {
     // Happens between scroll 0 and 800 (increased for smoother transition)
     const morphProgress = useTransform(virtualScroll, [0, 800], [0, 1]);
     const smoothMorph = useSpring(morphProgress, { 
-        stiffness: 100, 
-        damping: 15,
-        mass: 0.2,
-        restDelta: 0.001
+        stiffness: 120, 
+        damping: 20,
+        mass: 0.5,
+        restDelta: 0.0001,
+        restSpeed: 0.0001
     });
 
     // 2. Scroll Rotation (Shuffling): Starts after morph (e.g., > 800)
     // Rotates the bottom arc as user continues scrolling
     const scrollRotate = useTransform(virtualScroll, [800, 3500], [0, 360]);
     const smoothScrollRotate = useSpring(scrollRotate, { 
-        stiffness: 80, 
-        damping: 15,
-        mass: 0.3,
-        restDelta: 0.001
+        stiffness: 100, 
+        damping: 20,
+        mass: 0.5,
+        restDelta: 0.0001,
+        restSpeed: 0.0001
     });
 
     // --- Mouse Parallax ---
     const mouseX = useMotionValue(0);
     const smoothMouseX = useSpring(mouseX, { 
-        stiffness: 80, 
-        damping: 20,
-        mass: 0.2,
-        restDelta: 0.001
+        stiffness: 100, 
+        damping: 25,
+        mass: 0.5,
+        restDelta: 0.0001
     });
 
     useEffect(() => {
