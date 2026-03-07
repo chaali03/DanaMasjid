@@ -51,6 +51,30 @@ export default function RegisterPage() {
   const [nicknameAvailable, setNicknameAvailable] = useState<boolean | null>(null)
   const [emailChecking, setEmailChecking] = useState(false)
   const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null)
+  const [otpStepStartTime, setOtpStepStartTime] = useState<number | null>(null)
+
+  // OTP Step Timeout - redirect to login after 1 hour of inactivity
+  useEffect(() => {
+    if (currentStep === 2) {
+      // Set start time when entering OTP step
+      if (!otpStepStartTime) {
+        setOtpStepStartTime(Date.now())
+      }
+      
+      // Check every minute if 1 hour has passed
+      const timeoutCheck = setInterval(() => {
+        if (otpStepStartTime && Date.now() - otpStepStartTime > 60 * 60 * 1000) {
+          // 1 hour passed, redirect to login
+          router.push('/login')
+        }
+      }, 60000) // Check every minute
+      
+      return () => clearInterval(timeoutCheck)
+    } else {
+      // Reset timer when leaving OTP step
+      setOtpStepStartTime(null)
+    }
+  }, [currentStep, otpStepStartTime, router])
 
   // Countdown timer for resend OTP
   useEffect(() => {

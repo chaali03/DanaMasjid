@@ -61,6 +61,56 @@ export default function DaftarMasjidPage() {
   const [csrfToken, setCSRFToken] = useState("")
   const [honeypot, setHoneypot] = useState("") // Bot detection
   const [sessionInitialized, setSessionInitialized] = useState(false)
+  const [formStartTime, setFormStartTime] = useState<number | null>(null)
+  const [lastActivityTime, setLastActivityTime] = useState<number>(Date.now())
+
+  // Track form inactivity and session timeout
+  useEffect(() => {
+    // Set start time when form is initialized
+    if (!formStartTime) {
+      setFormStartTime(Date.now())
+    }
+
+    // Update last activity time on any user interaction
+    const updateActivity = () => {
+      setLastActivityTime(Date.now())
+    }
+
+    // Listen to user interactions
+    window.addEventListener('mousemove', updateActivity)
+    window.addEventListener('keydown', updateActivity)
+    window.addEventListener('click', updateActivity)
+    window.addEventListener('scroll', updateActivity)
+
+    // Check timeouts every minute
+    const timeoutCheck = setInterval(() => {
+      const now = Date.now()
+      const inactiveTime = now - lastActivityTime
+      const totalTime = formStartTime ? now - formStartTime : 0
+
+      // Redirect to login if inactive for 1 hour
+      if (inactiveTime > 60 * 60 * 1000) {
+        localStorage.setItem('session_expired', 'inactive')
+        router.push('/login?message=Sesi Anda telah berakhir karena tidak aktif')
+        return
+      }
+
+      // Redirect to login if total session exceeds 24 hours
+      if (totalTime > 24 * 60 * 60 * 1000) {
+        localStorage.setItem('session_expired', 'timeout')
+        router.push('/login?message=Sesi Anda telah berakhir. Silakan login kembali')
+        return
+      }
+    }, 60000) // Check every minute
+
+    return () => {
+      window.removeEventListener('mousemove', updateActivity)
+      window.removeEventListener('keydown', updateActivity)
+      window.removeEventListener('click', updateActivity)
+      window.removeEventListener('scroll', updateActivity)
+      clearInterval(timeoutCheck)
+    }
+  }, [formStartTime, lastActivityTime, router])
 
   // Initialize session and device fingerprint
   useEffect(() => {

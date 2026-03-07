@@ -32,6 +32,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!auth) return
+    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user)
       setLoading(false)
@@ -41,8 +43,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signInWithGoogle = async () => {
+    if (!auth || !db) throw new Error('Firebase not initialized')
+    
     try {
-      const result = await signInWithPopup(auth, googleProvider)
+      const result = await signInWithPopup(auth, googleProvider!)
       const user = result.user
 
       // Save userId to localStorage
@@ -74,6 +78,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signUpWithEmail = async (email: string, password: string, userData: any) => {
+    if (!auth || !db) throw new Error('Firebase not initialized')
+    
     try {
       console.log('Creating Firebase user account...')
       const result = await createUserWithEmailAndPassword(auth, email, password)
@@ -126,9 +132,67 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signInWithEmail = async (email: string, password: string) => {
+    if (!auth || !db) throw new Error('Firebase not initialized')
+    
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
       const user = result.user
+      
+      // Check device fingerprint
+      const currentDevice = navigator.userAgent
+      const userRef = doc(db, 'users', user.uid)
+      const userSnap = await getDoc(userRef)
+      
+      if (userSnap.exists()) {
+        const userData = userSnap.data()
+        const lastDevice = userData.deviceFingerprint
+        const lastLogin = userData.lastLoginAt ? new Date(userData.lastLoginAt) : null
+        const now = new Date()
+        
+        // Check if device changed and last login was more than 24 hours ago
+        if (lastDevice && lastDevice !== currentDevice && lastLogin) {
+          const hoursSinceLastLogin = (now.getTime() - lastLogin.getTime()) / (1000 * 60 * 60)
+          
+          if (hoursSinceLastLogin > 24) {
+            // Device not recognized and 24+ hours since last login
+            // Generate verification token
+            const verificationToken = Math.random().toString(36).substring(2) + Date.now().toString(36)
+            
+            // Save verification token to Firestore
+            await setDoc(userRef, {
+              deviceVerificationToken: verificationToken,
+              deviceVerificationExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
+              pendingDeviceFingerprint: currentDevice
+            }, { merge: true })
+            
+            // Send verification email
+            try {
+              await fetch('/api/send-device-verification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  email: email,
+                  userName: userData.name || 'User',
+                  deviceInfo: currentDevice,
+                  verificationToken: verificationToken
+                })
+              })
+            } catch (emailError) {
+              console.error('Failed to send verification email:', emailError)
+            }
+            
+            // Trigger device verification
+            localStorage.setItem('device_verification_required', 'true')
+            localStorage.setItem('device_verification_email', email)
+            
+            // Sign out immediately
+            await firebaseSignOut(auth)
+            
+            // Throw error to show device verification modal
+            throw new Error('DEVICE_NOT_RECOGNIZED')
+          }
+        }
+      }
       
       // Save userId to localStorage immediately for faster UX
       localStorage.setItem('userId', user.uid)
@@ -143,6 +207,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       return user
     } catch (error: any) {
+      // Handle device verification error
+      if (error.message === 'DEVICE_NOT_RECOGNIZED') {
+        throw new Error('Perangkat ini tidak diakui. Silakan cek surat elektronik Anda untuk memverifikasi perangkat Anda.')
+      }
+      
       // Suppress offline errors in console
       if (error?.code === 'unavailable' || error?.message?.includes('client is offline')) {
         console.warn('Firebase offline - attempting to continue with cached data')
@@ -156,6 +225,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Background function to update user data (non-blocking)
   const updateUserLoginData = async (userId: string) => {
+    if (!db) return
+    
     try {
       const userRef = doc(db, 'users', userId)
       const userSnap = await getDoc(userRef)
@@ -190,6 +261,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
+    if (!auth) throw new Error('Firebase not initialized')
+    
     try {
       await firebaseSignOut(auth)
       

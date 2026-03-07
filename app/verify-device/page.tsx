@@ -1,79 +1,97 @@
-"use client";
+"use client"
 
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
-import { Shield, Mail, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
+import { motion } from 'framer-motion'
+import { CheckCircle2, XCircle, Loader2 } from 'lucide-react'
 
-function VerifyDeviceContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+export default function VerifyDevicePage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const token = searchParams.get('token')
   
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-  const [message, setMessage] = useState("");
-  const [countdown, setCountdown] = useState(5);
+  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     if (!token) {
-      setStatus("error");
-      setMessage("Token verifikasi tidak valid");
-      return;
+      setStatus('error')
+      setMessage('Token verifikasi tidak valid')
+      return
     }
 
-    verifyDevice();
-  }, [token]);
-
-  useEffect(() => {
-    if (status === "success" && countdown > 0) {
-      const timer = setTimeout(() => {
-        setCountdown(countdown - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-
-    if (status === "success" && countdown === 0) {
-      router.push("/login");
-    }
-  }, [status, countdown, router]);
+    verifyDevice()
+  }, [token])
 
   const verifyDevice = async () => {
-    try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-      const response = await fetch(`${API_URL}/api/auth/verify-device`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok && data.success) {
-        setStatus("success");
-        setMessage("Perangkat berhasil diverifikasi! Anda akan diarahkan ke halaman login.");
-      } else {
-        setStatus("error");
-        setMessage(data.message || "Verifikasi gagal");
-      }
-    } catch (error: any) {
-      setStatus("error");
-      setMessage(error.message || "Terjadi kesalahan saat verifikasi");
+    if (!db) {
+      setStatus('error')
+      setMessage('Firebase tidak tersedia')
+      return
     }
-  };
+    
+    try {
+      // Search for user with this verification token
+      const { collection, query, where, getDocs } = await import('firebase/firestore')
+      const usersRef = collection(db, 'users')
+      const q = query(usersRef, where('deviceVerificationToken', '==', token))
+      const querySnapshot = await getDocs(q)
+
+      if (querySnapshot.empty) {
+        setStatus('error')
+        setMessage('Token verifikasi tidak ditemukan atau sudah digunakan')
+        return
+      }
+
+      const userDoc = querySnapshot.docs[0]
+      const userData = userDoc.data()
+
+      // Check if token expired
+      const expiryDate = new Date(userData.deviceVerificationExpiry)
+      if (new Date() > expiryDate) {
+        setStatus('error')
+        setMessage('Token verifikasi sudah kedaluwarsa. Silakan login kembali.')
+        return
+      }
+
+      // Update user document - approve the new device
+      const userRef = doc(db, 'users', userDoc.id)
+      await setDoc(userRef, {
+        deviceFingerprint: userData.pendingDeviceFingerprint,
+        deviceVerificationToken: null,
+        deviceVerificationExpiry: null,
+        pendingDeviceFingerprint: null,
+        deviceVerifiedAt: new Date().toISOString()
+      }, { merge: true })
+
+      setStatus('success')
+      setMessage('Perangkat berhasil diverifikasi! Anda sekarang dapat login.')
+
+      // Redirect to login after 3 seconds
+      setTimeout(() => {
+        router.push('/login?message=Perangkat berhasil diverifikasi. Silakan login.')
+      }, 3000)
+
+    } catch (error) {
+      console.error('Error verifying device:', error)
+      setStatus('error')
+      setMessage('Terjadi kesalahan saat memverifikasi perangkat')
+    }
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-cyan-50 p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8"
       >
         <div className="text-center">
-          {status === "loading" && (
+          {status === 'loading' && (
             <>
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-              </div>
+              <Loader2 className="w-16 h-16 mx-auto text-blue-600 animate-spin mb-4" />
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 Memverifikasi Perangkat
               </h1>
@@ -83,59 +101,40 @@ function VerifyDeviceContent() {
             </>
           )}
 
-          {status === "success" && (
+          {status === 'success' && (
             <>
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600" />
-              </div>
+              <CheckCircle2 className="w-16 h-16 mx-auto text-green-600 mb-4" />
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 Verifikasi Berhasil!
               </h1>
-              <p className="text-gray-600 mb-4">{message}</p>
-              <p className="text-sm text-gray-500">
-                Redirect dalam {countdown} detik...
+              <p className="text-gray-600">
+                {message}
+              </p>
+              <p className="text-sm text-gray-500 mt-4">
+                Anda akan diarahkan ke halaman login...
               </p>
             </>
           )}
 
-          {status === "error" && (
+          {status === 'error' && (
             <>
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <XCircle className="w-8 h-8 text-red-600" />
-              </div>
+              <XCircle className="w-16 h-16 mx-auto text-red-600 mb-4" />
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 Verifikasi Gagal
               </h1>
-              <p className="text-gray-600 mb-6">{message}</p>
+              <p className="text-gray-600 mb-6">
+                {message}
+              </p>
               <button
-                onClick={() => router.push("/login")}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                onClick={() => router.push('/login')}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Kembali ke Login
               </button>
             </>
           )}
         </div>
-
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Shield className="w-4 h-4" />
-            <span>Keamanan akun Anda adalah prioritas kami</span>
-          </div>
-        </div>
       </motion.div>
     </div>
-  );
-}
-
-export default function VerifyDevicePage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    }>
-      <VerifyDeviceContent />
-    </Suspense>
-  );
+  )
 }
