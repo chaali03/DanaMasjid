@@ -57,7 +57,7 @@ export function StatsSection() {
   }, [isVisible])
 
   return (
-    <section id="stats-section" className="py-24 px-6 bg-background">
+    <section id="stats-section" className="py-24 px-6 bg-white">
       <div className="max-w-4xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
           <div

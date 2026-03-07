@@ -60,7 +60,7 @@ const testimonials2 = [
 
 export function TestimonialsSection() {
   return (
-    <section id="testimonials" className="py-32 px-6 bg-gradient-to-b from-white to-slate-50">
+    <section id="testimonials" className="py-32 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-4">

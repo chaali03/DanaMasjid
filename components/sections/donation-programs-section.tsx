@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 
 export function DonationProgramsSection() {
   return (
-    <section id="pricing" className="py-16 md:py-32 px-6 bg-gradient-to-b from-slate-50 to-white lg:mt-142">
+    <section id="pricing" className="py-8 md:py-12 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <motion.div
@@ -366,20 +366,6 @@ export function DonationProgramsSection() {
 
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes spin-slow {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 8s linear infinite;
-        }
-      `}</style>
     </section>
   )
 }

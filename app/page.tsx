@@ -10,7 +10,6 @@ import { CTASection } from "@/components/sections"
 import { Footer } from "@/components/layout"
 import IntroAnimation from "@/components/scroll-morph-hero"
 import { HomePage as ScrollingAnimation } from "@/components/scrolling-animation"
-import ScrollAdventure from "@/components/ui/animated-scroll"
  
  
 
@@ -33,7 +32,6 @@ export default function Home() {
       <ServicesSection />
       <FeaturesSection />
       <CTASection />
-      <ScrollAdventure />
       <IntroAnimation />
       <DonationProgramsSection />
       <ScrollingAnimation />

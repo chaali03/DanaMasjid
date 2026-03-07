@@ -315,11 +315,12 @@ export default function IntroAnimation() {
     return (
         <div
             ref={containerRef}
-            className="relative h-[500vh] w-full bg-[#FAFAFA]"
+            className="relative h-[500vh] w-full bg-white"
             style={{ overscrollBehavior: "contain" }}
         >
             {/* Pinned viewport */}
             <div ref={pinnedRef} className="sticky top-0 h-screen overflow-hidden flex flex-col items-center justify-center perspective-1000">
+
 
                 {/* Intro Text (Fades out) */}
                 <div className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-1/2 -translate-y-1/2">

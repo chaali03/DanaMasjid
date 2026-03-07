@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react"
 
 export function DonationHeroSection() {
   return (
-    <section className="relative py-20 px-6 overflow-hidden bg-gradient-to-b from-white to-slate-50">
+    <section className="relative py-20 px-6 overflow-hidden bg-white">
       <div className="max-w-7xl mx-auto">
         {/* Main Content */}
         <div className="text-center mb-16">
