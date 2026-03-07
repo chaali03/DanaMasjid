@@ -107,6 +107,18 @@ export function proxy(request: NextRequest) {
     response.headers.set('Expires', '0')
   }
   
+  // CSS files - Ensure correct MIME type
+  if (pathname.endsWith('.css')) {
+    response.headers.set('Content-Type', 'text/css; charset=utf-8')
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+  }
+  
+  // JavaScript files - Ensure correct MIME type
+  if (pathname.endsWith('.js')) {
+    response.headers.set('Content-Type', 'application/javascript; charset=utf-8')
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+  }
+  
   // Static assets - aggressive caching
   if (
     pathname.startsWith('/_next/static/') ||
@@ -115,6 +127,7 @@ export function proxy(request: NextRequest) {
     pathname.match(/\.(jpg|jpeg|png|gif|svg|webp|ico|woff|woff2|ttf|eot)$/)
   ) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+    response.headers.set('X-Content-Type-Options', 'nosniff')
   }
   
   // Prevent clickjacking on auth pages
