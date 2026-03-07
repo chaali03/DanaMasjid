@@ -5,6 +5,7 @@ import { QueryProvider, RecaptchaProvider, SecurityProvider } from "@/components
 import { AuthProvider } from "@/lib/auth-context"
 import { ScrollProgress } from "@/components/ui/scroll-progress"
 import { BackToTop } from "@/components/ui/back-to-top"
+import { SuppressExtensionErrors } from "@/components/suppress-extension-errors"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -73,6 +74,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
       </head>
       <body className={`font-sans antialiased`}>
+        <SuppressExtensionErrors />
         <ScrollProgress />
         <SecurityProvider>
           <AuthProvider>
