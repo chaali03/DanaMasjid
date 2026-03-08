@@ -81,38 +81,30 @@ export default function DaftarMasjidPage() {
     window.addEventListener('keydown', updateActivity)
     window.addEventListener('click', updateActivity)
     window.addEventListener('scroll', updateActivity)
+    window.addEventListener('touchstart', updateActivity)
+    window.addEventListener('touchmove', updateActivity)
 
-    // Check timeouts every minute
+    // Check timeouts every 30 seconds for more responsive timeout
     const timeoutCheck = setInterval(() => {
       const now = Date.now()
       const inactiveTime = now - lastActivityTime
-      const totalTime = formStartTime ? now - formStartTime : 0
 
-      // Redirect to login if inactive for 1 hour
+      // Redirect to login if inactive for 1 hour (no submit/no fill)
       if (inactiveTime > 60 * 60 * 1000) {
         localStorage.setItem('session_expired', 'inactive')
-        router.push('/login?message=Sesi Anda telah berakhir karena tidak aktif')
+        localStorage.setItem('redirect_after_login', '/daftar-masjid')
+        router.push('/login?message=Sesi Anda telah berakhir karena tidak aktif lebih dari 1 jam')
         return
       }
-
-      // Redirect to login if total session exceeds 24 hours
-      if (totalTime > 24 * 60 * 60 * 1000) {
-        const userId = localStorage.getItem('userId')
-        if (userId) {
-          // Mark this user as requiring device verification on next login
-          localStorage.setItem(`force_device_verification_${userId}`, 'true')
-        }
-        localStorage.setItem('session_expired', 'timeout')
-        router.push('/login?message=Sesi Anda telah berakhir. Silakan login kembali')
-        return
-      }
-    }, 60000) // Check every minute
+    }, 30000) // Check every 30 seconds
 
     return () => {
       window.removeEventListener('mousemove', updateActivity)
       window.removeEventListener('keydown', updateActivity)
       window.removeEventListener('click', updateActivity)
       window.removeEventListener('scroll', updateActivity)
+      window.removeEventListener('touchstart', updateActivity)
+      window.removeEventListener('touchmove', updateActivity)
       clearInterval(timeoutCheck)
     }
   }, [formStartTime, lastActivityTime, router])
