@@ -99,9 +99,12 @@ export default function LoginPage() {
       setSuccess(false)
       await signInWithEmail(email, password)
       
-      // Show success message, don't auto-redirect
+      // Show success message and redirect
       setSuccess(true)
-      setLoading(false)
+      
+      // Wait a bit then redirect to daftar-masjid
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      window.location.href = '/daftar-masjid'
     } catch (err: any) {
       setError("Email atau password salah")
       setLoading(false)
