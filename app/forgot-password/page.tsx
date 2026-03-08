@@ -1,7 +1,7 @@
 ﻿// @ts-nocheck
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,10 @@ import { VideoBackground } from '@/components/auth/video-background';
 import { sendPasswordResetEmail, fetchSignInMethodsForEmail } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { PolicyModal } from '@/components/policy-modal';
+import { useRouter } from 'next/navigation';
 
 export default function ForgotPasswordPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,6 +24,23 @@ export default function ForgotPasswordPage() {
   const [isHovered, setIsHovered] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [isPolicyOpen, setIsPolicyOpen] = useState(false);
+
+  // Check if user is already logged in, redirect to daftar-masjid
+  useEffect(() => {
+    const checkAuthAndRedirect = () => {
+      const userId = localStorage.getItem('userId')
+      const authCookie = document.cookie.split('; ').find(row => row.startsWith('auth_token='))
+      
+      if (userId && authCookie) {
+        // User is already logged in, redirect to daftar-masjid
+        const redirectPath = localStorage.getItem('redirect_after_login') || '/daftar-masjid'
+        localStorage.removeItem('redirect_after_login')
+        router.push(redirectPath)
+      }
+    }
+    
+    checkAuthAndRedirect()
+  }, [router])
 
   // Animation variants
   const containerVariants = {
