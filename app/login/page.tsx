@@ -273,7 +273,10 @@ export default function LoginPage() {
               fill
               className="object-cover"
               priority
-              sizes="(max-width: 768px) 100vw, 50vw"
+              fetchPriority="high"
+              sizes="50vw"
+              quality={75}
+              loading="eager"
             />
           </div>
           
@@ -351,7 +354,10 @@ export default function LoginPage() {
               fill
               className="object-cover"
               priority
-              sizes="(max-width: 768px) 100vw, 50vw"
+              fetchPriority="high"
+              sizes="(max-width: 1024px) 100vw, 0vw"
+              quality={75}
+              loading="eager"
             />
           </motion.div>
 
@@ -422,6 +428,7 @@ export default function LoginPage() {
                   type="button"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label="Email icon"
                   className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -464,6 +471,7 @@ export default function LoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
                 >
                   {showPassword ? (

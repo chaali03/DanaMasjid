@@ -1,10 +1,12 @@
 import type React from "react"
 import type { Metadata } from "next"
+import Script from "next/script"
 import { CookieConsentBanner } from "@/components/cookie-consent"
 import { QueryProvider, RecaptchaProvider, SecurityProvider } from "@/components/providers"
 import { AuthProvider } from "@/lib/auth-context"
 import { ScrollProgress } from "@/components/ui/scroll-progress"
 import { BackToTop } from "@/components/ui/back-to-top"
+import { PageLoadingTransition } from "@/components/ui/page-loading-transition"
 import { SuppressExtensionErrors } from "@/components/suppress-extension-errors"
 import "./globals.css"
 
@@ -55,6 +57,7 @@ export const metadata: Metadata = {
       { url: '/favicon_io/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
     ],
   },
+  metadataBase: new URL('https://danamasjid.com'),
 }
 
 export default function RootLayout({
@@ -65,18 +68,63 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
-        {/* Preconnect to external domains for better performance */}
-        <link rel="preconnect" href="https://www.google.com" />
-        <link rel="preconnect" href="https://www.gstatic.com" />
-        <link rel="preconnect" href="https://apis.google.com" />
-        <link rel="preconnect" href="https://danamasjid.firebaseapp.com" />
-        <link rel="preconnect" href="https://firestore.googleapis.com" />
+        {/* Preconnect only to critical domains */}
+        <link rel="preconnect" href="https://danamasjid.firebaseapp.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.google.com" />
         <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com" />
         <link rel="dns-prefetch" href="https://securetoken.googleapis.com" />
       </head>
       <body className={`font-sans antialiased`}>
+        {/* Structured Data for Organization */}
+        <Script
+          id="organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "DanaMasjid",
+              "url": "https://danamasjid.com",
+              "logo": "https://danamasjid.com/favicon_io/android-chrome-512x512.png",
+              "description": "Platform donasi masjid yang transparan dan terpercaya",
+              "sameAs": [
+                "https://www.facebook.com/danamasjid",
+                "https://www.instagram.com/danamasjid",
+                "https://twitter.com/danamasjid"
+              ],
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "Customer Service",
+                "email": "info@danamasjid.com"
+              }
+            })
+          }}
+        />
+        
+        {/* Structured Data for WebSite */}
+        <Script
+          id="website-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "DanaMasjid",
+              "url": "https://danamasjid.com",
+              "description": "Platform donasi masjid yang transparan dan terpercaya. Salurkan zakat, infaq, dan sedekah Anda dengan amanah.",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://danamasjid.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
+        
         <SuppressExtensionErrors />
         <ScrollProgress />
+        <PageLoadingTransition />
         <SecurityProvider>
           <AuthProvider>
             <QueryProvider>

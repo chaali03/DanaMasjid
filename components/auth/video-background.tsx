@@ -16,16 +16,21 @@ export function VideoBackground({ videoSrc, posterSrc, className = '' }: VideoBa
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
 
   useEffect(() => {
-    // Only load video on desktop and good connection
-    const isDesktop = window.innerWidth >= 1024
+    // Load video on all devices with good connection
     const connection = (navigator as any).connection
-    const isGoodConnection = !connection || connection.effectiveType === '4g'
+    const isGoodConnection = !connection || connection.effectiveType === '4g' || connection.effectiveType === '3g'
     
-    if (isDesktop && isGoodConnection) {
-      // Delay video load to prioritize LCP
+    if (isGoodConnection) {
+      // Delay video load slightly to prioritize initial render
       const timer = setTimeout(() => {
         setShouldLoadVideo(true)
-      }, 1000)
+      }, 500)
+      return () => clearTimeout(timer)
+    } else {
+      // On slow connection, still show after longer delay
+      const timer = setTimeout(() => {
+        setShouldLoadVideo(true)
+      }, 2000)
       return () => clearTimeout(timer)
     }
   }, [])
@@ -83,7 +88,7 @@ export function VideoBackground({ videoSrc, posterSrc, className = '' }: VideoBa
         }}
       />
 
-      {/* Video Background - only on desktop with good connection */}
+      {/* Video Background - on all devices */}
       {shouldLoadVideo && !hasError && (
         <motion.div
           initial={{ opacity: 0 }}
