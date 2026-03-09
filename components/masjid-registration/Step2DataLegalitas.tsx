@@ -381,7 +381,7 @@ export default function Step2DataLegalitas({ formData, setFormData }: Step2Props
       </div>
 
       <div
-        className={`relative border-2 border-dashed rounded-lg sm:rounded-xl p-4 sm:p-6 text-center transition-all ${
+        className={`relative border-2 border-dashed rounded-lg sm:rounded-xl p-4 sm:p-6 text-center transition-all cursor-pointer ${
           dragActive === id
             ? "border-blue-500 bg-blue-50"
             : file
@@ -392,6 +392,7 @@ export default function Step2DataLegalitas({ formData, setFormData }: Step2Props
         onDragLeave={(e) => handleDrag(e, id)}
         onDragOver={(e) => handleDrag(e, id)}
         onDrop={(e) => handleDrop(e, id)}
+        onClick={() => !file && document.getElementById(id)?.click()}
       >
         <input
           type="file"
@@ -403,12 +404,12 @@ export default function Step2DataLegalitas({ formData, setFormData }: Step2Props
         />
         
         {!file ? (
-          <label htmlFor={id} className="cursor-pointer block">
+          <div className="pointer-events-none">
             <Upload className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-2 sm:mb-3" />
             <p className="text-xs sm:text-sm font-medium text-gray-700 mb-1">{placeholder}</p>
             <p className="text-[10px] sm:text-xs text-gray-500">Format: .jpeg, .jpg, .png, .pdf (Max 5MB)</p>
             <p className="text-[10px] sm:text-xs text-blue-600 mt-1">Resolusi: 600x400 - 5000x5000 pixels</p>
-          </label>
+          </div>
         ) : (
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center justify-between bg-white rounded-lg p-2 sm:p-3 border border-green-200">
