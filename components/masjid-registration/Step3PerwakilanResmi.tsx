@@ -177,7 +177,10 @@ export default function Step3PerwakilanResmi({ formData, setFormData, handleFile
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Foto {formData.jenisID} <span className="text-red-500">*</span>
             </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-500 transition-all bg-white">
+            <div 
+              className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-500 transition-all bg-white cursor-pointer"
+              onClick={() => document.getElementById('fotoKTP')?.click()}
+            >
               <input
                 type="file"
                 accept="image/jpeg,image/jpg,image/png,application/pdf"
@@ -186,11 +189,11 @@ export default function Step3PerwakilanResmi({ formData, setFormData, handleFile
                 id="fotoKTP"
                 required
               />
-              <label htmlFor="fotoKTP" className="cursor-pointer">
+              <div className="pointer-events-none">
                 <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                 <p className="text-sm font-medium text-gray-700 mb-1">Unggah atau seret file ke sini</p>
                 <p className="text-xs text-gray-500">Format File: .jpeg, .jpg, .png, .pdf (Max 2MB)</p>
-              </label>
+              </div>
             </div>
             {formData.fotoKTP && (
               <p className="text-sm text-green-600 mt-2 flex items-center gap-2">
