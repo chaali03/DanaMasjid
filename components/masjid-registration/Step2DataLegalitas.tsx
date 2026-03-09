@@ -406,6 +406,7 @@ export default function Step2DataLegalitas({ formData, setFormData }: Step2Props
       >
         <input
           type="file"
+          name={id}
           accept="image/jpeg,image/jpg,image/png,application/pdf"
           onChange={(e) => handleFileChange(id, e.target.files?.[0] || null)}
           className="hidden"

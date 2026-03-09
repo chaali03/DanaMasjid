@@ -183,6 +183,7 @@ export default function Step3PerwakilanResmi({ formData, setFormData, handleFile
             >
               <input
                 type="file"
+                name="fotoKTP"
                 accept="image/jpeg,image/jpg,image/png,application/pdf"
                 onChange={(e) => handleFileChange('fotoKTP', e.target.files?.[0] || null)}
                 className="hidden"
