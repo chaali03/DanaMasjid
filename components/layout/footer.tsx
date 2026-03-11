@@ -30,8 +30,8 @@ export function Footer() {
                     src="/images/logo/DanaMasjid.webp"
                     alt="DanaMasjid Logo"
                     fill
-                    className="object-contain"
                     sizes="48px"
+                    className="object-contain"
                   />
                 </div>
               </Link>

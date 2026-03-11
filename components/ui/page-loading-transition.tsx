@@ -2,14 +2,12 @@
 
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
-import dynamic from "next/dynamic"
-
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false })
+import Lottie from "lottie-react"
+import animationData from "@/public/lotie-loading.json"
 
 export function PageLoadingTransition() {
   const pathname = usePathname()
   const [isTransitioning, setIsTransitioning] = useState(false)
-  const [animationData, setAnimationData] = useState<any>(null)
 
   useEffect(() => {
     // Trigger transition on route change
@@ -22,17 +20,6 @@ export function PageLoadingTransition() {
     return () => clearTimeout(timer)
   }, [pathname])
 
-  useEffect(() => {
-    if (!isTransitioning || animationData) return
-    let cancelled = false
-    import("@/lotie/loading screen.json").then((data) => {
-      if (!cancelled) setAnimationData(data.default)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [isTransitioning, animationData])
-
   return (
     <>
       {isTransitioning && (
@@ -40,21 +27,21 @@ export function PageLoadingTransition() {
           <div className="fixed inset-0 z-[9998] bg-gray-500/50 backdrop-blur-sm transition-opacity duration-200" />
 
           <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none transition-all duration-300">
-            <div className="text-center">
-              {animationData ? (
-                <div className="w-[700px] h-[700px] max-w-[85vw] max-h-[85vh] mx-auto">
-                  <Lottie
-                    animationData={animationData}
-                    loop={true}
-                    rendererSettings={{
-                      preserveAspectRatio: "xMidYMid slice",
-                      progressiveLoad: true,
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
-              )}
+            <div className="flex flex-col items-center gap-6">
+              <div className="w-[200px] h-[200px] md:w-[300px] md:h-[300px]">
+                <Lottie
+                  animationData={animationData}
+                  loop={true}
+                  rendererSettings={{
+                    preserveAspectRatio: "xMidYMid slice",
+                    progressiveLoad: true,
+                  }}
+                />
+              </div>
+              <div className="text-gray-600 text-center">
+                <div className="text-xl font-semibold">Loading...</div>
+                <div className="text-base mt-2">Memuat halaman...</div>
+              </div>
             </div>
           </div>
         </>

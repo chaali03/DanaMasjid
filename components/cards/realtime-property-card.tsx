@@ -144,9 +144,9 @@ export function RealtimePropertyCard() {
 
       <div className="mb-6">
         <p className="mb-3 text-sm font-medium text-slate-700">Kunjungan Hari Ini</p>
-        <div className="h-32">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={hourlyData}>
+        <div className="h-32" style={{ width: '100%', height: '128px' }}>
+          <ResponsiveContainer width="100%" height="100%" minHeight={128}>
+            <BarChart data={hourlyData} width={400} height={128}>
               <XAxis
                 dataKey="hour"
                 tick={{ fontSize: 10, fill: "#64748b" }}

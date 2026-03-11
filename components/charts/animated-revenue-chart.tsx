@@ -97,9 +97,9 @@ export function AnimatedRevenueChart() {
         </div>
       </div>
 
-      <div className="h-56 relative">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
+      <div className="h-56 relative" style={{ width: '100%', height: '224px' }}>
+        <ResponsiveContainer width="100%" height="100%" minHeight={224}>
+          <PieChart width={400} height={224}>
             <Pie
               data={data}
               cx="50%"

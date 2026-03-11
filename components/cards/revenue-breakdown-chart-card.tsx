@@ -50,9 +50,9 @@ export function RevenueBreakdownChartCard({
         </div>
       </div>
 
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
+      <div className="h-64" style={{ width: '100%', height: '256px' }}>
+        <ResponsiveContainer width="100%" height="100%" minHeight={256}>
+          <PieChart width={400} height={256}>
             <Pie data={data} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="value">
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />

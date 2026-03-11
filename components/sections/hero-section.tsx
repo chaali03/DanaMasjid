@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState, useRef } from "react"
 import { AnimatedText } from "@/components/animations"
+import { OptimizedVideo } from "@/components/ui/optimized-video"
 import Image from "next/image"
 
 export function HeroSection() {
@@ -134,22 +135,14 @@ export function HeroSection() {
           }}
         >
           {videoLoaded ? (
-            <video 
-              ref={videoRef}
-              autoPlay 
-              loop
-              muted 
-              playsInline
-              preload="none"
+            <OptimizedVideo
+              src="/vidio/vidio1.mp4"
               className="w-full h-full object-cover"
-              style={{
-                transform: 'translate3d(0, 0, 0)',
-                backfaceVisibility: 'hidden',
-              }}
-            >
-              <source src="/vidio/vidio1.mp4" type="video/mp4" />
-              <track kind="captions" srcLang="id" label="Indonesian" />
-            </video>
+              autoPlay={true}
+              loop={true}
+              muted={true}
+              playsInline={true}
+            />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-blue-50 via-cyan-50 to-yellow-50" />
           )}

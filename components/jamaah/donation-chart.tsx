@@ -69,9 +69,9 @@ export function DonationChart() {
                 </div>
             </div>
 
-            <div className="h-52">
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+            <div className="h-52" style={{ width: '100%', height: '208px' }}>
+                <ResponsiveContainer width="100%" height="100%" minHeight={208}>
+                    <AreaChart data={data} width={400} height={208} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                         <defs>
                             <linearGradient id="colorDonasi" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="5%" stopColor="#fbbf24" stopOpacity={0.3} />

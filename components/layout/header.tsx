@@ -77,6 +77,7 @@ export function Header() {
                 src="/images/logo/DanaMasjid.webp"
                 alt="DanaMasjid Logo"
                 fill
+                sizes="48px"
                 className="object-contain"
                 priority
               />
