@@ -2,12 +2,12 @@
 import { useEffect, useState, useRef } from "react"
 import { AnimatedText } from "@/components/animations"
 import Image from "next/image"
-import { LazyVideo } from "@/components/ui/lazy-video"
 
 export function HeroSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
+  const [videoLoaded, setVideoLoaded] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const sectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -15,23 +15,75 @@ export function HeroSection() {
   }, [])
 
   useEffect(() => {
-    // Do not load the large hero MP4 in the critical path (Lighthouse).
-    // Defer until after first render + idle time, and skip on save-data / 2g.
-    const conn = (navigator as any).connection
-    const saveData = Boolean(conn?.saveData)
-    const slow = typeof conn?.effectiveType === "string" && /(^2g$|slow-2g)/.test(conn.effectiveType)
-    if (saveData || slow) return
+    const el = sectionRef.current
+    if (!el || videoLoaded) return
 
-    const timeoutId = window.setTimeout(() => {
-      if ("requestIdleCallback" in window) {
-        ;(window as any).requestIdleCallback(() => setShouldLoadVideo(true), { timeout: 3000 })
+    let idleId: number | null = null
+    let timeoutId: number | null = null
+
+    const scheduleLoad = () => {
+      if (typeof window === "undefined") return
+      const w = window as Window &
+        typeof globalThis & {
+          requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number
+          cancelIdleCallback?: (id: number) => void
+        }
+
+      if (typeof w.requestIdleCallback === "function") {
+        idleId = w.requestIdleCallback(() => setVideoLoaded(true), { timeout: 2500 })
       } else {
-        setShouldLoadVideo(true)
+        timeoutId = window.setTimeout(() => setVideoLoaded(true), 1200)
       }
-    }, 1500)
+    }
 
-    return () => window.clearTimeout(timeoutId)
-  }, [])
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            scheduleLoad()
+            observer.disconnect()
+            break
+          }
+        }
+      },
+      // Load after user actually sees hero (avoid early network during initial render)
+      { threshold: 0.35, rootMargin: "0px" }
+    )
+
+    observer.observe(el)
+
+    return () => {
+      observer.disconnect()
+      if (idleId != null) {
+        ;(window as Window &
+          typeof globalThis & {
+            cancelIdleCallback?: (id: number) => void
+          }).cancelIdleCallback?.(idleId)
+      }
+      if (timeoutId != null) window.clearTimeout(timeoutId)
+    }
+  }, [videoLoaded])
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video || !videoLoaded) return
+
+    // Trigger fetch only after we intentionally "enable" video
+    video.load()
+
+    const play = () => {
+      video.play().catch(() => {
+        // ignore autoplay blocks
+      })
+    }
+
+    if (video.readyState >= 3) play()
+    else video.addEventListener("loadeddata", play, { once: true })
+
+    return () => {
+      video.pause()
+    }
+  }, [videoLoaded])
 
   useEffect(() => {
     let rafId: number
@@ -62,6 +114,7 @@ export function HeroSection() {
 
   const scale = 1 - easeOutQuad(scrollProgress) * 0.15
   const borderRadius = easeOutCubic(scrollProgress) * 48
+  const heightVh = 100 - easeOutQuad(scrollProgress) * 37.5
 
   return (
     <section ref={sectionRef} className="pt-32 pb-12 px-6 min-h-screen flex items-center relative overflow-hidden max-w-full">
@@ -71,7 +124,7 @@ export function HeroSection() {
           style={{
             transform: `scale(${scale}) translate3d(0, 0, 0)`,
             borderRadius: `${borderRadius}px`,
-            height: "100vh",
+            height: `${heightVh}vh`,
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             perspective: 1000,
@@ -80,17 +133,26 @@ export function HeroSection() {
             contain: 'layout style paint',
           }}
         >
-          <div className="w-full h-full bg-gradient-to-br from-blue-50 via-cyan-50 to-yellow-50" />
-          {shouldLoadVideo ? (
-            <LazyVideo
-              src="/vidio/vidio1.mp4"
-              className="absolute inset-0 w-full h-full object-cover"
-              autoPlay
+          {videoLoaded ? (
+            <video 
+              ref={videoRef}
+              autoPlay 
               loop
-              muted
+              muted 
               playsInline
-            />
-          ) : null}
+              preload="none"
+              className="w-full h-full object-cover"
+              style={{
+                transform: 'translate3d(0, 0, 0)',
+                backfaceVisibility: 'hidden',
+              }}
+            >
+              <source src="/vidio/vidio1.mp4" type="video/mp4" />
+              <track kind="captions" srcLang="id" label="Indonesian" />
+            </video>
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-blue-50 via-cyan-50 to-yellow-50" />
+          )}
         </div>
       </div>
 
@@ -150,6 +212,7 @@ export function HeroSection() {
                 sizes="(max-width: 768px) 200px, (max-width: 1024px) 250px, 350px"
                 className="w-full h-auto relative z-10"
                 priority
+                fetchPriority="high"
                 quality={90}
               />
             </div>

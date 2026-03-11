@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, useTransform, useSpring, useMotionValue, useScroll, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 // --- Utility ---
 // function cn(...inputs: ClassValue[]) {
@@ -98,10 +99,13 @@ function FlipCard({
                     className="absolute inset-0 h-full w-full overflow-hidden rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl ring-1 ring-black/5 bg-transparent"
                     style={{ backfaceVisibility: "hidden" }}
                 >
-                    <img
+                    <Image
                         src={src}
                         alt={`hero-${index}`}
-                        className="h-full w-full object-cover"
+                        fill
+                        sizes="(max-width: 640px) 55px, (max-width: 1024px) 60px, 60px"
+                        className="object-cover"
+                        quality={70}
                     />
                     {/* Click hint */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-1 sm:pb-2">
@@ -423,13 +427,15 @@ export default function IntroAnimation() {
                                                     transition={{ duration: 0.2 }}
                                                     className="bg-white rounded-lg p-3 md:p-4 shadow-md hover:shadow-xl transition-shadow duration-300"
                                                 >
-                                                    <img 
-                                                        src={sponsors[sponsorIndex].src} 
-                                                        alt={sponsors[sponsorIndex].alt} 
+                                                    <Image
+                                                        src={sponsors[sponsorIndex].src}
+                                                        alt={sponsors[sponsorIndex].alt}
                                                         width={120}
                                                         height={48}
                                                         className="h-10 md:h-12 w-auto object-contain"
                                                         loading="lazy"
+                                                        sizes="120px"
+                                                        quality={80}
                                                     />
                                                 </motion.div>
                                                 <p className="text-[10px] md:text-xs font-semibold text-gray-800 text-center">

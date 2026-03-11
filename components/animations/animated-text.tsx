@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useMemo } from "react"
 
 interface AnimatedTextProps {
   text: string
@@ -8,43 +8,31 @@ interface AnimatedTextProps {
 }
 
 export function AnimatedText({ text, delay = 0 }: AnimatedTextProps) {
-  const words = text.split(" ")
-  let charIndex = 0
+  const chars = useMemo(() => Array.from(text), [text])
 
   return (
-    <motion.span
+    <span
       className="font-bold text-center leading-[0.75] tracking-tighter font-serif text-black block"
-      initial="hidden"
-      animate="visible"
       style={{ perspective: 400 }}
     >
-      {words.map((word, wordIndex) => (
-        <span key={wordIndex} style={{ display: "inline-block" }}>
-          {word.split("").map((char, index) => {
-            const currentIndex = charIndex++
-            return (
-              <motion.span
-                key={index}
-                initial={{ opacity: 0, y: 30, rotateX: -45 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{
-                  duration: 0.6,
-                  delay: delay + currentIndex * 0.04,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                }}
-                style={{
-                  display: "inline-block",
-                  transformStyle: "preserve-3d",
-                  transformOrigin: "center bottom",
-                }}
-              >
-                {char}
-              </motion.span>
-            )
-          })}
-          {wordIndex < words.length - 1 && " "}
-        </span>
-      ))}
-    </motion.span>
+      {chars.map((char, i) => {
+        const isSpace = char === " "
+        if (isSpace) return <span key={`space-${i}`}>{" "}</span>
+
+        return (
+          <span
+            key={`${char}-${i}`}
+            className="dm-animated-char"
+            style={{
+              animationDelay: `${delay + i * 0.04}s`,
+            }}
+            aria-hidden="true"
+          >
+            {char}
+          </span>
+        )
+      })}
+      <span className="sr-only">{text}</span>
+    </span>
   )
 }
