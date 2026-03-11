@@ -147,7 +147,7 @@ const nextConfig = {
               "img-src 'self' data: blob: https:",
               "font-src 'self' data: https://fonts.gstatic.com",
               "connect-src 'self' https: wss:",
-              "frame-src 'self' https://www.google.com https://www.recaptcha.net https://recaptcha.net",
+              "frame-src 'self' https://www.google.com https://www.recaptcha.net https://recaptcha.net https://danamasjid.firebaseapp.com",
               "worker-src 'self' blob:",
               "child-src 'self' blob:",
               "object-src 'none'",
