@@ -31,30 +31,33 @@ export function OptimizedVideo({
   const observerRef = useRef<IntersectionObserver>()
 
   useEffect(() => {
-    // Only load video when it's near viewport and loading is lazy
-    if (loading === "eager") {
+    // If autoPlay is true or loading is eager, load immediately
+    if (autoPlay || loading === "eager") {
       setShouldLoad(true)
       return
     }
 
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setShouldLoad(true)
-            observerRef.current?.disconnect()
-          }
-        })
-      },
-      { rootMargin: "100px" }
-    )
+    // Only load video when it's near viewport and loading is lazy
+    if (loading === "lazy") {
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setShouldLoad(true)
+              observerRef.current?.disconnect()
+            }
+          })
+        },
+        { rootMargin: "100px" }
+      )
 
-    if (videoRef.current) {
-      observerRef.current.observe(videoRef.current)
+      if (videoRef.current) {
+        observerRef.current.observe(videoRef.current)
+      }
     }
 
     return () => observerRef.current?.disconnect()
-  }, [loading])
+  }, [loading, autoPlay])
 
   const handleLoadedData = () => {
     setIsLoaded(true)

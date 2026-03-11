@@ -196,21 +196,13 @@ export function middleware(request: NextRequest) {
     })
   }
 
-  // Add security headers with CSP nonce
+  // Add security headers
   const response = NextResponse.next()
-  
-  // Generate CSP nonce for this request using Web Crypto API
-  const array = new Uint8Array(16)
-  crypto.getRandomValues(array)
-  const nonce = btoa(String.fromCharCode(...array))
   
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('X-Frame-Options', 'SAMEORIGIN')
   response.headers.set('X-XSS-Protection', '1; mode=block')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-  
-  // Set CSP nonce header for use in components
-  response.headers.set('X-CSP-Nonce', nonce)
   
   return response
 }

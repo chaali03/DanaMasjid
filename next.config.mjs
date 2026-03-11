@@ -252,13 +252,13 @@ const nextConfig = {
             key: 'Cross-Origin-Resource-Policy',
             value: 'cross-origin'
           },
-          // Comprehensive CSP with Trusted Types and stricter policies
+          // Comprehensive CSP with balanced security and functionality
           {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'nonce-lighthouse-csp' https://www.gstatic.com https://www.google.com https://www.recaptcha.net https://apis.google.com",
-              "style-src 'self' 'nonce-lighthouse-csp' https://fonts.googleapis.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://www.google.com https://www.recaptcha.net https://apis.google.com https://danamasjid.firebaseapp.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data: https://fonts.gstatic.com",
               "connect-src 'self' https: wss:",
@@ -270,8 +270,6 @@ const nextConfig = {
               "form-action 'self'",
               "manifest-src 'self'",
               "media-src 'self' blob: data:",
-              "require-trusted-types-for 'script'",
-              "trusted-types default",
               "upgrade-insecure-requests"
             ].join('; ')
           },
