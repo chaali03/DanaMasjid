@@ -25,8 +25,8 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  // Enable source maps in development only
-  productionBrowserSourceMaps: process.env.NODE_ENV === 'development',
+  // Enable source maps in production for better debugging
+  productionBrowserSourceMaps: true,
   
   // Generate unique build IDs to prevent cache issues
   generateBuildId: async () => {
