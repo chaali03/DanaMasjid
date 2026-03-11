@@ -11,8 +11,8 @@ export function RecaptchaProvider({ children }: RecaptchaProviderProps) {
   // reCAPTCHA v3 Site Key (public key - aman untuk di frontend)
   const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
   
-  // If no valid key, render children without reCAPTCHA
-  if (!recaptchaSiteKey || recaptchaSiteKey === 'your_recaptcha_site_key') {
+  // Disable reCAPTCHA in development or if no valid key
+  if (!recaptchaSiteKey || recaptchaSiteKey === 'your_recaptcha_site_key_here' || process.env.NODE_ENV === 'development') {
     return <>{children}</>;
   }
 

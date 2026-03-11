@@ -1,8 +1,13 @@
 "use client"
 
 import { ArrowUpRight, ArrowRight } from "lucide-react"
-import { AnimatedRevenueChart } from "@/components/charts"
-import { motion } from "framer-motion"
+import dynamic from "next/dynamic"
+
+// Lazy load AnimatedRevenueChart karena menggunakan framer-motion
+const AnimatedRevenueChart = dynamic(() => import("@/components/charts").then(mod => ({ default: mod.AnimatedRevenueChart })), {
+  ssr: false,
+  loading: () => <div className="w-full max-w-md mx-auto h-96 bg-gray-100 animate-pulse rounded-3xl" />
+})
 
 export function CTASection() {
   return (
@@ -12,24 +17,16 @@ export function CTASection() {
         <div className="lg:hidden text-[20vw] font-bold font-sans tracking-tighter leading-none whitespace-nowrap" suppressHydrationWarning>
           <span className="relative inline-block">
             <span className="relative z-10 text-white px-2">BER</span>
-            <motion.span
-              className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 -z-0"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-              style={{ transformOrigin: "left" }}
+            <span
+              className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 -z-0 animate-slide-in-right"
+              style={{ transformOrigin: "left", animationDelay: "200ms" }}
             />
           </span>
           <span className="relative inline-block">
             <span className="relative z-10 text-white px-2">KAH</span>
-            <motion.span
-              className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 -z-0"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-              style={{ transformOrigin: "left" }}
+            <span
+              className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 -z-0 animate-slide-in-right"
+              style={{ transformOrigin: "left", animationDelay: "500ms" }}
             />
           </span>
         </div>
@@ -42,13 +39,9 @@ export function CTASection() {
               <span className="relative z-10 text-white text-[18vw] font-bold font-sans tracking-tighter leading-none px-8">
                 BER
               </span>
-              <motion.span
-                className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 -z-0 rounded-2xl shadow-2xl"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                style={{ transformOrigin: "left" }}
+              <span
+                className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 -z-0 rounded-2xl shadow-2xl animate-slide-in-right"
+                style={{ transformOrigin: "left", animationDelay: "200ms" }}
               />
             </span>
           </div>
@@ -59,13 +52,9 @@ export function CTASection() {
               <span className="relative z-10 text-white text-[18vw] font-bold font-sans tracking-tighter leading-none px-8">
                 KAH
               </span>
-              <motion.span
-                className="absolute inset-0 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 -z-0 rounded-2xl shadow-2xl"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-                style={{ transformOrigin: "left" }}
+              <span
+                className="absolute inset-0 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 -z-0 rounded-2xl shadow-2xl animate-slide-in-right"
+                style={{ transformOrigin: "left", animationDelay: "500ms" }}
               />
             </span>
           </div>

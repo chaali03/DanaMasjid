@@ -105,6 +105,7 @@ export function PricingSection() {
         positionRef.current = 0
       }
 
+      scrollContainer.style.willChange = 'transform'
       scrollContainer.style.transform = `translateX(-${positionRef.current}px)`
       animationRef.current = requestAnimationFrame(animate)
     }

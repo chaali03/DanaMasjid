@@ -25,8 +25,8 @@ export function AnimatedText({ text, delay = 0 }: AnimatedTextProps) {
             return (
               <motion.span
                 key={index}
-                initial={{ opacity: 0, y: 30, filter: "blur(12px)", rotateX: -45 }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)", rotateX: 0 }}
+                initial={{ opacity: 0, y: 30, rotateX: -45 }}
+                animate={{ opacity: 1, y: 0, rotateX: 0 }}
                 transition={{
                   duration: 0.6,
                   delay: delay + currentIndex * 0.04,

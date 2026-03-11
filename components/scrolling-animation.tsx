@@ -2,7 +2,7 @@
 
 export function HomePage() {
   return (
-    <div className="relative bg-background min-h-[200vh] lg:min-h-[200vh]">
+    <div className="relative bg-background min-h-[200vh] lg:min-h-[135vh]">
       <div className="relative px-4 py-8 md:py-12 min-h-[200vh] lg:min-h-[135vh]">
         {/* Wavy Background - Only in this section */}
         <div className="absolute inset-0 z-0">

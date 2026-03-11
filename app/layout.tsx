@@ -68,18 +68,23 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
-        {/* Preconnect only to critical domains */}
-        <link rel="preconnect" href="https://danamasjid.firebaseapp.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
+        {/* Meta Description */}
+        <meta name="description" content="Platform donasi masjid yang transparan dan terpercaya. Salurkan zakat, infaq, dan sedekah Anda dengan amanah. Gratis 3 bulan pertama untuk masjid yang mendaftar." />
+        {/* Preload critical font */}
+        <link rel="preload" href="/__nextjs_font/geist-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/* Preconnect to critical domains */}
+        <link rel="preconnect" href="https://www.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.google.com" />
-        <link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com" />
-        <link rel="dns-prefetch" href="https://securetoken.googleapis.com" />
+        {/* Defer non-critical resources */}
+        <link rel="preload" href="/images/masjid1.webp" as="image" media="(min-width: 768px)" fetchPriority="low" />
+        <link rel="preload" href="/images/iphone.webp" as="image" fetchPriority="low" />
       </head>
       <body className={`font-sans antialiased`}>
-        {/* Structured Data for Organization */}
+        {/* Defer structured data */}
         <Script
           id="organization-schema"
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",

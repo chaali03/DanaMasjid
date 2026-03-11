@@ -61,21 +61,21 @@ export function StatsSection() {
       <div className="max-w-4xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
           <div
-            className={`text-center transition-all duration-1000 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            className={`text-center transition-opacity duration-1000 delay-200 ${isVisible ? "opacity-100" : "opacity-0"}`}
           >
             <p className="font-light text-foreground mb-2 text-6xl md:text-7xl leading-none">{homes.value}</p>
             <p className="text-xs text-muted-foreground uppercase tracking-wider">Masjid Terdaftar</p>
           </div>
 
           <div
-            className={`text-center transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            className={`text-center transition-opacity duration-1000 delay-300 ${isVisible ? "opacity-100" : "opacity-0"}`}
           >
             <p className="font-light text-foreground mb-2 text-6xl md:text-7xl leading-none">{cities.value}</p>
             <p className="text-xs text-muted-foreground uppercase tracking-wider">Kota</p>
           </div>
 
           <div
-            className={`text-center transition-all duration-1000 delay-400 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+            className={`text-center transition-opacity duration-1000 delay-400 ${isVisible ? "opacity-100" : "opacity-0"}`}
           >
             <p className="font-light text-foreground mb-2 text-6xl md:text-7xl leading-none">{users.value}</p>
             <p className="text-xs text-muted-foreground uppercase tracking-wider">Jamaah Terhubung</p>

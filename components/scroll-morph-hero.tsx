@@ -486,8 +486,8 @@ export default function IntroAnimation() {
                 {/* Intro Text (Fades out) */}
                 <div className="absolute z-0 flex flex-col items-center justify-center text-center pointer-events-none top-[60%] md:top-[55%] -translate-y-1/2 px-4 max-w-xs md:max-w-none">
                     <motion.h1
-                        initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0, filter: "blur(0px)" } : { opacity: 0, filter: "blur(10px)" }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue * 2, y: 0 } : { opacity: 0 }}
                         transition={{ duration: 1 }}
                         className="text-base md:text-2xl lg:text-4xl font-medium tracking-tight text-gray-800 leading-tight md:leading-normal"
                     >
@@ -495,9 +495,10 @@ export default function IntroAnimation() {
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
-                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 }}
+                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.9 - morphValue } : { opacity: 0 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className="mt-2 md:mt-4 text-[9px] md:text-xs font-bold tracking-[0.15em] md:tracking-[0.2em] text-gray-800"
+                        className="mt-2 md:mt-4 text-[9px] md:text-xs font-bold tracking-[0.15em] md:tracking-[0.2em] text-gray-900"
+                        style={{ textShadow: '2px 2px 8px rgba(255,255,255,0.8), 1px 1px 4px rgba(255,255,255,0.6)' }}
                     >
                         SCROLL UNTUK MENJELAJAH
                     </motion.p>

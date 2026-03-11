@@ -276,6 +276,8 @@ export function Header() {
           <button
             className={`xl:hidden transition-colors duration-300 ${isScrolled ? "text-black" : "text-foreground"}`}
             onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Tutup menu" : "Buka menu"}
+            aria-expanded={isOpen}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

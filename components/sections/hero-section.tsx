@@ -1,12 +1,13 @@
 "use client"
 import { useEffect, useState, useRef } from "react"
 import { AnimatedText } from "@/components/animations"
-import { motion } from "framer-motion"
 
 export function HeroSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [videoLoaded, setVideoLoaded] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -16,16 +17,35 @@ export function HeroSection() {
   }, [])
 
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !videoLoaded) {
+            // Delay video loading slightly
+            setTimeout(() => setVideoLoaded(true), 100)
+          }
+        })
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [videoLoaded])
+
+  useEffect(() => {
     const video = videoRef.current
-    if (!video) return
+    if (!video || !videoLoaded) return
 
     // Force hardware acceleration
     video.style.transform = 'translateZ(0)'
     video.style.backfaceVisibility = 'hidden'
     
-    // Optimize video loading
-    video.preload = 'auto'
-    video.playsInline = true
+    // Load video only when needed
+    video.load()
     
     // Ensure video starts from beginning
     video.currentTime = 0
@@ -86,10 +106,10 @@ export function HeroSection() {
   const heightVh = 100 - easeOutQuad(scrollProgress) * 37.5
 
   return (
-    <section className="pt-32 pb-12 px-6 min-h-screen flex items-center relative overflow-hidden max-w-full">
-      <div className="absolute inset-0 top-0 max-w-full">
+    <section ref={sectionRef} className="pt-32 pb-12 px-6 min-h-screen flex items-center relative overflow-hidden max-w-full">
+      <div className="absolute inset-0 top-0 max-w-full" style={{ contain: 'layout style paint' }}>
         <div
-          className="w-full overflow-hidden"
+          className="w-full overflow-hidden relative"
           style={{
             transform: `scale(${scale}) translate3d(0, 0, 0)`,
             borderRadius: `${borderRadius}px`,
@@ -98,59 +118,66 @@ export function HeroSection() {
             WebkitBackfaceVisibility: 'hidden',
             perspective: 1000,
             WebkitPerspective: 1000,
+            aspectRatio: '16/9',
+            contain: 'layout style paint',
           }}
         >
-          <video 
-            ref={videoRef}
-            autoPlay 
-            loop
-            muted 
-            playsInline
-            preload="auto"
-            className="w-full h-full object-cover"
-            style={{
-              transform: 'translate3d(0, 0, 0)', // Force GPU acceleration
-              backfaceVisibility: 'hidden',
-            }}
-          >
-            <source src="/vidio/vidio1.mp4" type="video/mp4" />
-            <track kind="captions" srcLang="id" label="Indonesian" />
-          </video>
+          {videoLoaded ? (
+            <video 
+              ref={videoRef}
+              autoPlay 
+              loop
+              muted 
+              playsInline
+              preload="none"
+              className="w-full h-full object-cover"
+              style={{
+                transform: 'translate3d(0, 0, 0)',
+                backfaceVisibility: 'hidden',
+              }}
+            >
+              <source src="/vidio/vidio1.mp4" type="video/mp4" />
+              <track kind="captions" srcLang="id" label="Indonesian" />
+            </video>
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-16 h-16 border-4 border-gray-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-500 text-sm">Loading...</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       <div
         className="absolute bottom-0 left-0 right-0 w-full overflow-hidden pointer-events-none z-[5] flex items-end justify-center max-w-full"
         style={{
-          transform: `translateY(${scrollProgress * 150}px)`,
+          transform: `translate3d(0, ${scrollProgress * 150}px, 0)`,
           opacity: 1 - scrollProgress * 0.8,
           height: "100%",
+          willChange: 'transform, opacity',
+          contain: 'layout style paint',
         }}
       >
-        <motion.span
-          initial={{ opacity: 0, scale: 0.5, y: 100 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{
-            duration: 1.2,
-            delay: 0.2,
-            ease: [0.16, 1, 0.3, 1],
-            scale: {
-              type: "spring",
-              damping: 15,
-              stiffness: 100,
-            }
-          }}
+        <span
           className="block font-bold text-[28vw] sm:text-[25vw] md:text-[22vw] lg:text-[20vw] tracking-tighter select-none text-center leading-none bg-gradient-to-r from-blue-400 via-cyan-400 to-yellow-400 bg-clip-text text-transparent max-w-full"
-          style={{ marginBottom: "0" }}
+          style={{ 
+            marginBottom: "0",
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 0.6s ease-out',
+            transitionDelay: '200ms',
+            contain: 'layout style paint',
+          }}
         >
           MASJID
-        </motion.span>
+        </span>
       </div>
 
       <div className="max-w-7xl mx-auto w-full relative z-10">
         <div className="text-center mb-12 max-w-full">
           <div
-            className={`transition-all duration-1000 delay-[800ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"}`}
+            className={`transition-opacity duration-1000 delay-[800ms] ${isVisible ? "opacity-100" : "opacity-0"}`}
           >
             <h1 className="font-serif text-[2rem] xs:text-[2.5rem] sm:text-[3rem] md:text-[4rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7rem] font-normal leading-tight mb-6 w-full px-4 max-w-6xl mx-auto text-center">
               <span className="inline-block whitespace-nowrap">
@@ -171,13 +198,19 @@ export function HeroSection() {
                 isVisible ? "opacity-100" : "opacity-0"
               }`}
             >
-              <img 
-                src="/images/iphone.webp" 
-                alt="DanaMasjid Mobile App" 
-                width={475}
-                height={934}
-                className="w-full h-auto relative z-10" 
-              />
+              {isVisible ? (
+                <img 
+                  src="/images/iphone.webp" 
+                  alt="DanaMasjid Mobile App" 
+                  width={350}
+                  height={688}
+                  sizes="(max-width: 768px) 200px, (max-width: 1024px) 250px, 350px"
+                  className="w-full h-auto relative z-10"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-full aspect-[350/688] bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 rounded-3xl animate-pulse" />
+              )}
             </div>
           </div>
         </div>

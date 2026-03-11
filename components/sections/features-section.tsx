@@ -1,7 +1,6 @@
 "use client"
 
 import { Check } from "lucide-react"
-import { motion } from "framer-motion"
 import { RealtimePropertyCard } from "@/components/cards"
 
 const features = [
@@ -18,16 +17,15 @@ export function FeaturesSection() {
     <section id="features" className="py-32 px-6 relative overflow-hidden max-w-full">
       <div className="absolute top-[50%] md:top-[45%] lg:top-[85%] xl:top-[80%] -translate-y-1/2 left-0 right-0 lg:left-[46%] flex justify-center pointer-events-none z-20 max-w-full overflow-hidden">
         <span className="relative inline-block">
-          <span className="relative z-10 font-bold text-center text-[20vw] sm:text-[14vw] md:text-[12vw] lg:text-[12vw] leading-none tracking-tighter text-white whitespace-nowrap px-4" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.3)' }}>
+          <span className="relative z-10 font-bold text-center text-[20vw] sm:text-[14vw] md:text-[12vw] lg:text-[12vw] leading-none tracking-tighter text-white whitespace-nowrap px-4">
             KELOLA
           </span>
-          <motion.span
-            className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 -z-0"
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            style={{ transformOrigin: "left" }}
+          <span
+            className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-500 -z-0 animate-slide-in-right"
+            style={{ 
+              transformOrigin: "left",
+              animationDelay: "200ms"
+            }}
           />
         </span>
       </div>
@@ -39,35 +37,27 @@ export function FeaturesSection() {
           </div>
 
           <div className="order-1 lg:order-2 space-y-8 lg:-mt-50">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
+            <div className="animate-fade-in">
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-balance">
                 Kelola keuangan masjid dengan transparan
               </h2>
               <p className="text-muted-foreground leading-relaxed text-lg">
                 Pantau pemasukan dan pengeluaran, kelola program masjid, publikasikan laporan keuangan real-time, dan tingkatkan kepercayaan jamaah dengan transparansi penuh.
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
               {features.map((feature, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="flex items-center p-3 rounded-xl hover:bg-zinc-50 transition-colors duration-300 gap-2 py-1"
+                  className="flex items-center p-3 rounded-xl hover:bg-zinc-50 transition-colors duration-300 gap-2 py-1 animate-slide-in-left"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="w-6 h-6 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
                     <Check className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
                   </div>
                   <span className="text-sm text-foreground">{feature}</span>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>

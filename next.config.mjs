@@ -22,8 +22,8 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  // Disable source maps in production for better performance
-  productionBrowserSourceMaps: false,
+  // Enable source maps in development only
+  productionBrowserSourceMaps: process.env.NODE_ENV === 'development',
   
   // Generate unique build IDs to prevent cache issues
   generateBuildId: async () => {
@@ -36,6 +36,11 @@ const nextConfig = {
   
   // Complex Security Headers Configuration
   async headers() {
+    // Only apply strict security headers in production
+    if (process.env.NODE_ENV !== 'production') {
+      return []
+    }
+    
     return [
       {
         source: '/:path*',
@@ -95,21 +100,19 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com https://www.googletagmanager.com https://maps.googleapis.com https://apis.google.com https://accounts.google.com https://ssl.gstatic.com https://www.google-analytics.com https://tagmanager.google.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com https://tagmanager.google.com",
-              "img-src 'self' data: blob: https: *",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.gstatic.com",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https:",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "connect-src 'self' https://apis.google.com https://*.workers.dev https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com wss://*.firebaseio.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://www.googletagmanager.com https://www.emsifa.com wss://ws-us3.pusher.com wss://*.pusher.com",
-              "frame-src 'self' https://www.google.com https://www.recaptcha.net https://recaptcha.net https://*.firebaseapp.com https://accounts.google.com https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/",
+              "connect-src 'self' https: wss:",
+              "frame-src 'none'",
               "worker-src 'self' blob:",
               "child-src 'self' blob:",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-ancestors 'self'",
               "manifest-src 'self'",
-              "media-src 'self' blob: data:",
-              "upgrade-insecure-requests"
+              "media-src 'self' blob: data:"
             ].join('; ')
           },
           // Additional security headers

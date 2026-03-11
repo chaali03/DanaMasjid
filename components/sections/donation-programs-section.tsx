@@ -1,44 +1,42 @@
 "use client"
 
-import { motion } from "framer-motion"
-import Lottie from "lottie-react"
-import animationData from "@/lotie/Man goes to the mosque on Ramadan.json"
+import dynamic from "next/dynamic"
+import { useState, useEffect } from "react"
+
+const Lottie = dynamic(() => import("lottie-react"), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-gray-100 animate-pulse rounded-lg" />
+})
 
 export function DonationProgramsSection() {
+  const [animationData, setAnimationData] = useState(null)
+
+  useEffect(() => {
+    // Lazy load animation data
+    import("@/lotie/Man goes to the mosque on Ramadan.json").then((data) => {
+      setAnimationData(data.default)
+    })
+  }, [])
   return (
     <section id="pricing" className="py-8 md:py-12 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
+          <div className="animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
               Kenapa Memilih <span className="text-blue-600 relative inline-block">
                 DanaMasjid
-                <motion.svg
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.3 }}
+                <svg
                   className="absolute -bottom-2 left-0 w-full"
                   viewBox="0 0 300 12"
                   preserveAspectRatio="none"
                   style={{ height: '12px' }}
                 >
-                  <motion.path
+                  <path
                     d="M0,6 Q10,2 20,6 T40,6 T60,6 T80,6 T100,6 T120,6 T140,6 T160,6 T180,6 T200,6 T220,6 T240,6 T260,6 T280,6 T300,6"
                     stroke="url(#gradient)"
                     strokeWidth="3"
                     fill="none"
                     strokeLinecap="round"
-                    strokeDasharray="1000"
-                    initial={{ strokeDashoffset: 1000 }}
-                    whileInView={{ strokeDashoffset: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
                   />
                   <defs>
                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -46,90 +44,51 @@ export function DonationProgramsSection() {
                       <stop offset="100%" stopColor="#ea580c" />
                     </linearGradient>
                   </defs>
-                </motion.svg>
+                </svg>
               </span>
             </h2>
             <p className="text-slate-600 text-lg max-w-2xl mx-auto">
               Platform manajemen keuangan masjid terpercaya dengan transparansi penuh dan fitur lengkap
             </p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           {/* Card 1: Terpercaya */}
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ 
-              duration: 0.6,
-              delay: 0.1,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            viewport={{ once: true, margin: "-50px" }}
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300"
+          <div
+            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 animate-fade-in"
+            style={{ animationDelay: '100ms' }}
           >
             <div className="flex flex-col items-center justify-center space-y-6">
-              <motion.div 
-                initial={{ scale: 0, rotate: -180 }}
-                whileInView={{ scale: 1, rotate: 0 }}
-                transition={{ duration: 0.6, delay: 0.3, type: "spring", stiffness: 200 }}
-                viewport={{ once: true }}
-                className="relative w-full h-28 md:h-32 flex items-center justify-center mb-2"
-              >
+              <div className="relative w-full h-28 md:h-32 flex items-center justify-center mb-2">
                 <img 
                   src="/images/program/terpercaya.webp" 
                   alt="Transparansi" 
                   className="h-24 w-24 md:h-32 md:w-32 object-contain"
+                  loading="lazy"
                 />
-              </motion.div>
-              <motion.h3 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.5 }}
-                viewport={{ once: true }}
-                className="text-2xl font-bold text-slate-900 mt-2"
-              >
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mt-2">
                 Transparansi
-              </motion.h3>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.6 }}
-                viewport={{ once: true }}
-                className="text-slate-600 text-center text-base leading-relaxed mt-1"
-              >
+              </h3>
+              <p className="text-slate-600 text-center text-base leading-relaxed mt-1">
                 Platform manajemen keuangan masjid yang <span className="font-semibold text-blue-600">transparan</span> dan dipercaya ribuan masjid
-              </motion.p>
-              <motion.div 
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.7 }}
-                viewport={{ once: true }}
-                className="flex items-center gap-1 text-sm text-slate-500 mt-2"
-              >
+              </p>
+              <div className="flex items-center gap-1 text-sm text-slate-500 mt-2">
                 <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Terverifikasi</span>
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Card 2: Aman & Terpercaya */}
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ 
-              duration: 0.6,
-              delay: 0.2,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            viewport={{ once: true, margin: "-50px" }}
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300"
+          <div
+            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 animate-fade-in"
+            style={{ animationDelay: '200ms' }}
           >
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="relative w-32 h-32">
@@ -153,20 +112,12 @@ export function DonationProgramsSection() {
                 <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full">PCI DSS</span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Card 3: Mudah Digunakan */}
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ 
-              duration: 0.6,
-              delay: 0.3,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            viewport={{ once: true, margin: "-50px" }}
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300"
+          <div
+            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 animate-fade-in"
+            style={{ animationDelay: '300ms' }}
           >
             <div className="flex flex-col space-y-4">
               <div className="flex items-center justify-between text-sm">
@@ -210,20 +161,12 @@ export function DonationProgramsSection() {
                 <span className="px-3 py-1 bg-slate-100 text-slate-700 text-xs rounded-full">E-Wallet</span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Card 4: Laporan Real-time (2 columns) */}
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ 
-              duration: 0.6,
-              delay: 0.4,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            viewport={{ once: true, margin: "-50px" }}
-            whileHover={{ y: -8, scale: 1.01 }}
-            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 lg:col-span-2"
+          <div
+            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 lg:col-span-2 animate-fade-in"
+            style={{ animationDelay: '400ms' }}
           >
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-shrink-0">
@@ -244,11 +187,17 @@ export function DonationProgramsSection() {
 
                 {/* Dashboard Preview Image */}
                 <div className="relative rounded-xl overflow-hidden shadow-lg border border-slate-200 bg-gradient-to-br from-blue-50 to-cyan-50">
-                  <Lottie 
-                    animationData={animationData}
-                    loop={true}
-                    className="w-full h-auto"
-                  />
+                  {animationData ? (
+                    <Lottie 
+                      animationData={animationData}
+                      loop={true}
+                      className="w-full h-auto"
+                    />
+                  ) : (
+                    <div className="w-full h-48 bg-gray-100 animate-pulse rounded-xl flex items-center justify-center">
+                      <span className="text-gray-400">Loading...</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-4">
@@ -270,20 +219,12 @@ export function DonationProgramsSection() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Card 5: Komunitas Donatur */}
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ 
-              duration: 0.6,
-              delay: 0.5,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            viewport={{ once: true, margin: "-50px" }}
-            whileHover={{ y: -8, scale: 1.02 }}
-            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300"
+          <div
+            className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 animate-fade-in"
+            style={{ animationDelay: '500ms' }}
           >
             <div className="flex flex-col h-full space-y-4">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg">
@@ -362,7 +303,7 @@ export function DonationProgramsSection() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
         </div>
       </div>

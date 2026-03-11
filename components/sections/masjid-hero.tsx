@@ -57,7 +57,6 @@ const BlurText: React.FC<BlurTextProps> = ({
           key={i}
           style={{
             display: "inline-block",
-            filter: inView ? "blur(0px)" : "blur(10px)",
             opacity: inView ? 1 : 0,
             transform: inView ? "translateY(0)" : `translateY(${direction === "top" ? "-20px" : "20px"})`,
             transition: `all 0.5s ease-out ${i * delay}ms`,

@@ -2,7 +2,6 @@
 
 import { FileText, CheckCircle, Shield } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
-import { motion } from "framer-motion"
 
 const services = [
   {
@@ -82,16 +81,15 @@ export function ServicesSection() {
     <section id="how-it-works" className="py-32 px-6 pb-24 relative overflow-hidden max-w-full">
       <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none z-0 max-w-full overflow-hidden">
         <span className="relative inline-block">
-          <span className="relative z-10 font-bold text-center text-[18vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none tracking-tighter text-white whitespace-nowrap px-4" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.3)' }}>
+          <span className="relative z-10 font-bold text-center text-[18vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] leading-none tracking-tighter text-white whitespace-nowrap px-4">
             AMANAH
           </span>
-          <motion.span
-            className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 -z-0"
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            style={{ transformOrigin: "left" }}
+          <span
+            className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 -z-0 animate-slide-in-right"
+            style={{ 
+              transformOrigin: "left",
+              animationDelay: "200ms"
+            }}
           />
         </span>
       </div>
@@ -120,18 +118,24 @@ export function ServicesSection() {
         <div ref={sectionRef} className="relative px-6 lg:px-8 py-20 lg:py-24 mb-3 lg:mt-25 overflow-hidden rounded-3xl min-h-[450px] lg:min-h-[550px]">
           {/* Background image that spans full width */}
           <div className="absolute inset-0 w-full h-full overflow-hidden">
-            <img
-              src="/images/masjid1.webp"
-              alt="Beautiful house"
-              className={`w-full h-[130%] object-cover transition-transform duration-1000 ease-out ${
-                isVisible ? "scale-100" : "scale-110"
-              }`}
-              style={{ 
-                minWidth: '100%', 
-                minHeight: '100%',
-                objectPosition: 'center 20%' // Ini akan menaikkan posisi gambar
-              }}
-            />
+            {isVisible ? (
+              <div style={{ aspectRatio: '929/619', width: '100%', height: '100%' }}>
+                <img
+                  src="/images/masjid1.webp"
+                  alt="Beautiful house"
+                  className="w-full h-full object-cover transition-transform duration-1000 ease-out scale-100"
+                  style={{ 
+                    objectPosition: 'center 20%'
+                  }}
+                  loading="lazy"
+                  width="1200"
+                  height="799"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                />
+              </div>
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 animate-pulse" />
+            )}
             {/* Overlay for better text readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
           </div>
