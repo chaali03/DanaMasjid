@@ -68,13 +68,18 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
+        {/* DNS prefetch for external domains we actually use */}
+        <link rel="dns-prefetch" href="//danamasjid.firebaseapp.com" />
+        <link rel="dns-prefetch" href="//identitytoolkit.googleapis.com" />
+        
+        {/* Preconnect only for critical external resources */}
+        <link rel="preconnect" href="https://danamasjid.firebaseapp.com" />
+        
         {/* Meta Description */}
         <meta name="description" content="Platform donasi masjid yang transparan dan terpercaya. Salurkan zakat, infaq, dan sedekah Anda dengan amanah. Gratis 3 bulan pertama untuk masjid yang mendaftar." />
-        {/* Prefetch to critical domains */}
-        <link rel="dns-prefetch" href="https://www.google.com" />
       </head>
       <body className={`font-sans antialiased`}>
-        {/* Defer structured data */}
+        {/* Defer all structured data to after interactive */}
         <Script
           id="organization-schema"
           type="application/ld+json"
@@ -105,6 +110,7 @@ export default function RootLayout({
         <Script
           id="website-schema"
           type="application/ld+json"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -119,6 +125,33 @@ export default function RootLayout({
               }
             })
           }}
+        />
+        
+        {/* Service Worker Registration */}
+        <Script
+          id="sw-registration"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                      console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                      console.log('SW registration failed: ', registrationError);
+                    });
+                });
+              }
+            `
+          }}
+        />
+        
+        {/* Performance Monitoring */}
+        <Script
+          src="/performance-monitor.js"
+          strategy="afterInteractive"
         />
         
         <SuppressExtensionErrors />

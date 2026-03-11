@@ -26,7 +26,7 @@ const nextConfig = {
   poweredByHeader: false,
   
   // Enable source maps in production for better debugging
-  productionBrowserSourceMaps: true,
+  productionBrowserSourceMaps: false, // Disable to reduce bundle size
   
   // Generate unique build IDs to prevent cache issues
   generateBuildId: async () => {
@@ -34,45 +34,159 @@ const nextConfig = {
   },
   
   experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts', 'framer-motion'],
+    optimizePackageImports: ['lucide-react', 'recharts', 'framer-motion', 'lottie-react'],
+    optimizeCss: true,
+    // Enable modern bundling
+    serverComponentsExternalPackages: ['sharp'],
+    // Optimize server components
+    serverActions: {
+      allowedOrigins: ['localhost:3000', 'localhost:3001']
+    },
+    // Enable SWC minification for better performance
+    swcMinify: true,
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
   
   // Optimize CSS
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
+    // Enable SWC minification
+    styledComponents: true,
   },
   
   // Optimize webpack
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
     // Optimize bundle size
-    if (!isServer) {
+    if (!isServer && !dev) {
       config.optimization = {
         ...config.optimization,
         splitChunks: {
           chunks: 'all',
+          minSize: 10000, // Smaller minimum size
+          maxSize: 50000, // Much smaller chunks for faster loading
           cacheGroups: {
             default: false,
             vendors: false,
-            // Vendor chunk
+            // Framework chunk (React, Next.js) - keep very small
+            framework: {
+              chunks: 'all',
+              name: 'framework',
+              test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
+              priority: 40,
+              enforce: true,
+              maxSize: 50000,
+            },
+            // Animation libraries - completely async and small
+            animations: {
+              name: 'animations',
+              chunks: 'async',
+              test: /[\\/]node_modules[\\/](framer-motion|lottie-react|motion-dom|lottie-web)[\\/]/,
+              priority: 30,
+              enforce: true,
+              maxSize: 30000,
+            },
+            // UI libraries - async and small
+            ui: {
+              name: 'ui',
+              chunks: 'async',
+              test: /[\\/]node_modules[\\/](lucide-react|recharts|@radix-ui)[\\/]/,
+              priority: 25,
+              enforce: true,
+              maxSize: 25000,
+            },
+            // Firebase - separate async chunk
+            firebase: {
+              name: 'firebase',
+              chunks: 'async',
+              test: /[\\/]node_modules[\\/](firebase|@firebase)[\\/]/,
+              priority: 28,
+              enforce: true,
+              maxSize: 40000,
+            },
+            // Utilities - async and very small
+            utils: {
+              name: 'utils',
+              chunks: 'async',
+              test: /[\\/]node_modules[\\/](date-fns|clsx|class-variance-authority|tailwind-merge)[\\/]/,
+              priority: 22,
+              enforce: true,
+              maxSize: 20000,
+            },
+            // React ecosystem - separate chunk
+            reactEcosystem: {
+              name: 'react-ecosystem',
+              chunks: 'async',
+              test: /[\\/]node_modules[\\/](react-hook-form|react-hot-toast|react-query|@tanstack)[\\/]/,
+              priority: 24,
+              enforce: true,
+              maxSize: 30000,
+            },
+            // Vendor chunk - much smaller pieces
             vendor: {
               name: 'vendor',
               chunks: 'all',
               test: /[\\/]node_modules[\\/]/,
-              priority: 20
+              priority: 20,
+              minChunks: 1,
+              maxSize: 40000,
             },
-            // Common chunk
+            // Common chunk - very small
             common: {
               name: 'common',
               minChunks: 2,
               chunks: 'all',
               priority: 10,
               reuseExistingChunk: true,
-              enforce: true
+              enforce: true,
+              maxSize: 20000,
             }
           }
-        }
+        },
+        // Aggressive tree shaking
+        usedExports: true,
+        sideEffects: false,
+        // Module concatenation for better tree shaking
+        concatenateModules: true,
+        // Minimize bundle size
+        minimize: true,
+        // Remove unused modules
+        providedExports: true,
+      }
+
+      // Add aggressive module replacement for smaller alternatives
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        // Use smaller alternatives where possible
+        'react/jsx-runtime': 'react/jsx-runtime',
+        'react/jsx-dev-runtime': 'react/jsx-dev-runtime',
+      }
+
+      // Ignore large modules that aren't needed
+      config.externals = {
+        ...config.externals,
+        // Externalize large libraries if they're not critical
+        canvas: 'canvas',
+        bufferutil: 'bufferutil',
+        'utf-8-validate': 'utf-8-validate',
       }
     }
+
+    // Add module concatenation for better tree shaking
+    if (!isServer && !dev) {
+      config.optimization.concatenateModules = true;
+    }
+
+    // Optimize module resolution
+    config.resolve.modules = ['node_modules'];
+    config.resolve.symlinks = false;
+
     return config
   },
   

@@ -2,13 +2,13 @@
 
 export function HomePage() {
   return (
-    <div className="relative bg-background min-h-[200vh] lg:min-h-[135vh]">
-      <div className="relative px-4 py-8 md:py-12 min-h-[200vh] lg:min-h-[135vh]">
+    <div className="relative bg-background min-h-[120vh] md:min-h-[150vh] lg:min-h-[135vh]">
+      <div className="relative px-4 py-8 md:py-12 min-h-[120vh] md:min-h-[130vh] lg:min-h-[135vh]">
         {/* Wavy Background - Only in this section */}
         <div className="absolute inset-0 z-0">
           {/* Top Wave */}
           <svg 
-            className="absolute top-0 left-0 w-full h-[60vh]" 
+            className="absolute top-0 left-0 w-full h-[40vh] md:h-[50vh] lg:h-[60vh]" 
             viewBox="0 0 1440 800" 
             preserveAspectRatio="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +28,7 @@ export function HomePage() {
           
           {/* Bottom Wave */}
           <svg 
-            className="absolute bottom-0 left-0 w-full h-[60vh]" 
+            className="absolute bottom-0 left-0 w-full h-[40vh] md:h-[50vh] lg:h-[60vh]" 
             viewBox="0 0 1440 800" 
             preserveAspectRatio="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -80,20 +80,20 @@ export function HomePage() {
                 {
                   gradient: "linear-gradient(177deg, rgb(9, 138, 95) 2.45%, rgb(5, 227, 156) 97.55%)",
                   icon: "/images/scroll/2.webp",
-                  title: "Ruang Kerja Tim Bersama",
-                  desc: "Kredit bersama dan perpustakaan aset yang terintegrasi menjaga tim Anda tetap sinkron dan memungkinkan kolaborasi yang lancar sepanjang alur kerja."
+                  title: "Manajemen Donasi Digital",
+                  desc: "Platform terintegrasi untuk mengelola donasi online, wakaf, dan zakat dengan sistem pelaporan real-time yang transparan untuk jamaah."
                 },
                 {
                   gradient: "linear-gradient(177deg, rgb(67, 49, 94) 2.45%, rgb(168, 119, 217) 97.55%)",
                   icon: "/images/scroll/3.webp",
-                  title: "Sertifikasi ISO27001, SOC2 Tipe II, & GDPR",
-                  desc: "Kami menyediakan keamanan tingkat perusahaan di setiap lapisan platform kami. Platform kami telah disertifikasi di bawah SOC2 Type II, ISO27001, dan GDPR."
+                  title: "Keamanan & Sertifikasi Syariah",
+                  desc: "Sistem keamanan berlapis dengan sertifikasi halal dan pengawasan Dewan Syariah Nasional untuk memastikan pengelolaan dana sesuai syariat Islam."
                 },
                 {
                   gradient: "linear-gradient(177deg, rgb(251, 186, 111) 2.45%, rgb(255, 236, 225) 97.55%)",
                   icon: "/images/scroll/4.webp",
-                  title: "Single Sign-On (SSO)",
-                  desc: "DanaMasjid Enterprise mendukung SSO melalui SAML, memungkinkan login yang aman dan terpusat untuk tim besar menggunakan penyedia identitas seperti Okta, Google Workspace, atau Microsoft Entra."
+                  title: "Laporan Keuangan Transparan",
+                  desc: "Laporan keuangan masjid yang dapat diakses jamaah secara real-time, lengkap dengan rincian pemasukan, pengeluaran, dan program yang sedang berjalan."
                 }
               ].map((card, index) => (
                 <div
@@ -133,23 +133,23 @@ export function HomePage() {
               {[
                 {
                   icon: "/images/scroll/5.webp",
-                  title: "Privasi Data yang Ditingkatkan",
-                  desc: "Data pelanggan perusahaan disimpan dalam database terpisah yang aman untuk memastikan privasi dan memenuhi kebutuhan kepatuhan organisasi."
+                  title: "Perlindungan Data Jamaah",
+                  desc: "Data pribadi jamaah disimpan dengan enkripsi tingkat bank dan sistem keamanan berlapis untuk melindungi privasi dan informasi sensitif."
                 },
                 {
                   icon: "/images/scroll/6.webp",
-                  title: "Dukungan Akun Khusus",
-                  desc: "Eksekutif akun dan insinyur solusi yang berdedikasi siap mendukung pengaturan perusahaan Anda dan membantu dengan pertanyaan umum apa pun dengan cepat."
+                  title: "Dukungan Pengurus Masjid",
+                  desc: "Tim support khusus siap membantu pengurus masjid dalam pengelolaan platform dan menjawab pertanyaan seputar fitur donasi digital."
                 },
                 {
                   icon: "/images/scroll/7.webp",
-                  title: "Retensi Aset Selamanya",
-                  desc: "Setelah dihasilkan, model Anda selalu tersedia untuk diunduh—kapan saja Anda membutuhkannya."
+                  title: "Arsip Donasi Permanen",
+                  desc: "Semua riwayat donasi dan transaksi tersimpan permanen dan dapat diakses kapan saja untuk keperluan audit dan pelaporan."
                 },
                 {
                   icon: "/images/scroll/8.webp",
-                  title: "Penagihan Terpusat",
-                  desc: "Semua anggota tim berbagi satu akun penagihan, sehingga memudahkan tim TI dan keuangan untuk mengelola pembayaran dan faktur."
+                  title: "Sistem Pembayaran Terpusat",
+                  desc: "Integrasi dengan berbagai metode pembayaran digital seperti e-wallet, transfer bank, dan QRIS untuk kemudahan jamaah berdonasi."
                 }
               ].map((card, index) => (
                 <div
