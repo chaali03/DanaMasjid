@@ -64,9 +64,9 @@ export function MasjidHeroV2() {
               >
                 Daftarkan Masjid Anda & Terima Donasi{" "}
                 <span className="relative inline-block">
-                  <span className="relative z-10 text-white px-2">Transparan</span>
+                  <span className="relative z-10 text-white px-3 py-1">Transparan</span>
                   <motion.span
-                    className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 -z-0"
+                    className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 -z-0 -inset-y-1"
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
                     transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
@@ -136,8 +136,8 @@ export function MasjidHeroV2() {
                   ].map((text, index) => (
                     <motion.li
                       key={text}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
                       className="flex items-center gap-2"
                     >

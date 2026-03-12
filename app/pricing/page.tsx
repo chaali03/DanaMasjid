@@ -6,6 +6,7 @@ import { Header } from "@/components/layout"
 import { HeroSection2 } from "@/components/sections"
 import { PricingInfoSection } from "@/components/sections"
 import { motion } from "framer-motion"
+import { AnimatedSection } from "@/components/ui/animated-section"
 
 const pricingPlans = [
   {
@@ -83,7 +84,7 @@ export default function PricingPage() {
       <HeroSection2
         title={
           <>
-            Harga yang <span className="relative inline-block">
+            Harga yang <AnimatedSection variant="slideInBlur" className="relative inline-block">
               <span className="relative z-10 text-white px-2">Transparan</span>
               <motion.span
                 className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-400 -z-0"
@@ -93,7 +94,7 @@ export default function PricingPage() {
                 transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
                 style={{ transformOrigin: "left" }}
               />
-            </span> untuk Semua
+            </AnimatedSection> untuk Semua
           </>
         }
         subtitle="Pilih paket yang sesuai dengan kebutuhan masjid Anda. Semua paket sudah termasuk fitur keamanan dan transparansi penuh."
@@ -111,17 +112,21 @@ export default function PricingPage() {
       />
 
       {/* Info Section */}
-      <PricingInfoSection />
+      <AnimatedSection variant="fadeInUp">
+        <PricingInfoSection />
+      </AnimatedSection>
 
       {/* Pricing Component */}
-      <div id="pricing" className="max-w-6xl mx-auto mb-88">
-        <Pricing 
-          plans={pricingPlans}
-          title="Pilih Paket yang Tepat"
-          description="Mulai gratis atau upgrade untuk fitur lebih lengkap
+      <AnimatedSection variant="scaleIn" delay={0.2}>
+        <div id="pricing" className="max-w-6xl mx-auto mb-88">
+          <Pricing 
+            plans={pricingPlans}
+            title="Pilih Paket yang Tepat"
+            description="Mulai gratis atau upgrade untuk fitur lebih lengkap
 Semua paket dapat diupgrade atau downgrade kapan saja"
-        />
-      </div>
+          />
+        </div>
+      </AnimatedSection>
 
       {/* Footer */}
       <Footer />

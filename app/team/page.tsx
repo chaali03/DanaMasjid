@@ -6,6 +6,7 @@ import { HeroSection2 } from "@/components/sections"
 import { TeamInfoSection } from "@/components/sections"
 import { TeamMembersSection } from "@/components/sections"
 import { motion } from "framer-motion"
+import { AnimatedSection } from "@/components/ui/animated-section"
 
 export default function TeamPage() {
   return (
@@ -20,7 +21,7 @@ export default function TeamPage() {
       <HeroSection2
         title={
           <>
-            Kenali <span className="text-primary">Tim</span> <span className="relative inline-block">
+            Kenali <span className="text-primary">Tim</span> <AnimatedSection variant="zoomInRotate" className="relative inline-block">
               <span className="relative z-10 text-white px-2">HidupTebe</span>
               <motion.span
                 className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 -z-0"
@@ -30,7 +31,7 @@ export default function TeamPage() {
                 transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
                 style={{ transformOrigin: "left" }}
               />
-            </span>
+            </AnimatedSection>
           </>
         }
         subtitle="Bersama membangun platform donasi masjid yang transparan, amanah, dan terpercaya untuk kemakmuran masjid di seluruh Indonesia."
@@ -48,7 +49,9 @@ export default function TeamPage() {
       />
 
       {/* Team Info Section */}
-      <TeamInfoSection />
+      <AnimatedSection variant="fadeInLeft">
+        <TeamInfoSection />
+      </AnimatedSection>
 
       {/* Team Members Section */}
       <TeamMembersSection />

@@ -15,14 +15,18 @@ export function HomePage() {
       >
         {/* Wavy Background - Only in this section */}
         <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          initial={{ opacity: 0, scale: 1.1 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
           className="absolute inset-0 z-0"
         >
           {/* Top Wave */}
-          <svg 
+          <motion.svg 
+            initial={{ y: -50 }}
+            whileInView={{ y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            viewport={{ once: true }}
             className="absolute top-0 left-0 w-full h-[40vh] md:h-[50vh] lg:h-[60vh]" 
             viewBox="0 0 1440 800" 
             preserveAspectRatio="none"
@@ -39,10 +43,14 @@ export function HomePage() {
               d="M0,0 C240,150 480,200 720,180 C960,160 1200,100 1440,150 L1440,0 L0,0 Z" 
               fill="url(#waveGradient)"
             />
-          </svg>
+          </motion.svg>
           
           {/* Bottom Wave */}
-          <svg 
+          <motion.svg 
+            initial={{ y: 50 }}
+            whileInView={{ y: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+            viewport={{ once: true }}
             className="absolute bottom-0 left-0 w-full h-[40vh] md:h-[50vh] lg:h-[60vh]" 
             viewBox="0 0 1440 800" 
             preserveAspectRatio="none"
@@ -59,29 +67,43 @@ export function HomePage() {
               d="M0,800 C240,650 480,600 720,620 C960,640 1200,700 1440,650 L1440,800 L0,800 Z" 
               fill="url(#waveGradient2)"
             />
-          </svg>
+          </motion.svg>
         </motion.div>
 
         {/* TRANSPARAN - Pojok Kanan Atas */}
         <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          initial={{ opacity: 0, x: 100, rotate: 5 }}
+          whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+          transition={{ 
+            duration: 0.8, 
+            ease: [0.16, 1, 0.3, 1],
+            delay: 0.4 
+          }}
           viewport={{ once: true }}
           className="absolute top-4 left-1/2 -translate-x-1/2 lg:top-12 lg:right-16 lg:left-auto lg:translate-x-0 overflow-visible w-[85vw] sm:w-[70vw] md:w-[60vw] lg:w-[25vw] z-50"
         >
-          <div className="relative inline-block w-full">
+          <motion.div 
+            whileHover={{ scale: 1.05, rotate: -2 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="relative inline-block w-full"
+          >
             {/* Frame Border */}
             <div className="absolute inset-0 border-3 sm:border-4 border-gray-200 dark:border-gray-700 rounded-2xl sm:rounded-3xl pointer-events-none z-20 shadow-lg"></div>
             
             {/* Background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 rounded-2xl sm:rounded-3xl shadow-xl"></div>
+            <motion.div 
+              initial={{ scale: 0.8 }}
+              whileInView={{ scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              viewport={{ once: true }}
+              className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 rounded-2xl sm:rounded-3xl shadow-xl"
+            ></motion.div>
             
             {/* Text */}
             <span className="relative z-10 font-bold text-center text-[8vw] sm:text-[7vw] md:text-[6vw] lg:text-[3.5vw] leading-none tracking-tighter text-white whitespace-nowrap px-3 py-2 sm:px-4 sm:py-3 md:px-5 md:py-4 block drop-shadow-lg">
               TRANSPARAN
             </span>
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* Main Content */}
@@ -100,111 +122,206 @@ export function HomePage() {
               {[
                 {
                   gradient: "linear-gradient(177deg, rgb(9, 138, 95) 2.45%, rgb(5, 227, 156) 97.55%)",
-                  icon: "/images/scroll/2.webp",
+                  icon: "/images/stak/Zakat-Ramadan.webp",
                   title: "Manajemen Donasi Digital",
                   desc: "Platform terintegrasi untuk mengelola donasi online, wakaf, dan zakat dengan sistem pelaporan real-time yang transparan untuk jamaah."
                 },
                 {
                   gradient: "linear-gradient(177deg, rgb(67, 49, 94) 2.45%, rgb(168, 119, 217) 97.55%)",
-                  icon: "/images/scroll/3.webp",
+                  icon: "/images/stak/Halal-Sign-Ramadan.webp",
                   title: "Keamanan & Sertifikasi Syariah",
                   desc: "Sistem keamanan berlapis dengan sertifikasi halal dan pengawasan Dewan Syariah Nasional untuk memastikan pengelolaan dana sesuai syariat Islam."
                 },
                 {
                   gradient: "linear-gradient(177deg, rgb(251, 186, 111) 2.45%, rgb(255, 236, 225) 97.55%)",
-                  icon: "/images/scroll/4.webp",
+                  icon: "/images/stak/Ramadan-Lantern-Ramadan.webp",
                   title: "Laporan Keuangan Transparan",
                   desc: "Laporan keuangan masjid yang dapat diakses jamaah secara real-time, lengkap dengan rincian pemasukan, pengeluaran, dan program yang sedang berjalan."
                 }
               ].map((card, index) => (
-                <div
+                <motion.div
                   key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: 0.6 + index * 0.15,
+                    ease: [0.16, 1, 0.3, 1]
+                  }}
+                  viewport={{ once: true }}
                   className="flex flex-col p-4 md:p-8 border-r border-gray-200 dark:border-gray-700 last:border-r-0"
                 >
                   {/* Gradient Header with Icon */}
-                  <div 
+                  <motion.div 
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: 0.8 + index * 0.15,
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
+                    viewport={{ once: true }}
                     className="relative h-12 md:h-16 lg:h-20 w-full rounded-xl md:rounded-2xl rounded-tl-[32px] md:rounded-tl-[40px] lg:rounded-tl-[60px] shadow-lg mt-12 sm:mt-16 lg:mt-20 mb-4 md:mb-8"
                     style={{ background: card.gradient }}
                   >
-                    <div className="absolute bottom-0 left-0 h-[200%] max-h-[160px] aspect-[340/160]">
+                    <motion.div 
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ 
+                        duration: 0.6, 
+                        delay: 1 + index * 0.15,
+                        ease: [0.16, 1, 0.3, 1]
+                      }}
+                      viewport={{ once: true }}
+                      className="absolute bottom-0 left-0 h-[150%] max-h-[120px] aspect-square"
+                    >
                       <img
                         src={card.icon}
                         alt={card.title}
-                        width={340}
-                        height={160}
-                        sizes="(max-width: 768px) 200px, (max-width: 1024px) 250px, 340px"
+                        width={120}
+                        height={120}
+                        sizes="(max-width: 768px) 80px, (max-width: 1024px) 100px, 120px"
                         className="w-full h-full object-contain"
                         loading="lazy"
                         decoding="async"
                       />
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                   
                   {/* Text Content */}
-                  <h4 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3">
+                  <motion.h4 
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: 1.1 + index * 0.15,
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
+                    viewport={{ once: true }}
+                    className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3"
+                  >
                     {card.title}
-                  </h4>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  </motion.h4>
+                  <motion.p 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: 1.2 + index * 0.15,
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
+                    viewport={{ once: true }}
+                    className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed"
+                  >
                     {card.desc}
-                  </p>
-                </div>
+                  </motion.p>
+                </motion.div>
               ))}
             </div>
 
             {/* Bottom 4 Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 dark:bg-gray-900 rounded-[20px] border border-gray-200 dark:border-gray-700 p-4 md:p-0 md:bg-transparent md:border-0 mt-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.7, 
+                delay: 1.5,
+                ease: [0.16, 1, 0.3, 1]
+              }}
+              viewport={{ once: true }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 dark:bg-gray-900 rounded-[20px] border border-gray-200 dark:border-gray-700 p-4 md:p-0 md:bg-transparent md:border-0 mt-6"
+            >
               {[
                 {
-                  icon: "/images/scroll/5.webp",
+                  icon: "/images/stak/Tauhid-Ramadan.webp",
                   title: "Perlindungan Data Jamaah",
                   desc: "Data pribadi jamaah disimpan dengan enkripsi tingkat bank dan sistem keamanan berlapis untuk melindungi privasi dan informasi sensitif."
                 },
                 {
-                  icon: "/images/scroll/6.webp",
+                  icon: "/images/stak/Sorry-Hand-Ramadan.webp",
                   title: "Dukungan Pengurus Masjid",
                   desc: "Tim support khusus siap membantu pengurus masjid dalam pengelolaan platform dan menjawab pertanyaan seputar fitur donasi digital."
                 },
                 {
-                  icon: "/images/scroll/7.webp",
+                  icon: "/images/stak/Ramadan-Drum-Ramadan.webp",
                   title: "Arsip Donasi Permanen",
                   desc: "Semua riwayat donasi dan transaksi tersimpan permanen dan dapat diakses kapan saja untuk keperluan audit dan pelaporan."
                 },
                 {
-                  icon: "/images/scroll/8.webp",
+                  icon: "/images/stak/Ramadan-Discount-Ramadan.webp",
                   title: "Sistem Pembayaran Terpusat",
                   desc: "Integrasi dengan berbagai metode pembayaran digital seperti e-wallet, transfer bank, dan QRIS untuk kemudahan jamaah berdonasi."
                 }
               ].map((card, index) => (
-                <div
+                <motion.div
                   key={index}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: 1.7 + index * 0.1,
+                    ease: [0.16, 1, 0.3, 1]
+                  }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
                   className="flex items-center gap-3 md:gap-5 border-t border-gray-200 dark:border-gray-700 p-0 md:p-5 lg:px-8 lg:py-6"
                 >
                   {/* Icon */}
-                  <div className="relative size-16 sm:size-24 md:size-[120px] shrink-0">
+                  <motion.div 
+                    initial={{ scale: 0, rotate: -180 }}
+                    whileInView={{ scale: 1, rotate: 0 }}
+                    transition={{ 
+                      duration: 0.6, 
+                      delay: 1.8 + index * 0.1,
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
+                    viewport={{ once: true }}
+                    className="relative size-12 sm:size-16 md:size-20 shrink-0"
+                  >
                     <img
                       src={card.icon}
                       alt={card.title}
-                      width={120}
-                      height={120}
-                      sizes="(max-width: 640px) 64px, (max-width: 768px) 96px, 120px"
+                      width={80}
+                      height={80}
+                      sizes="(max-width: 640px) 48px, (max-width: 768px) 64px, 80px"
                       className="w-full h-full object-contain"
                       loading="lazy"
                       decoding="async"
                     />
-                  </div>
+                  </motion.div>
                   
                   {/* Text */}
                   <div>
-                    <h4 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3">
+                    <motion.h4 
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ 
+                        duration: 0.5, 
+                        delay: 1.9 + index * 0.1,
+                        ease: [0.16, 1, 0.3, 1]
+                      }}
+                      viewport={{ once: true }}
+                      className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3"
+                    >
                       {card.title}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                    </motion.h4>
+                    <motion.p 
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ 
+                        duration: 0.5, 
+                        delay: 2 + index * 0.1,
+                        ease: [0.16, 1, 0.3, 1]
+                      }}
+                      viewport={{ once: true }}
+                      className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed"
+                    >
                       {card.desc}
-                    </p>
+                    </motion.p>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
           </div>
         </div>

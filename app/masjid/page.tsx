@@ -9,6 +9,7 @@ import { Search, MapPin, Filter, ChevronDown, BadgeCheck } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { getAllMosques } from "@/lib/services/masjid-service"
+import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/animated-section"
 
 export default function MasjidPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -40,12 +41,8 @@ export default function MasjidPage() {
         <div className="max-w-7xl mx-auto">
 
           {/* Search and Filter */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white rounded-2xl shadow-lg p-6 mb-12"
-          >
+          <AnimatedSection variant="scaleIn" delay={0.1}>
+            <div className="bg-white rounded-2xl shadow-lg p-6 mb-12">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Search */}
               <div className="md:col-span-2 relative">
@@ -96,18 +93,14 @@ export default function MasjidPage() {
             <div className="mt-4 text-sm text-gray-600">
               Menampilkan <span className="font-semibold text-gray-900">{filteredMosques.length}</span> masjid
             </div>
-          </motion.div>
+            </div>
+          </AnimatedSection>
 
           {/* Mosque Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredMosques.map((mosque, index) => (
-              <motion.div
-                key={mosque.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 * index }}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer"
-              >
+              <StaggerItem key={mosque.id}>
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer h-full">
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
                   <Image
@@ -159,17 +152,15 @@ export default function MasjidPage() {
                     Masuk sebagai Jamaah
                   </Link>
                 </div>
-              </motion.div>
+              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
 
           {/* Empty State */}
           {filteredMosques.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-16"
-            >
+            <AnimatedSection variant="bounceIn">
+              <div className="text-center py-16">
               <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Search className="w-12 h-12 text-gray-400" />
               </div>
@@ -187,7 +178,8 @@ export default function MasjidPage() {
               >
                 Reset Filter
               </button>
-            </motion.div>
+              </div>
+            </AnimatedSection>
           )}
         </div>
       </section>
@@ -206,25 +198,24 @@ export default function MasjidPage() {
         </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
+          <AnimatedSection variant="fadeInUp">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
               Masjid Anda Belum Terdaftar?
             </h2>
+          </AnimatedSection>
+          <AnimatedSection variant="fadeInUp" delay={0.2}>
             <p className="text-lg text-blue-100 mb-10 max-w-2xl mx-auto">
               Daftarkan masjid Anda sekarang dan mulai terima donasi secara transparan dan amanah
             </p>
+          </AnimatedSection>
+          <AnimatedSection variant="scaleIn" delay={0.4}>
             <Link
               href="/daftar-masjid"
               className="inline-block px-10 py-5 bg-white text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 text-lg"
             >
               Daftarkan Masjid Sekarang
             </Link>
-          </motion.div>
+          </AnimatedSection>
         </div>
       </section>
 

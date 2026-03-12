@@ -1,90 +1,61 @@
 "use client"
+
 import { useEffect, useState, useRef } from "react"
 import { AnimatedText } from "@/components/animations"
-import { OptimizedVideo } from "@/components/ui/optimized-video"
+import { motion } from "framer-motion"
 import Image from "next/image"
 
 export function HeroSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const [videoLoaded, setVideoLoaded] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
   const sectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setIsVisible(true)
+    const timer = setTimeout(() => {
+      setIsVisible(true)
+    }, 100)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
-    const el = sectionRef.current
-    if (!el || videoLoaded) return
-
-    let idleId: number | null = null
-    let timeoutId: number | null = null
-
-    const scheduleLoad = () => {
-      if (typeof window === "undefined") return
-      const w = window as Window &
-        typeof globalThis & {
-          requestIdleCallback?: (cb: () => void, opts?: { timeout?: number }) => number
-          cancelIdleCallback?: (id: number) => void
-        }
-
-      if (typeof w.requestIdleCallback === "function") {
-        idleId = w.requestIdleCallback(() => setVideoLoaded(true), { timeout: 2500 })
-      } else {
-        timeoutId = window.setTimeout(() => setVideoLoaded(true), 1200)
-      }
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            scheduleLoad()
-            observer.disconnect()
-            break
-          }
-        }
-      },
-      // Load after user actually sees hero (avoid early network during initial render)
-      { threshold: 0.35, rootMargin: "0px" }
-    )
-
-    observer.observe(el)
-
-    return () => {
-      observer.disconnect()
-      if (idleId != null) {
-        ;(window as Window &
-          typeof globalThis & {
-            cancelIdleCallback?: (id: number) => void
-          }).cancelIdleCallback?.(idleId)
-      }
-      if (timeoutId != null) window.clearTimeout(timeoutId)
-    }
-  }, [videoLoaded])
-
-  useEffect(() => {
     const video = videoRef.current
-    if (!video || !videoLoaded) return
+    if (!video) return
 
-    // Trigger fetch only after we intentionally "enable" video
-    video.load()
+    // Force hardware acceleration
+    video.style.transform = 'translateZ(0)'
+    video.style.backfaceVisibility = 'hidden'
 
-    const play = () => {
-      video.play().catch(() => {
-        // ignore autoplay blocks
-      })
+    // Optimize video loading
+    video.preload = 'auto'
+    video.playsInline = true
+
+    // Ensure video starts from beginning
+    video.currentTime = 0
+
+    // Play video immediately when loaded
+    const playVideo = () => {
+      video.play().catch(err => console.log('Video autoplay prevented:', err))
     }
 
-    if (video.readyState >= 3) play()
-    else video.addEventListener("loadeddata", play, { once: true })
+    if (video.readyState >= 3) {
+      playVideo()
+    } else {
+      video.addEventListener('loadeddata', playVideo, { once: true })
+    }
+
+    // Simple loop without reverse (much smoother)
+    const handleEnded = () => {
+      video.currentTime = 0
+      video.play()
+    }
+
+    video.addEventListener('ended', handleEnded)
 
     return () => {
-      video.pause()
+      video.removeEventListener('ended', handleEnded)
     }
-  }, [videoLoaded])
+  }, [])
 
   useEffect(() => {
     let rafId: number
@@ -93,7 +64,6 @@ export function HeroSection() {
     const handleScroll = () => {
       if (!ticking) {
         rafId = requestAnimationFrame(() => {
-          // Use cached values to avoid forced reflows
           const scrollY = window.pageYOffset || document.documentElement.scrollTop
           const maxScroll = 400
           const progress = Math.min(scrollY / maxScroll, 1)
@@ -131,27 +101,24 @@ export function HeroSection() {
             WebkitBackfaceVisibility: 'hidden',
             perspective: 1000,
             WebkitPerspective: 1000,
-            aspectRatio: '16/9',
-            contain: 'layout style paint',
           }}
         >
-          {videoLoaded ? (
-            <OptimizedVideo
-              src="/vidio/vidio1.mp4"
-              poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23fbbf24;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23f59e0b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1920' height='1080' fill='url(%23grad)'/%3E%3C/svg%3E"
-              className="w-full h-full object-cover"
-              autoPlay={true}
-              preload="none"
-              loading="lazy"
-              loop={true}
-              muted={true}
-              playsInline={true}
-              width={1920}
-              height={1080}
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-blue-50 via-cyan-50 to-yellow-50" />
-          )}
+          <video 
+            ref={videoRef}
+            autoPlay 
+            loop
+            muted 
+            playsInline
+            preload="auto"
+            className="w-full h-full object-cover"
+            style={{
+              transform: 'translate3d(0, 0, 0)',
+              backfaceVisibility: 'hidden',
+            }}
+          >
+            <source src="/vidio/vidio1.mp4" type="video/mp4" />
+            <track kind="captions" srcLang="id" label="Indonesian" />
+          </video>
         </div>
       </div>
 
@@ -165,24 +132,32 @@ export function HeroSection() {
           contain: 'layout style paint',
         }}
       >
-        <span
-          className="block font-bold text-[28vw] sm:text-[25vw] md:text-[22vw] lg:text-[20vw] tracking-tighter select-none text-center leading-none bg-gradient-to-r from-blue-400 via-cyan-400 to-yellow-400 bg-clip-text text-transparent max-w-full"
-          style={{ 
-            marginBottom: "0",
-            opacity: isVisible ? 1 : 0,
-            transition: 'opacity 0.6s ease-out',
-            transitionDelay: '200ms',
-            contain: 'layout style paint',
+        <motion.span
+          initial={{ opacity: 0, scale: 0.5, y: 100 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{
+            duration: 1.2,
+            delay: 0.2,
+            ease: [0.16, 1, 0.3, 1],
+            scale: {
+              type: "spring",
+              damping: 15,
+              stiffness: 100,
+            }
           }}
+          className="block font-bold text-[28vw] sm:text-[25vw] md:text-[22vw] lg:text-[20vw] tracking-tighter select-none text-center leading-none bg-gradient-to-r from-blue-400 via-cyan-400 to-yellow-400 bg-clip-text text-transparent max-w-full"
+          style={{ marginBottom: "0", contain: 'layout style paint' }}
         >
           MASJID
-        </span>
+        </motion.span>
       </div>
 
       <div className="max-w-7xl mx-auto w-full relative z-10">
         <div className="text-center mb-12 max-w-full">
           <div
-            className={`transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
+            className={`transition-all duration-1000 delay-[800ms] ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+            }`}
           >
             <h1 className="font-serif text-[2rem] xs:text-[2.5rem] sm:text-[3rem] md:text-[4rem] lg:text-[5rem] xl:text-[6rem] 2xl:text-[7rem] font-normal leading-tight mb-6 w-full px-4 max-w-6xl mx-auto text-center">
               <span className="inline-block whitespace-nowrap">
@@ -199,8 +174,8 @@ export function HeroSection() {
         <div className="flex flex-col items-center justify-center gap-8">
           <div className="relative">
             <div
-              className={`relative w-[200px] md:w-[250px] lg:w-[300px] xl:w-[350px] transition-all duration-700 ease-out ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              className={`relative w-[200px] md:w-[250px] lg:w-[300px] xl:w-[350px] transition-opacity duration-1000 ease-out delay-500 ${
+                isVisible ? "opacity-100" : "opacity-0"
               }`}
             >
               <Image 
