@@ -14,6 +14,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import dynamic from "next/dynamic"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
+import { useAuth } from "@/lib/auth-context"
 
 // Lazy load each step — only Step1 is needed on initial render
 const Step1DataMasjid = dynamic(
@@ -71,6 +72,7 @@ const rateLimiter = new RateLimiter(3, 5 * 60 * 1000)
 
 export default function DaftarMasjidPage() {
   const router = useRouter()
+  const { user, loading: authLoading } = useAuth()
   const [currentStep, setCurrentStep] = useState(1)
   const [direction, setDirection] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -112,28 +114,17 @@ export default function DaftarMasjidPage() {
     console.log('🧹 Registration data cleared - fresh start required')
   }, []) // Run only once on mount
 
-  // Client-side authentication check
+  // Firebase auth guard — redirect to login if not authenticated
   useEffect(() => {
-    // Check if user is authenticated
-    const checkAuth = () => {
-      // Check for auth token in cookies
-      const cookies = document.cookie.split(';')
-      const authToken = cookies.find(cookie => cookie.trim().startsWith('auth_token='))
-      
-      if (!authToken) {
-        // Redirect to login with message
-        const loginUrl = new URL('/login', window.location.origin)
-        loginUrl.searchParams.set('redirect', '/daftar-masjid')
-        loginUrl.searchParams.set('message', 'Harus login terlebih dahulu untuk mendaftar masjid')
-        loginUrl.searchParams.set('type', 'daftar-masjid')
-        
-        window.location.href = loginUrl.toString()
-        return
-      }
+    if (authLoading) return // Wait for Firebase to resolve auth state
+    if (!user) {
+      const loginUrl = new URL('/login', window.location.origin)
+      loginUrl.searchParams.set('redirect', '/daftar-masjid')
+      loginUrl.searchParams.set('message', 'Harus login terlebih dahulu untuk mendaftar masjid')
+      loginUrl.searchParams.set('type', 'daftar-masjid')
+      router.replace(loginUrl.toString())
     }
-    
-    checkAuth()
-  }, [])
+  }, [user, authLoading, router])
 
   // Track form inactivity and session timeout
   useEffect(() => {
@@ -215,21 +206,6 @@ export default function DaftarMasjidPage() {
     sessionStorage.setItem('csrf_token', token)
   }, [])
   
-  // Check authentication on mount
-  useEffect(() => {
-    const checkAuth = () => {
-      const userId = localStorage.getItem('userId')
-      const authCookie = document.cookie.split('; ').find(row => row.startsWith('auth_token='))
-      
-      if (!userId || !authCookie) {
-        // Not authenticated, redirect to login
-        router.push('/login?redirect=/daftar-masjid&message=Silakan login terlebih dahulu')
-      }
-    }
-    
-    checkAuth()
-  }, [router])
-
   // Pre-fill user data from Firestore
   useEffect(() => {
     const prefillUserData = async () => {
@@ -546,6 +522,15 @@ export default function DaftarMasjidPage() {
         duration: 0.2
       }
     })
+  }
+
+  // Show nothing while checking auth (prevents flash of content)
+  if (authLoading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
+        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
   }
 
   return (
