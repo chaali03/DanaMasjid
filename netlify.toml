@@ -29,12 +29,11 @@
     # Referrer Policy
     Referrer-Policy = "strict-origin-when-cross-origin"
     
-    # Permissions Policy - Disable dangerous features, allow geolocation for mosque registration
-    Permissions-Policy = "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), interest-cohort=()"
+    # Permissions Policy - allow geolocation for mosque registration
+    Permissions-Policy = "camera=(), microphone=(), geolocation=*, payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=(), interest-cohort=()"
     
     # Cross-Origin Policies
     Cross-Origin-Opener-Policy = "same-origin"
-    Cross-Origin-Embedder-Policy = "require-corp"
     Cross-Origin-Resource-Policy = "same-origin"
     
     # Disable client-side caching for HTML
