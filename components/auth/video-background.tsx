@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
 
 interface VideoBackgroundProps {
   videoSrc: string
@@ -15,7 +14,6 @@ export function VideoBackground({ videoSrc, posterSrc, className = '' }: VideoBa
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
 
   // Intersection Observer - only load when visible
   useEffect(() => {
@@ -23,131 +21,87 @@ export function VideoBackground({ videoSrc, posterSrc, className = '' }: VideoBa
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true)
+        if (entries[0].isIntersecting) {
+          observer.disconnect()
+
+          // Check connection quality
+          const connection = (navigator as any).connection
+          const isSlow = connection && (connection.effectiveType === '2g' || connection.saveData)
+
+          if (isSlow) {
+            setHasError(true) // just show poster on slow connection
+            return
           }
-        })
+
+          // Short delay so page content renders first
+          const timer = setTimeout(() => setShouldLoadVideo(true), 800)
+          return () => clearTimeout(timer)
+        }
       },
-      { threshold: 0.1 }
+      { threshold: 0.01 }
     )
 
     observer.observe(containerRef.current)
-
-    return () => {
-      observer.disconnect()
-    }
+    return () => observer.disconnect()
   }, [])
 
   useEffect(() => {
-    if (!isVisible) return
-
-    // Load video only on desktop with good connection
-    const connection = (navigator as any).connection
-    const isGoodConnection = !connection || connection.effectiveType === '4g'
-    const isDesktop = window.innerWidth >= 1024
-    
-    if (isGoodConnection && isDesktop) {
-      // Delay video load significantly to prioritize LCP and initial render
-      const timer = setTimeout(() => {
-        setShouldLoadVideo(true)
-      }, 3000) // Increased delay
-      return () => clearTimeout(timer)
-    } else {
-      // On mobile or slow connection, don't load video at all
-      setHasError(true)
-    }
-  }, [isVisible])
-
-  useEffect(() => {
     if (!shouldLoadVideo) return
-    
+
     const video = videoRef.current
     if (!video) return
 
-    // Force play on mount
     const playVideo = async () => {
       try {
-        // Set video properties for better performance
-        video.playbackRate = 1
-        video.defaultPlaybackRate = 1
-        
-        // Try to play
         await video.play()
         setIsLoaded(true)
-      } catch (error) {
-        console.warn('Video autoplay failed:', error)
+      } catch {
         setHasError(true)
       }
     }
 
-    // Wait for video to be ready
+    const handleError = () => setHasError(true)
+    video.addEventListener('error', handleError)
+
     if (video.readyState >= 3) {
       playVideo()
     } else {
       video.addEventListener('canplay', playVideo, { once: true })
     }
 
-    // Handle errors
-    const handleError = () => {
-      console.error('Video loading error')
-      setHasError(true)
-    }
-    video.addEventListener('error', handleError)
-
-    return () => {
-      video.removeEventListener('error', handleError)
-    }
+    return () => video.removeEventListener('error', handleError)
   }, [shouldLoadVideo])
 
   return (
-    <div ref={containerRef} className="absolute inset-0 w-full h-full">
-      {/* Fallback background - always show poster */}
-      <div 
+    <div ref={containerRef} className={`absolute inset-0 w-full h-full ${className}`}>
+      {/* Poster / gradient fallback */}
+      <div
         className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-600 via-blue-700 to-cyan-600"
-        style={{
-          backgroundImage: posterSrc ? `url(${posterSrc})` : undefined,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+        style={posterSrc ? { backgroundImage: `url(${posterSrc})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
       />
 
-      {/* Video Background - on all devices */}
+      {/* Video — only rendered when ready */}
       {shouldLoadVideo && !hasError && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isLoaded ? 1 : 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className={`absolute inset-0 w-full h-full ${className}`}
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="none"
+          poster={posterSrc}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+          style={{
+            opacity: isLoaded ? 1 : 0,
+            transform: 'translateZ(0)',
+          }}
         >
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="none"
-            poster={posterSrc}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-              // Hardware acceleration
-              transform: 'translateZ(0)',
-              willChange: 'transform',
-            }}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-        </motion.div>
+          <source src={videoSrc} type="video/mp4" />
+        </video>
       )}
 
       {/* Overlay */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-sky-900/30 to-cyan-900/40 backdrop-blur-[2px]"
-      />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-sky-900/30 to-cyan-900/40 backdrop-blur-[2px]" />
     </div>
   )
 }
-
