@@ -2,14 +2,15 @@
 
 /**
  * Sanitize input to prevent XSS attacks
+ * Single-pass encoding — no double-encoding issues
  */
 export function sanitizeInput(input: string): string {
   if (!input) return ''
-  
-  // Remove HTML tags
-  let sanitized = input.replace(/<[^>]*>/g, '')
-  
-  // Escape special characters - order matters to prevent double escaping
+
+  // Remove null bytes first
+  let sanitized = input.replace(/\0/g, '')
+
+  // Single-pass HTML entity encoding
   sanitized = sanitized
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -17,16 +18,7 @@ export function sanitizeInput(input: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;')
     .replace(/\//g, '&#x2F;')
-  
-  // Second pass to catch any remaining dangerous characters
-  sanitized = sanitized
-    .replace(/&(?!amp;|lt;|gt;|quot;|#x27;|#x2F;)/g, '&amp;')
-    .replace(/<(?!&lt;)/g, '&lt;')
-    .replace(/>(?!&gt;)/g, '&gt;')
-  
-  // Remove null bytes
-  sanitized = sanitized.replace(/\0/g, '')
-  
+
   return sanitized.trim()
 }
 
