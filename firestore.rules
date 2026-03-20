@@ -40,8 +40,10 @@ service cloud.firestore {
                       request.resource.data.uid == resource.data.uid &&
                       request.resource.data.email == resource.data.email) ||
                       // Allow device verification update without auth (token-based)
-                      (resource.data.deviceVerificationToken != null &&
-                      request.resource.data.keys().hasOnly([
+                      // Use affectedKeys() (not keys()) because merge:true makes keys() return ALL doc fields
+                      ('deviceVerificationToken' in resource.data &&
+                      resource.data.deviceVerificationToken != null &&
+                      request.resource.data.diff(resource.data).affectedKeys().hasOnly([
                         'deviceFingerprint', 'deviceFingerprintStable',
                         'deviceVerificationToken', 'deviceVerificationExpiry',
                         'pendingDeviceFingerprint', 'pendingDeviceFingerprintStable',
