@@ -28,7 +28,7 @@ import { useAuth } from "@/lib/auth-context"
 const VideoBackground = lazy(() => import("@/components/auth/video-background").then(mod => ({ default: mod.VideoBackground })))
 const PolicyModal = lazy(() => import("@/components/policy-modal").then(mod => ({ default: mod.PolicyModal })))
 
-export default function LoginPage() {
+function LoginPageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { signInWithEmail, signInWithGoogle } = useAuth()
@@ -824,5 +824,15 @@ export default function LoginPage() {
         <PolicyModal open={isPolicyOpen} onOpenChange={setIsPolicyOpen} />
       </Suspense>
     </motion.div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-cyan-50" />
+    }>
+      <LoginPageInner />
+    </Suspense>
   )
 }
