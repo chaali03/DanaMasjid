@@ -15,6 +15,7 @@ import { auth, googleProvider, db } from './firebase'
 interface AuthContextType {
   user: User | null
   loading: boolean
+  firebaseReady: boolean
   signInWithGoogle: () => Promise<User>
   signOut: () => Promise<void>
   signUpWithEmail: (email: string, password: string, userData: any) => Promise<User>
@@ -85,9 +86,14 @@ function resetRateLimit(email: string): void {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const firebaseReady = !!auth // true if Firebase client SDK initialized
 
   useEffect(() => {
-    if (!auth) return
+    if (!auth) {
+      // Firebase not initialized (e.g. missing env vars) — unblock children
+      setLoading(false)
+      return
+    }
     
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser)
@@ -346,6 +352,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
     user,
     loading,
+    firebaseReady,
     signInWithGoogle,
     signOut,
     signUpWithEmail,
@@ -354,7 +361,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   )
 }

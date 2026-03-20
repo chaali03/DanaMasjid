@@ -72,7 +72,7 @@ const rateLimiter = new RateLimiter(3, 5 * 60 * 1000)
 
 export default function DaftarMasjidPage() {
   const router = useRouter()
-  const { user, loading: authLoading } = useAuth()
+  const { user, loading: authLoading, firebaseReady } = useAuth()
   const [currentStep, setCurrentStep] = useState(1)
   const [direction, setDirection] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -116,15 +116,22 @@ export default function DaftarMasjidPage() {
 
   // Firebase auth guard — redirect to login if not authenticated
   useEffect(() => {
-    if (authLoading) return // Wait for Firebase to resolve auth state
+    if (authLoading) return
+    if (!firebaseReady) return // Firebase not initialized — don't redirect
     if (!user) {
-      const loginUrl = new URL('/login', window.location.origin)
-      loginUrl.searchParams.set('redirect', '/daftar-masjid')
-      loginUrl.searchParams.set('message', 'Harus login terlebih dahulu untuk mendaftar masjid')
-      loginUrl.searchParams.set('type', 'daftar-masjid')
-      router.replace(loginUrl.toString())
+      const userId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null
+      if (userId) {
+        // userId exists but user null — Firebase still catching up, wait
+        const timer = setTimeout(() => {
+          if (!localStorage.getItem('userId')) {
+            router.replace('/login?redirect=/daftar-masjid&message=Harus+login+terlebih+dahulu+untuk+mendaftar+masjid&type=daftar-masjid')
+          }
+        }, 3000)
+        return () => clearTimeout(timer)
+      }
+      router.replace('/login?redirect=/daftar-masjid&message=Harus+login+terlebih+dahulu+untuk+mendaftar+masjid&type=daftar-masjid')
     }
-  }, [user, authLoading, router])
+  }, [user, authLoading, firebaseReady, router])
 
   // Track form inactivity and session timeout
   useEffect(() => {
