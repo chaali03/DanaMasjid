@@ -66,11 +66,11 @@ export function MasjidHeroV2() {
                 <span className="relative inline-block">
                   <span className="relative z-10 text-white px-3 py-1">Transparan</span>
                   <motion.span
-                    className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-500 -z-0 -inset-y-1"
+                    className="absolute inset-x-0 bg-gradient-to-r from-yellow-400 to-yellow-500 -z-0"
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: 1 }}
                     transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-                    style={{ transformOrigin: "left" }}
+                    style={{ transformOrigin: "left", top: "10%", bottom: "-8%" }}
                   />
                 </span>
               </motion.h1>
@@ -89,7 +89,7 @@ export function MasjidHeroV2() {
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
                 <form onSubmit={handleSubscribe} className="mx-auto my-10 max-w-2xl lg:my-12 lg:ml-0 lg:mr-auto">
-                  <div className="bg-white has-[input:focus]:ring-blue-500 relative grid grid-cols-[1fr_auto] items-center rounded-[1rem] border border-gray-200 pr-1.5 shadow-lg has-[input:focus]:ring-2">
+                  <div className="bg-white has-[input:focus]:ring-blue-500 relative grid grid-cols-[1fr_auto] items-center rounded-[1rem] border border-gray-200 pr-1.5 has-[input:focus]:ring-2">
                     <Mail className="text-gray-400 pointer-events-none absolute inset-y-0 left-6 my-auto size-5" />
 
                     <input
@@ -164,7 +164,7 @@ export function MasjidHeroV2() {
             <div aria-hidden className="absolute z-[1] inset-0 bg-gradient-to-r from-white from-25%" />
             <div className="relative h-full w-full">
               <Image
-                className="rounded-2xl shadow-2xl object-cover"
+                className="rounded-2xl object-cover"
                 src="/images/masjid/interior.webp"
                 alt="Masjid illustration"
                 fill

@@ -46,36 +46,6 @@ export function Header() {
   const isScrolled = true
   const router = useRouter()
 
-  const scrollToId = (targetId: string) => {
-    let attempts = 0
-    const tryScroll = () => {
-      const element = document.getElementById(targetId)
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" })
-      } else if (attempts++ < 40) {
-        setTimeout(tryScroll, 150)
-      }
-    }
-    tryScroll()
-  }
-
-  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    e.preventDefault()
-    
-    // Check if we're on homepage
-    if (window.location.pathname === '/') {
-      scrollToId(targetId)
-      setIsOpen(false)
-    } else {
-      // If not on homepage, navigate to homepage with hash
-      // Store target so page.tsx can scroll after load
-      window.__scrollTarget = targetId
-      triggerPageLoading()
-      router.push(`/`)
-      setIsOpen(false)
-    }
-  }
-
   const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     
@@ -125,56 +95,19 @@ export function Header() {
           </a>
 
           <nav className="hidden xl:flex items-center gap-8">
-            <a
-              href="#how-it-works"
-              onClick={(e) => handleSmoothScroll(e, "how-it-works")}
+            <Link
+              href="/"
+              onClick={() => triggerPageLoading()}
               className={`text-sm transition-colors cursor-pointer ${
                 isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Tentang
-            </a>
-            <a
-              href="#features"
-              onClick={(e) => handleSmoothScroll(e, "features")}
-              className={`text-sm transition-colors cursor-pointer ${
-                isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Fitur
-            </a>
-            <a
-              href="#program"
-              onClick={(e) => handleSmoothScroll(e, "program")}
-              className={`text-sm transition-colors cursor-pointer ${
-                isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Program
-            </a>
-            <a
-              href="#testimonials"
-              onClick={(e) => handleSmoothScroll(e, "testimonials")}
-              className={`text-sm transition-colors cursor-pointer ${
-                isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Testimoni
-            </a>
-            <a
-              href="#faq"
-              onClick={(e) => handleSmoothScroll(e, "faq")}
-              className={`text-sm transition-colors cursor-pointer ${
-                isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              FAQ
-            </a>
-            
+              Beranda
+            </Link>
+
             {/* Separator */}
             <div className={`h-6 w-px ${isScrolled ? "bg-zinc-300" : "bg-border"}`} />
-            
-            {/* Masjid Link */}
+
             <Link
               href="/masjid"
               onClick={() => triggerPageLoading()}
@@ -184,8 +117,6 @@ export function Header() {
             >
               Masjid
             </Link>
-            
-            {/* Harga Link */}
             <Link
               href="/pricing"
               onClick={() => triggerPageLoading()}
@@ -195,8 +126,6 @@ export function Header() {
             >
               Harga
             </Link>
-            
-            {/* Tim Link */}
             <Link
               href="/team"
               onClick={() => triggerPageLoading()}
@@ -206,8 +135,6 @@ export function Header() {
             >
               Tim
             </Link>
-            
-            {/* Donasi Link */}
             <Link
               href="/donasi"
               onClick={() => triggerPageLoading()}
@@ -339,56 +266,19 @@ export function Header() {
               isScrolled ? "border-zinc-200" : "border-border"
             }`}
           >
-            <a
-              href="#how-it-works"
-              onClick={(e) => handleSmoothScroll(e, "how-it-works")}
+            <Link
+              href="/"
+              onClick={() => { setIsOpen(false); triggerPageLoading() }}
               className={`transition-colors cursor-pointer ${
                 isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Tentang
-            </a>
-            <a
-              href="#features"
-              onClick={(e) => handleSmoothScroll(e, "features")}
-              className={`transition-colors cursor-pointer ${
-                isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Fitur
-            </a>
-            <a
-              href="#program"
-              onClick={(e) => handleSmoothScroll(e, "program")}
-              className={`transition-colors cursor-pointer ${
-                isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Program
-            </a>
-            <a
-              href="#testimonials"
-              onClick={(e) => handleSmoothScroll(e, "testimonials")}
-              className={`transition-colors cursor-pointer ${
-                isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Testimoni
-            </a>
-            <a
-              href="#faq"
-              onClick={(e) => handleSmoothScroll(e, "faq")}
-              className={`transition-colors cursor-pointer ${
-                isScrolled ? "text-zinc-600 hover:text-black" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              FAQ
-            </a>
-            
+              Beranda
+            </Link>
+
             {/* Separator */}
             <div className={`h-px w-full ${isScrolled ? "bg-zinc-200" : "bg-border"}`} />
-            
-            {/* Masjid Link */}
+
             <Link
               href="/masjid"
               onClick={() => { setIsOpen(false); triggerPageLoading() }}
@@ -398,8 +288,6 @@ export function Header() {
             >
               Masjid
             </Link>
-            
-            {/* Harga Link */}
             <Link
               href="/pricing"
               onClick={() => { setIsOpen(false); triggerPageLoading() }}
@@ -409,8 +297,6 @@ export function Header() {
             >
               Harga
             </Link>
-            
-            {/* Tim Link */}
             <Link
               href="/team"
               onClick={() => { setIsOpen(false); triggerPageLoading() }}
@@ -420,8 +306,6 @@ export function Header() {
             >
               Tim
             </Link>
-            
-            {/* Donasi Link */}
             <Link
               href="/donasi"
               onClick={() => { setIsOpen(false); triggerPageLoading() }}

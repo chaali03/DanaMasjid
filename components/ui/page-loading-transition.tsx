@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState, useCallback, Suspense } from "react"
 
 import { LottieLoading } from "@/components/ui/lottie-loading"
+import { markPageLoadingDone } from "@/lib/page-loading-done"
 
 declare global {
   interface Window {
@@ -75,6 +76,7 @@ function Inner() {
       timerRef.current = setTimeout(() => {
         setVisible(false)
         setFading(false)
+        markPageLoadingDone()
       }, 300)
     }, remaining)
   }, [clearTimers])

@@ -1,0 +1,337 @@
+{
+  "convertedCount": 66,
+  "failureCount": 0,
+  "failures": [],
+  "converted": [
+    {
+      "src": "dashboard-admin\\_src_ref\\alerts.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\alerts.tsx",
+      "name": "Alerts"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\avatars.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\avatars.tsx",
+      "name": "Avatars"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\badge.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\badge.tsx",
+      "name": "Badge"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\bar-chart.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\bar-chart.tsx",
+      "name": "BarChart"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\basic-tables.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\basic-tables.tsx",
+      "name": "BasicTables"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\blank.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\blank.tsx",
+      "name": "Blank"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\buttons.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\buttons.tsx",
+      "name": "Buttons"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\calendar.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\calendar.tsx",
+      "name": "Calendar"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\form-elements.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\form-elements.tsx",
+      "name": "FormElements"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\images.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\images.tsx",
+      "name": "Images"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\index.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\index.tsx",
+      "name": "Index"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\line-chart.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\line-chart.tsx",
+      "name": "LineChart"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\alert\\alert-error.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\alert\\alert-error.tsx",
+      "name": "PartialsAlertAlertError"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\alert\\alert-info.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\alert\\alert-info.tsx",
+      "name": "PartialsAlertAlertInfo"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\alert\\alert-success.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\alert\\alert-success.tsx",
+      "name": "PartialsAlertAlertSuccess"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\alert\\alert-warning.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\alert\\alert-warning.tsx",
+      "name": "PartialsAlertAlertWarning"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\avatar\\avatar-01.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\avatar\\avatar-01.tsx",
+      "name": "PartialsAvatarAvatar01"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\avatar\\avatar-02.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\avatar\\avatar-02.tsx",
+      "name": "PartialsAvatarAvatar02"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\avatar\\avatar-03.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\avatar\\avatar-03.tsx",
+      "name": "PartialsAvatarAvatar03"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\avatar\\avatar-04.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\avatar\\avatar-04.tsx",
+      "name": "PartialsAvatarAvatar04"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\badge\\badge-01.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\badge\\badge-01.tsx",
+      "name": "PartialsBadgeBadge01"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\badge\\badge-02.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\badge\\badge-02.tsx",
+      "name": "PartialsBadgeBadge02"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\badge\\badge-03.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\badge\\badge-03.tsx",
+      "name": "PartialsBadgeBadge03"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\badge\\badge-04.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\badge\\badge-04.tsx",
+      "name": "PartialsBadgeBadge04"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\badge\\badge-05.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\badge\\badge-05.tsx",
+      "name": "PartialsBadgeBadge05"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\badge\\badge-06.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\badge\\badge-06.tsx",
+      "name": "PartialsBadgeBadge06"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\breadcrumb.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\breadcrumb.tsx",
+      "name": "PartialsBreadcrumb"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\buttons\\button-01.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\buttons\\button-01.tsx",
+      "name": "PartialsButtonsButton01"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\buttons\\button-02.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\buttons\\button-02.tsx",
+      "name": "PartialsButtonsButton02"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\buttons\\button-03.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\buttons\\button-03.tsx",
+      "name": "PartialsButtonsButton03"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\buttons\\button-04.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\buttons\\button-04.tsx",
+      "name": "PartialsButtonsButton04"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\buttons\\button-05.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\buttons\\button-05.tsx",
+      "name": "PartialsButtonsButton05"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\buttons\\button-06.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\buttons\\button-06.tsx",
+      "name": "PartialsButtonsButton06"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\calendar-event-modal.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\calendar-event-modal.tsx",
+      "name": "PartialsCalendarEventModal"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\chart\\chart-01.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\chart\\chart-01.tsx",
+      "name": "PartialsChartChart01"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\chart\\chart-02.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\chart\\chart-02.tsx",
+      "name": "PartialsChartChart02"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\chart\\chart-03.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\chart\\chart-03.tsx",
+      "name": "PartialsChartChart03"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\common-grid-shape.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\common-grid-shape.tsx",
+      "name": "PartialsCommonGridShape"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\common-social-links.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\common-social-links.tsx",
+      "name": "PartialsCommonSocialLinks"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\datepicker.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\datepicker.tsx",
+      "name": "PartialsDatepicker"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\grid-image\\image-01.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\grid-image\\image-01.tsx",
+      "name": "PartialsGridImageImage01"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\grid-image\\image-02.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\grid-image\\image-02.tsx",
+      "name": "PartialsGridImageImage02"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\grid-image\\image-03.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\grid-image\\image-03.tsx",
+      "name": "PartialsGridImageImage03"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\header.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\header.tsx",
+      "name": "PartialsHeader"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\map-01.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\map-01.tsx",
+      "name": "PartialsMap01"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\media-card.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\media-card.tsx",
+      "name": "PartialsMediaCard"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\metric-group\\metric-group-01.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\metric-group\\metric-group-01.tsx",
+      "name": "PartialsMetricGroupMetricGroup01"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\overlay.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\overlay.tsx",
+      "name": "PartialsOverlay"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\preloader.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\preloader.tsx",
+      "name": "PartialsPreloader"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\profile\\profile-address-modal.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\profile\\profile-address-modal.tsx",
+      "name": "PartialsProfileProfileAddressModal"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\profile\\profile-info-modal.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\profile\\profile-info-modal.tsx",
+      "name": "PartialsProfileProfileInfoModal"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\sidebar.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\sidebar.tsx",
+      "name": "PartialsSidebar"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\table\\table-01.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\table\\table-01.tsx",
+      "name": "PartialsTableTable01"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\table\\table-06.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\table\\table-06.tsx",
+      "name": "PartialsTableTable06"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\top-card-group.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\top-card-group.tsx",
+      "name": "PartialsTopCardGroup"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\upcoming-schedule.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\upcoming-schedule.tsx",
+      "name": "PartialsUpcomingSchedule"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\video\\video-01.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\video\\video-01.tsx",
+      "name": "PartialsVideoVideo01"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\video\\video-02.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\video\\video-02.tsx",
+      "name": "PartialsVideoVideo02"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\video\\video-03.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\video\\video-03.tsx",
+      "name": "PartialsVideoVideo03"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\video\\video-04.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\video\\video-04.tsx",
+      "name": "PartialsVideoVideo04"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\partials\\watchlist.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\partials\\watchlist.tsx",
+      "name": "PartialsWatchlist"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\profile.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\profile.tsx",
+      "name": "Profile"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\sidebar.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\sidebar.tsx",
+      "name": "Sidebar"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\signin.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\signin.tsx",
+      "name": "Signin"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\signup.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\signup.tsx",
+      "name": "Signup"
+    },
+    {
+      "src": "dashboard-admin\\_src_ref\\videos.html",
+      "dst": "dashboard-admin\\_src_ref_tsx\\videos.tsx",
+      "name": "Videos"
+    }
+  ]
+}

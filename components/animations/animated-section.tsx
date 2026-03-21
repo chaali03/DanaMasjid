@@ -2,6 +2,7 @@
 
 import { motion, type Variants } from "framer-motion"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
+import { usePageLoadingDone } from "@/hooks/use-page-loading-done"
 import { ReactNode } from "react"
 
 interface AnimatedSectionProps {
@@ -110,13 +111,14 @@ export function AnimatedSection({
     threshold,
     triggerOnce: true
   })
+  const loadingDone = usePageLoadingDone()
 
   return (
     <motion.section
       id={id}
       ref={ref}
       initial="hidden"
-      animate={isIntersecting ? "visible" : "hidden"}
+      animate={loadingDone && isIntersecting ? "visible" : "hidden"}
       variants={animationVariants[animation]}
       transition={{
         duration,

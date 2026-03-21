@@ -10,6 +10,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { getAllMosques } from "@/lib/services/masjid-service"
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/ui/animated-section"
+import { MasjidTerdaftarSection } from "@/components/sections/masjid-terdaftar-section"
 
 export default function MasjidPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -30,11 +31,14 @@ export default function MasjidPage() {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-white">
       <Header />
 
       {/* Hero Section */}
       <MasjidHeroV2 />
+
+      {/* Masjid Terverifikasi dari Pendaftaran */}
+      <MasjidTerdaftarSection />
 
       {/* Search and Filter Section */}
       <section className="py-16 px-4">

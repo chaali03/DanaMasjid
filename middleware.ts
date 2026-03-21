@@ -70,11 +70,12 @@ export async function middleware(request: NextRequest) {
   const ip = getClientIP(request)
   const pathname = request.nextUrl.pathname
 
-  // Skip for static files, API routes, Next.js internals
+  // Skip for static files, API routes, Next.js internals, and dashboard-admin
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/_vercel') ||
+    pathname.startsWith('/dashboard-admin') ||
     pathname.includes('.') ||
     pathname === '/favicon.ico'
   ) {

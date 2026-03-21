@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useState, useEffect } from "react";
+import { markPageLoadingDone } from "@/lib/page-loading-done";
 
 // Lottie player — shows nothing until animation data is ready
 const LottiePlayer = memo(function LottiePlayer() {
@@ -62,6 +63,7 @@ export const LottieLoading = memo(function LottieLoading({
       setVisible(false);
       document.body.classList.remove("loading-active");
       document.getElementById("initial-loader-style")?.remove();
+      markPageLoadingDone();
     }, 2300);
 
     return () => {

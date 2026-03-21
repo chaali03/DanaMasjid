@@ -1,7 +1,8 @@
 "use client"
 
-import { motion, type Variants } from "framer-motion"
-import { ReactNode } from "react"
+import { motion, type Variants, useInView } from "framer-motion"
+import { ReactNode, useRef } from "react"
+import { usePageLoadingDone } from "@/hooks/use-page-loading-done"
 
 // Variasi animasi yang berbeda
 export const fadeInUp: Variants = {
@@ -164,13 +165,16 @@ export function AnimatedSection({
   id,
 }: AnimatedSectionProps) {
   const selectedVariant = variantMap[variant]
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once, margin: "-80px" })
+  const loadingDone = usePageLoadingDone()
   
   return (
     <motion.div
       id={id}
+      ref={ref}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once, margin: "-80px" }}
+      animate={loadingDone && isInView ? "visible" : "hidden"}
       variants={selectedVariant}
       transition={{ delay }}
       className={className}
@@ -188,11 +192,15 @@ interface StaggerContainerProps {
 }
 
 export function StaggerContainer({ children, className = "", fast = false, once = true }: StaggerContainerProps) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once, margin: "-50px" })
+  const loadingDone = usePageLoadingDone()
+
   return (
     <motion.div
+      ref={ref}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once, margin: "-50px" }}
+      animate={loadingDone && isInView ? "visible" : "hidden"}
       variants={fast ? staggerFastContainer : staggerContainer}
       className={className}
     >

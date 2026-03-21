@@ -3,7 +3,7 @@
 import { AnimatedSection } from "@/components/animations/animated-section"
 import { motion } from "framer-motion"
 
-export function HomePage() {
+export function FiturSection() {
   return (
     <AnimatedSection animation="fadeIn" className="relative bg-background min-h-[120vh] md:min-h-[150vh] lg:min-h-[135vh]">
       <div className="relative px-4 py-8 md:py-12 min-h-[120vh] md:min-h-[130vh] lg:min-h-[135vh]">
@@ -93,19 +93,19 @@ export function HomePage() {
                   gradient: "linear-gradient(177deg, rgb(9, 138, 95) 2.45%, rgb(5, 227, 156) 97.55%)",
                   icon: "/images/stak/Zakat-Ramadan.webp",
                   title: "Manajemen Donasi Digital",
-                  desc: "Platform terintegrasi untuk mengelola donasi online, wakaf, dan zakat dengan sistem pelaporan real-time yang transparan untuk jamaah."
+                  desc: "Platform terintegrasi untuk mencatat dan mengelola donasi, infaq, wakaf, dan zakat secara digital dengan dashboard yang mudah digunakan pengurus masjid."
                 },
                 {
                   gradient: "linear-gradient(177deg, rgb(67, 49, 94) 2.45%, rgb(168, 119, 217) 97.55%)",
                   icon: "/images/stak/Halal-Sign-Ramadan.webp",
-                  title: "Keamanan & Sertifikasi Syariah",
-                  desc: "Sistem keamanan berlapis dengan sertifikasi halal dan pengawasan Dewan Syariah Nasional untuk memastikan pengelolaan dana sesuai syariat Islam."
+                  title: "Laporan Keuangan Transparan",
+                  desc: "Setiap donasi tercatat otomatis dan dapat diakses jamaah secara real-time. Laporan pemasukan dan pengeluaran tersedia lengkap dan terbuka untuk publik."
                 },
                 {
                   gradient: "linear-gradient(177deg, rgb(251, 186, 111) 2.45%, rgb(255, 236, 225) 97.55%)",
                   icon: "/images/stak/Ramadan-Lantern-Ramadan.webp",
-                  title: "Laporan Keuangan Transparan",
-                  desc: "Laporan keuangan masjid yang dapat diakses jamaah secara real-time, lengkap dengan rincian pemasukan, pengeluaran, dan program yang sedang berjalan."
+                  title: "Verifikasi Masjid Resmi",
+                  desc: "Setiap masjid yang bergabung melalui proses verifikasi dokumen resmi oleh tim DanaMasjid untuk memastikan keabsahan dan kepercayaan platform."
                 }
               ].map((card, index) => (
                 <motion.div
@@ -154,23 +154,23 @@ export function HomePage() {
               {[
                 {
                   icon: "/images/stak/Tauhid-Ramadan.webp",
-                  title: "Perlindungan Data Jamaah",
-                  desc: "Data pribadi jamaah disimpan dengan enkripsi tingkat bank dan sistem keamanan berlapis untuk melindungi privasi dan informasi sensitif."
+                  title: "Notifikasi Donasi Real-time",
+                  desc: "Pengurus masjid dan donatur mendapat notifikasi langsung setiap ada donasi masuk, sehingga tidak ada transaksi yang terlewat."
                 },
                 {
                   icon: "/images/stak/Sorry-Hand-Ramadan.webp",
                   title: "Dukungan Pengurus Masjid",
-                  desc: "Tim support khusus siap membantu pengurus masjid dalam pengelolaan platform dan menjawab pertanyaan seputar fitur donasi digital."
+                  desc: "Tim support siap membantu pengurus masjid dalam penggunaan platform, mulai dari pendaftaran hingga pengelolaan laporan keuangan harian."
                 },
                 {
                   icon: "/images/stak/Ramadan-Drum-Ramadan.webp",
-                  title: "Arsip Donasi Permanen",
-                  desc: "Semua riwayat donasi dan transaksi tersimpan permanen dan dapat diakses kapan saja untuk keperluan audit dan pelaporan."
+                  title: "Riwayat Donasi Lengkap",
+                  desc: "Semua riwayat donasi tersimpan permanen dan dapat diunduh kapan saja untuk keperluan audit, pelaporan, atau pertanggungjawaban kepada jamaah."
                 },
                 {
                   icon: "/images/stak/Ramadan-Discount-Ramadan.webp",
-                  title: "Sistem Pembayaran Terpusat",
-                  desc: "Integrasi dengan berbagai metode pembayaran digital seperti e-wallet, transfer bank, dan QRIS untuk kemudahan jamaah berdonasi."
+                  title: "Berbagai Metode Pembayaran",
+                  desc: "Mendukung transfer bank, QRIS, dan berbagai e-wallet populer sehingga jamaah dapat berdonasi dengan cara yang paling mudah dan nyaman."
                 }
               ].map((card, index) => (
                 <motion.div

@@ -10,8 +10,8 @@ const MarqueeLazy = dynamic(() => import("@/components/marquee"), {
   loading: () => <SimpleSpinner className="h-screen bg-white" />
 })
 
-const ScrollingAnimationLazy = dynamic(
-  () => import("@/components/scrolling-animation").then(mod => ({ default: mod.HomePage })), 
+const FiturSectionLazy = dynamic(
+  () => import("@/components/sections/fitur-section").then(mod => ({ default: mod.FiturSection })), 
   {
     ssr: false,
     loading: () => <SimpleSpinner className="min-h-screen bg-white" />
@@ -29,7 +29,7 @@ export function Marquee() {
 export function ScrollingAnimation() {
   return (
     <Suspense fallback={<SimpleSpinner className="min-h-screen bg-white" />}>
-      <ScrollingAnimationLazy />
+      <FiturSectionLazy />
     </Suspense>
   )
 }
