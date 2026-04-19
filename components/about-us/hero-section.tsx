@@ -140,10 +140,19 @@ export function HeroSection() {
 
   return (
     <>
-      {/* Video Section - original, tanpa overlay putih/hitam */}
-      <section className="relative min-h-[50vh] md:min-h-[60vh] lg:min-h-[100vh] flex flex-col justify-center items-start overflow-hidden bg-white">
-        {/* Background Video - menggunakan OptimizedVideo dengan bit-rate lebih rendah dan resolusi adaptif */}
-        <div className="absolute inset-0 z-0">
+      {/* Hero Section - Image for mobile/tablet, Video for desktop */}
+      <section className="relative min-h-[30vh] md:min-h-[40vh] lg:min-h-[105vh] flex flex-col justify-center items-start overflow-hidden bg-white mt-20 md:mt-0">
+        {/* Background Image for mobile/tablet */}
+        <div className="absolute inset-0 z-0 lg:hidden">
+          <img
+            src="/images/profile-tb.webp"
+            alt="PARANTARA Background"
+            className="w-full h-full object-cover object-center"
+          />
+        </div>
+        
+        {/* Background Video for desktop only */}
+        <div className="absolute inset-0 z-0 hidden lg:block">
           <OptimizedVideo
             src="/tb-profile-optimized.mp4"
             poster="/images/hero-poster.webp"
@@ -153,7 +162,7 @@ export function HeroSection() {
             playsInline
             preload="auto"
             loading="eager"
-            className="w-full h-full"
+            className="w-full h-full object-cover object-center"
             width={1280}
             height={720}
           />

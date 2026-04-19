@@ -8,6 +8,8 @@
     "build:netlify": "node --max-old-space-size=4096 node_modules/next/dist/bin/next build --webpack",
     "build:analyze": "ANALYZE=true next build",
     "dev": "node --max-old-space-size=8192 node_modules/next/dist/bin/next dev",
+    "clean": "rd /s /q .next && rd /s /q .netlify",
+    "dev:clean": "npm run clean && npm run dev",
     "lint": "eslint .",
     "start": "next start",
     "prepare": "husky || true",
