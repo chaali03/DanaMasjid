@@ -23,29 +23,39 @@ export function useIntersectionObserver(
     const element = ref.current
     if (!element) return
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const isVisible = entry.isIntersecting
-        
-        if (isVisible && (!triggerOnce || !hasTriggered)) {
-          setIsIntersecting(true)
-          if (triggerOnce) {
-            setHasTriggered(true)
+    // Use requestIdleCallback for non-critical observer setup
+    const setupObserver = () => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          const isVisible = entry.isIntersecting
+          
+          if (isVisible && (!triggerOnce || !hasTriggered)) {
+            setIsIntersecting(true)
+            if (triggerOnce) {
+              setHasTriggered(true)
+            }
+          } else if (!triggerOnce && !isVisible) {
+            setIsIntersecting(false)
           }
-        } else if (!triggerOnce && !isVisible) {
-          setIsIntersecting(false)
+        },
+        {
+          threshold,
+          rootMargin,
         }
-      },
-      {
-        threshold,
-        rootMargin,
+      )
+
+      observer.observe(element)
+
+      return () => {
+        observer.unobserve(element)
       }
-    )
+    }
 
-    observer.observe(element)
-
-    return () => {
-      observer.unobserve(element)
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(setupObserver)
+      return () => cancelIdleCallback(id)
+    } else {
+      return setupObserver()
     }
   }, [threshold, rootMargin, triggerOnce, hasTriggered])
 

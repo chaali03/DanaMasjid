@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+// @ts-nocheck
 "use client"
 
 import { useState, useEffect } from "react"
@@ -11,7 +11,6 @@ import { VideoBackground } from "@/components/auth/video-background"
 import { useRegisterStep1, useVerifyOTP } from "@/lib/hooks/use-auth"
 import { RateLimitAlert } from "@/components/ui/rate-limit-alert"
 import { ApiError } from "@/lib/api-client"
-import { PolicyModal } from "@/components/policy-modal"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -25,7 +24,6 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [direction, setDirection] = useState(0)
-  const [isPolicyOpen, setIsPolicyOpen] = useState(false)
   
   const [formData, setFormData] = useState({
     // Step 1
@@ -365,15 +363,15 @@ export default function RegisterPage() {
     }
   }, [formData.email])
 
-  // Animation variants untuk efek muncul
+  // Animation variants untuk efek muncul - optimized
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        duration: 0.8,
+        duration: 0.5,
         when: "beforeChildren",
-        staggerChildren: 0.15,
+        staggerChildren: 0.08,
       }
     }
   }
@@ -382,63 +380,56 @@ export default function RegisterPage() {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
-      transition: { duration: 1.2, ease: "easeOut" }
+      transition: { duration: 0.8, ease: "easeOut" }
     }
   }
 
   const cardVariants = {
-    hidden: { scale: 0.95, opacity: 0, y: 20 },
+    hidden: { scale: 0.98, opacity: 0, y: 10 },
     visible: { 
       scale: 1, 
       opacity: 1, 
       y: 0,
       transition: { 
-        type: "spring",
-        damping: 25,
-        stiffness: 200,
-        delay: 0.3
+        duration: 0.4,
+        ease: "easeOut"
       }
     }
   }
 
   const slideRightVariants = {
-    hidden: { x: 100, opacity: 0 },
+    hidden: { x: 50, opacity: 0 },
     visible: { 
       x: 0, 
       opacity: 1,
       transition: { 
-        type: "spring",
-        damping: 20,
-        stiffness: 100,
-        delay: 0.2
+        duration: 0.4,
+        ease: "easeOut"
       }
     }
   }
 
   const slideLeftVariants = {
-    hidden: { x: -100, opacity: 0 },
+    hidden: { x: -50, opacity: 0 },
     visible: { 
       x: 0, 
       opacity: 1,
       transition: { 
-        type: "spring",
-        damping: 20,
-        stiffness: 100,
-        delay: 0.2
+        duration: 0.4,
+        ease: "easeOut"
       }
     }
   }
 
   const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
+    hidden: { y: 15, opacity: 0 },
     visible: (custom: number) => ({
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
-        damping: 15,
-        stiffness: 100,
-        delay: 0.3 + (custom * 0.05)
+        duration: 0.3,
+        ease: "easeOut",
+        delay: 0.2 + (custom * 0.03)
       }
     })
   }
@@ -448,68 +439,62 @@ export default function RegisterPage() {
     visible: { 
       x: 0,
       transition: { 
-        type: "spring",
-        damping: 25,
-        stiffness: 150,
-        delay: 0.3
+        duration: 0.5,
+        ease: "easeOut"
       }
     }
   }
 
   const slideVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
+      x: direction > 0 ? 200 : -200,
       opacity: 0,
-      scale: 0.95
+      scale: 0.98
     }),
     center: {
       x: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.5,
-        type: "spring",
-        damping: 20,
-        stiffness: 200
+        duration: 0.3,
+        ease: "easeOut"
       }
     },
     exit: (direction: number) => ({
-      x: direction < 0 ? 300 : -300,
+      x: direction < 0 ? 200 : -200,
       opacity: 0,
-      scale: 0.95,
+      scale: 0.98,
       transition: {
-        duration: 0.3
+        duration: 0.2
       }
     })
   }
 
   const buttonHoverVariants = {
     hover: { 
-      scale: 1.02,
+      scale: 1.01,
       transition: { 
-        type: "spring",
-        stiffness: 400,
-        damping: 10
+        duration: 0.2,
+        ease: "easeOut"
       }
     },
     tap: { 
-      scale: 0.98,
+      scale: 0.99,
       transition: { 
-        type: "spring",
-        stiffness: 400,
-        damping: 10
+        duration: 0.1,
+        ease: "easeOut"
       }
     }
   }
 
   const footerVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: { 
       opacity: 1, 
       y: 0,
       transition: { 
         delay: 0.5,
-        duration: 0.4,
+        duration: 0.3,
         ease: "easeOut"
       }
     }
@@ -846,7 +831,7 @@ export default function RegisterPage() {
               fill
               className="object-cover"
               priority
-              sizes="100vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
               quality={80}
             />
           </motion.div>
@@ -1714,16 +1699,21 @@ export default function RegisterPage() {
         <div className="flex flex-row items-center justify-center gap-2 text-[10px] sm:text-xs text-white/90">
           <span>Hak Cipta @danamasjid 2026</span>
           <span>|</span>
-          <button 
-            onClick={() => setIsPolicyOpen(true)}
+          <Link 
+            href="/syarat-ketentuan"
+            className="hover:text-white transition-colors underline"
+          >
+            Syarat & Ketentuan
+          </Link>
+          <span>|</span>
+          <Link 
+            href="/kebijakan-privasi"
             className="hover:text-white transition-colors underline"
           >
             Kebijakan Privasi
-          </button>
+          </Link>
         </div>
       </motion.div>
-
-      <PolicyModal open={isPolicyOpen} onOpenChange={setIsPolicyOpen} />
     </motion.div>
   )
 }

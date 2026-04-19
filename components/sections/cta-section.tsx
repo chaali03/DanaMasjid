@@ -149,7 +149,7 @@ export function CTASection() {
             viewport={{ once: true }}
             className="text-muted-foreground max-w-2xl mx-auto mb-10"
           >
-            Bergabunglah dengan ribuan donatur dan pengurus masjid yang mempercayai DanaMasjid untuk transaksi donasi mereka.
+            Bergabunglah dengan ribuan donatur dan pengurus masjid yang mempercayai PARANTARA untuk transaksi donasi mereka.
           </motion.p>
 
           <motion.div 
@@ -160,7 +160,7 @@ export function CTASection() {
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <button 
-              onClick={() => router.push('/login?redirect=/daftar-masjid&type=daftar-masjid&message=Login+dulu+sebelum+daftarkan+masjid+Anda')}
+              onClick={() => router.push('/register')}
               className="relative flex items-center justify-center gap-0 bg-foreground text-background rounded-full pl-6 pr-1.5 py-1.5 transition-all duration-300 group overflow-hidden hover:opacity-90"
             >
               <span className="text-sm pr-4">Daftarkan Masjid</span>

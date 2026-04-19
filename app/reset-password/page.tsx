@@ -145,13 +145,38 @@ function ResetPasswordContent() {
                       required
                       className="w-full px-4 py-3 border-2 border-gray-900 rounded-xl focus:outline-none focus:border-blue-500 pr-12 text-base"
                     />
-                    <button
+                    <motion.button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors p-1 rounded-lg hover:bg-blue-50"
                     >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
+                      <AnimatePresence mode="wait" initial={false}>
+                        {showPassword ? (
+                          <motion.div
+                            key="eye-off"
+                            initial={{ scale: 0.8, opacity: 0, rotate: -30 }}
+                            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                            exit={{ scale: 0.8, opacity: 0, rotate: 30 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                          >
+                            <EyeOff className="w-5 h-5" />
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="eye"
+                            initial={{ scale: 0.8, opacity: 0, rotate: 30 }}
+                            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                            exit={{ scale: 0.8, opacity: 0, rotate: -30 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                          >
+                            <Eye className="w-5 h-5" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.button>
                   </div>
                 </div>
 
@@ -167,13 +192,38 @@ function ResetPasswordContent() {
                       required
                       className="w-full px-4 py-3 border-2 border-gray-900 rounded-xl focus:outline-none focus:border-blue-500 pr-12 text-base"
                     />
-                    <button
+                    <motion.button
                       type="button"
                       onClick={() => setShowConfirm(!showConfirm)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label={showConfirm ? "Hide password" : "Show password"}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors p-1 rounded-lg hover:bg-blue-50"
                     >
-                      {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
+                      <AnimatePresence mode="wait" initial={false}>
+                        {showConfirm ? (
+                          <motion.div
+                            key="eye-off-confirm"
+                            initial={{ scale: 0.8, opacity: 0, rotate: -30 }}
+                            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                            exit={{ scale: 0.8, opacity: 0, rotate: 30 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                          >
+                            <EyeOff className="w-5 h-5" />
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="eye-confirm"
+                            initial={{ scale: 0.8, opacity: 0, rotate: 30 }}
+                            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                            exit={{ scale: 0.8, opacity: 0, rotate: -30 }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
+                          >
+                            <Eye className="w-5 h-5" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.button>
                   </div>
                   {confirmPassword && password !== confirmPassword && (
                     <p className="text-red-500 text-xs mt-1">Password tidak cocok</p>

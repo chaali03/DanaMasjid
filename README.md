@@ -198,9 +198,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-- **Website:** https://danamasjid.netlify.app
-- **Email:** support@danamasjid.com
-- **Security:** security@danamasjid.com
+- **Website:** https://parantara.netlify.app
+- **Email:** support@parantara.com
+- **Security:** security@parantara.com
 
 ## 🙏 Acknowledgments
 

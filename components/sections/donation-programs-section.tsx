@@ -30,9 +30,18 @@ export function DonationProgramsSection() {
       (entries) => {
         if (entries[0].isIntersecting) {
           observer.disconnect()
-          import("@/lotie/Man goes to the mosque on Ramadan.json").then((d) =>
-            setAnimationData(d.default)
-          )
+          // Use requestIdleCallback for non-critical loading
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+              import("@/lotie/Man goes to the mosque on Ramadan.json").then((d) =>
+                setAnimationData(d.default)
+              )
+            })
+          } else {
+            import("@/lotie/Man goes to the mosque on Ramadan.json").then((d) =>
+              setAnimationData(d.default)
+            )
+          }
         }
       },
       { rootMargin: "200px" }
@@ -56,7 +65,7 @@ export function DonationProgramsSection() {
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
             Kenapa Memilih{" "}
             <span className="text-blue-600 relative inline-block">
-              DanaMasjid
+              PARANTARA
               <motion.svg
                 initial={{ pathLength: 0 }}
                 whileInView={{ pathLength: 1 }}
@@ -91,7 +100,7 @@ export function DonationProgramsSection() {
         {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          {/* Card 1: Transparansi */}
+          {/* Card 1: Blockchain Transparan */}
           <motion.div
             {...cardAnim(0)}
             className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
@@ -100,7 +109,7 @@ export function DonationProgramsSection() {
               <div className="relative w-full h-28 md:h-32 flex items-center justify-center mb-2">
                 <img
                   src="/images/program/terpercaya.webp"
-                  alt="Transparansi"
+                  alt="Blockchain"
                   width={128}
                   height={128}
                   className="h-24 w-24 md:h-32 md:w-32 object-contain"
@@ -108,51 +117,51 @@ export function DonationProgramsSection() {
                   decoding="async"
                 />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 mt-2">Transparansi</h3>
+              <h3 className="text-2xl font-bold text-slate-900 mt-2">Blockchain Transparan</h3>
               <p className="text-slate-600 text-center text-base leading-relaxed mt-1">
-                Platform manajemen keuangan masjid yang{" "}
-                <span className="font-semibold text-blue-600">transparan</span> dan dipercaya ribuan masjid
+                Setiap transaksi tercatat di{" "}
+                <span className="font-semibold text-blue-600">blockchain</span> yang tidak dapat dimanipulasi dan dipercaya ribuan masjid
               </p>
               <div className="flex items-center gap-1 text-sm text-slate-500 mt-2">
                 <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>Terverifikasi</span>
+                <span>Terdesentralisasi</span>
               </div>
             </div>
           </motion.div>
 
-          {/* Card 2: Aman & Terpercaya */}
+          {/* Card 2: Supply Chain Terlacak */}
           <motion.div
             {...cardAnim(1)}
             className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
           >
             <div className="flex flex-col items-center text-center space-y-4">
-              {/* Shield icon — static rings, no spin */}
+              {/* Chain icon with connected nodes */}
               <div className="relative w-32 h-32 flex-shrink-0">
                 <div className="absolute inset-0 rounded-full border-2 border-dashed border-blue-200" />
                 <div className="absolute inset-2 rounded-full border-2 border-blue-100" />
                 <div className="absolute inset-4 rounded-full border-2 border-blue-50" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg className="w-12 h-12 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                   </svg>
                 </div>
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Aman & Terpercaya</h3>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">Supply Chain Terlacak</h3>
                 <p className="text-slate-600 text-base leading-relaxed">
-                  Sistem keamanan berlapis dengan <span className="font-semibold">enkripsi SSL</span> dan verifikasi masjid ketat.
+                  Lacak perjalanan dana dari donatur hingga penggunaan akhir dengan <span className="font-semibold">teknologi blockchain</span> yang terdesentralisasi.
                 </p>
               </div>
               <div className="flex gap-2 mt-2">
-                <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full">ISO 27001</span>
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full">PCI DSS</span>
+                <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full">Real-time</span>
+                <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full">Immutable</span>
               </div>
             </div>
           </motion.div>
 
-          {/* Card 3: Mudah Digunakan */}
+          {/* Card 3: Smart Contract Otomatis */}
           <motion.div
             {...cardAnim(2)}
             className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
@@ -165,13 +174,13 @@ export function DonationProgramsSection() {
                       <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <span className="font-medium text-slate-700">Langkah Donasi</span>
+                  <span className="font-medium text-slate-700">Alur Supply Chain</span>
                 </div>
-                <span className="font-bold text-orange-600">3 Langkah</span>
+                <span className="font-bold text-orange-600">3 Tahap</span>
               </div>
 
               <div className="py-2 space-y-3">
-                {["Pilih masjid tujuan", "Tentukan nominal donasi", "Pilih metode pembayaran"].map((step, i) => (
+                {["Donatur transfer dana", "Smart contract verifikasi", "Dana tersalurkan otomatis"].map((step, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">{i + 1}</div>
                     <span className="text-sm text-slate-600">{step}</span>
@@ -180,21 +189,21 @@ export function DonationProgramsSection() {
               </div>
 
               <div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Mudah Digunakan</h3>
+                <h3 className="text-2xl font-bold text-slate-900 mb-2">Smart Contract Otomatis</h3>
                 <p className="text-slate-600 text-base leading-relaxed">
-                  Proses pencatatan keuangan yang <span className="font-semibold">simpel dan cepat</span> dengan antarmuka yang user-friendly untuk pengurus masjid.
+                  Distribusi dana dikelola oleh <span className="font-semibold">smart contract</span> yang berjalan otomatis tanpa campur tangan pihak ketiga.
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2 mt-2">
-                {["Kartu Kredit/Debit", "Transfer Bank", "QRIS", "E-Wallet"].map((m) => (
+                {["Ethereum", "Polygon", "BSC", "Solana"].map((m) => (
                   <span key={m} className="px-3 py-1 bg-slate-100 text-slate-700 text-xs rounded-full">{m}</span>
                 ))}
               </div>
             </div>
           </motion.div>
 
-          {/* Card 4: Laporan Real-time */}
+          {/* Card 4: Audit Trail Blockchain */}
           <motion.div
             {...cardAnim(3)}
             className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all duration-200 lg:col-span-2"
@@ -203,17 +212,17 @@ export function DonationProgramsSection() {
               <div className="flex-shrink-0">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg">
                   <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                   </svg>
                 </div>
               </div>
 
               <div className="flex-1 space-y-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Laporan Real-time</h3>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Audit Trail Blockchain</h3>
                   <p className="text-slate-600 text-base leading-relaxed">
-                    Dashboard interaktif dengan grafik dan statistik keuangan yang{" "}
-                    <span className="font-semibold">update secara otomatis</span> untuk transparansi maksimal kepada jamaah.
+                    Setiap transaksi tercatat permanen di blockchain dengan{" "}
+                    <span className="font-semibold">hash unik</span> yang dapat diverifikasi kapan saja untuk transparansi maksimal.
                   </p>
                 </div>
 
@@ -221,7 +230,7 @@ export function DonationProgramsSection() {
                 <div className="relative rounded-xl overflow-hidden border border-slate-200 bg-gradient-to-br from-blue-50 to-cyan-50">
                   <Image
                     src="/images/program/program.webp"
-                    alt="Ilustrasi Program Masjid"
+                    alt="Ilustrasi Blockchain Audit"
                     width={600}
                     height={400}
                     className="w-full h-auto object-cover"
@@ -230,9 +239,9 @@ export function DonationProgramsSection() {
 
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-4">
                   {[
-                    { label: "Total Donasi", value: "Rp 2.5M", change: "↑ 12%" },
-                    { label: "Donatur", value: "1,234", change: "↑ 8%" },
-                    { label: "Masjid", value: "156", change: "↑ 5%" },
+                    { label: "Transaksi Tercatat", value: "25K+", change: "↑ 18%" },
+                    { label: "Block Verified", value: "12.5K", change: "↑ 15%" },
+                    { label: "Hash Rate", value: "99.9%", change: "Stabil" },
                   ].map((stat, i) => (
                     <div key={i} className={`bg-slate-50 rounded-xl p-4 lg:p-6 ${i === 2 ? "col-span-2 lg:col-span-1" : ""}`}>
                       <div className="text-xs text-slate-500 mb-2">{stat.label}</div>

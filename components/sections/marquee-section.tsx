@@ -37,9 +37,10 @@ export function MarqueeSection({ sponsors, sponsorOrder }: MarqueeSectionProps) 
                       alt={sponsors[sponsorIndex].alt}
                       width={80}
                       height={32}
-                      className="h-6 md:h-8 object-contain"
+                      className="h-6 md:h-8 w-auto object-contain"
                       loading="lazy"
                       sizes="(max-width: 768px) 60px, 80px"
+                      style={{ width: 'auto', height: 'auto' }}
                     />
                   </div>
                   <p className="text-[10px] md:text-xs font-semibold text-gray-800 text-center">
@@ -55,19 +56,48 @@ export function MarqueeSection({ sponsors, sponsorOrder }: MarqueeSectionProps) 
       {/* Marquee Animation */}
       <div className="bg-blue-600 py-1 overflow-hidden">
         <div className="flex animate-marquee-infinite whitespace-nowrap">
+          {/* First set */}
           <span className="text-xs text-white mx-6">Platform Donasi Masjid Terpercaya</span>
           <span className="text-xs text-white">|</span>
-          <span className="text-xs text-white mx-6">Transparansi Real-Time</span>
+          <span className="text-xs text-white mx-6">Transparansi Blockchain Real-Time</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Supply Chain Bantuan Terverifikasi</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Pelacakan Distribusi Transparan</span>
           <span className="text-xs text-white">|</span>
           <span className="text-xs text-white mx-6">Amanah & Berkah</span>
           <span className="text-xs text-white">|</span>
-          <span className="text-xs text-white mx-6">Laporan Lengkap</span>
+          <span className="text-xs text-white mx-6">Laporan Lengkap & Akurat</span>
           <span className="text-xs text-white">|</span>
           <span className="text-xs text-white mx-6">Mudah & Aman</span>
           <span className="text-xs text-white">|</span>
           <span className="text-xs text-white mx-6">Sesuai Syariah</span>
           <span className="text-xs text-white">|</span>
-          <span className="text-xs text-white mx-6">Donasi Digital Terpercaya</span>
+          <span className="text-xs text-white mx-6">Teknologi Blockchain Terpercaya</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Rantai Pasokan Nusantara</span>
+          <span className="text-xs text-white">|</span>
+          
+          {/* Duplicate set for seamless loop */}
+          <span className="text-xs text-white mx-6">Platform Donasi Masjid Terpercaya</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Transparansi Blockchain Real-Time</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Supply Chain Bantuan Terverifikasi</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Pelacakan Distribusi Transparan</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Amanah & Berkah</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Laporan Lengkap & Akurat</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Mudah & Aman</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Sesuai Syariah</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Teknologi Blockchain Terpercaya</span>
+          <span className="text-xs text-white">|</span>
+          <span className="text-xs text-white mx-6">Rantai Pasokan Nusantara</span>
           <span className="text-xs text-white">|</span>
         </div>
       </div>

@@ -11,5 +11,6 @@
 
   // VS Code/Cursor CSS language service tidak mengenal sintaks Tailwind v4 di @import
   // (mis. source(none)). Matikan validasi bawaan; PostCSS + Tailwind tetap memvalidasi saat build.
-  "css.validate": false
+  "css.validate": false,
+  "typescript.autoClosingTags": false
 }

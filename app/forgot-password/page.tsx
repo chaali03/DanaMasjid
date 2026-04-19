@@ -10,7 +10,6 @@ import { ArrowLeft, Mail, CheckCircle2, AlertCircle, Clock } from 'lucide-react'
 import Link from 'next/link';
 import Image from 'next/image';
 import { VideoBackground } from '@/components/auth/video-background';
-import { PolicyModal } from '@/components/policy-modal';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -19,50 +18,46 @@ export default function ForgotPasswordPage() {
   const [success, setSuccess] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [cooldown, setCooldown] = useState(0);
-  const [isPolicyOpen, setIsPolicyOpen] = useState(false);
 
-  // Animation variants
+  // Animation variants - optimized
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        duration: 0.8,
+        duration: 0.5,
         when: "beforeChildren",
-        staggerChildren: 0.1,
+        staggerChildren: 0.06,
       }
     }
   };
 
   const cardVariants = {
     hidden: { 
-      scale: 0.95, 
+      scale: 0.98, 
       opacity: 0,
-      y: 30
+      y: 15
     },
     visible: { 
       scale: 1, 
       opacity: 1,
       y: 0,
       transition: { 
-        type: "spring",
-        damping: 25,
-        stiffness: 200,
-        delay: 0.3
+        duration: 0.4,
+        ease: "easeOut"
       }
     }
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 15, opacity: 0 },
     visible: (custom: number) => ({
       y: 0, 
       opacity: 1,
       transition: { 
-        type: "spring",
-        damping: 15,
-        stiffness: 100,
-        delay: 0.6 + (custom * 0.1)
+        duration: 0.3,
+        ease: "easeOut",
+        delay: 0.3 + (custom * 0.06)
       }
     })
   };
@@ -288,16 +283,21 @@ export default function ForgotPasswordPage() {
         <p className="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 md:gap-2">
           <span>Hak Cipta @danamasjid 2026</span>
           <span className="hidden sm:inline">|</span>
-          <button 
-            onClick={() => setIsPolicyOpen(true)}
+          <Link 
+            href="/syarat-ketentuan"
+            className="hover:text-white transition-colors underline"
+          >
+            Syarat & Ketentuan
+          </Link>
+          <span className="hidden sm:inline">|</span>
+          <Link 
+            href="/kebijakan-privasi"
             className="hover:text-white transition-colors underline"
           >
             Kebijakan Privasi
-          </button>
+          </Link>
         </p>
       </motion.div>
-
-      <PolicyModal open={isPolicyOpen} onOpenChange={setIsPolicyOpen} />
     </motion.div>
   );
 }

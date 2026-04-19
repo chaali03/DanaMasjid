@@ -42,21 +42,36 @@ export function AnimatedRevenueChart() {
     setTotalRevenue(total)
   }, [data])
 
-  // Animate data changes
+  // Animate data changes with throttling
   useEffect(() => {
+    let lastUpdate = Date.now()
     const interval = setInterval(() => {
-      setData(generateRandomData())
-      setGrowth(Math.round((Math.random() * 20 + 5) * 10) / 10)
+      const now = Date.now()
+      if (now - lastUpdate >= 4000) {
+        setData(generateRandomData())
+        setGrowth(Math.round((Math.random() * 20 + 5) * 10) / 10)
+        lastUpdate = now
+      }
     }, 4000)
     return () => clearInterval(interval)
   }, [])
 
-  // Cycle through active segments
+  // Cycle through active segments with RAF
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % revenueCategories.length)
-    }, 2000)
-    return () => clearInterval(interval)
+    let animationFrame: number
+    let lastTime = 0
+    const interval = 2000
+    
+    const animate = (time: number) => {
+      if (time - lastTime >= interval) {
+        setActiveIndex((prev) => (prev + 1) % revenueCategories.length)
+        lastTime = time
+      }
+      animationFrame = requestAnimationFrame(animate)
+    }
+    
+    animationFrame = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(animationFrame)
   }, [])
 
   return (

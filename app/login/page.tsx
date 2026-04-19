@@ -1,4 +1,4 @@
-﻿// @ts-nocheck
+﻿﻿// @ts-nocheck
 "use client"
 
 // Stable device signature helper (same logic as auth-context)
@@ -24,9 +24,10 @@ import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { useAuth } from "@/lib/auth-context"
 
-// Lazy load heavy components
-const VideoBackground = lazy(() => import("@/components/auth/video-background").then(mod => ({ default: mod.VideoBackground })))
-const PolicyModal = lazy(() => import("@/components/policy-modal").then(mod => ({ default: mod.PolicyModal })))
+// Lazy load heavy components with better loading states
+const VideoBackground = lazy(() => 
+  import("@/components/auth/video-background").then(mod => ({ default: mod.VideoBackground }))
+)
 
 function LoginPageInner() {
   const router = useRouter()
@@ -40,7 +41,6 @@ function LoginPageInner() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
   const [redirectMessage, setRedirectMessage] = useState("")
-  const [isPolicyOpen, setIsPolicyOpen] = useState(false)
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [isDeviceBlocked, setIsDeviceBlocked] = useState(false)
@@ -163,13 +163,22 @@ function LoginPageInner() {
       await new Promise(resolve => setTimeout(resolve, 300))
       
       // Check if already registered — go to waiting page
-      const isRegistered = document.cookie.includes('mosque_registered=true')
-      const redirectUrl = searchParams.get('redirect')
-      if (isRegistered) {
-        window.location.href = '/menunggu'
-      } else if (redirectUrl) {
+      const isRegistered = document.cookie.split(';').some(item => item.trim().startsWith('mosque_registered='))
+      const redirectUrl = searchParams.get('redirect') || localStorage.getItem('redirect_after_login')
+      
+      // Clear localStorage redirect after getting it
+      localStorage.removeItem('redirect_after_login')
+      
+      // Priority 1: Use specific redirect URL if provided (e.g., /daftar-masjid/[token])
+      if (redirectUrl) {
         window.location.href = redirectUrl
-      } else {
+      } 
+      // Priority 2: If already registered, go to waiting page
+      else if (isRegistered) {
+        window.location.href = '/menunggu'
+      } 
+      // Priority 3: Use the smart redirector at /daftar-masjid
+      else {
         window.location.href = '/daftar-masjid'
       }
     } catch (err: any) {
@@ -208,13 +217,22 @@ function LoginPageInner() {
       await new Promise(resolve => setTimeout(resolve, 300))
       
       // Check if already registered — go to waiting page
-      const isRegistered = document.cookie.includes('mosque_registered=true')
-      const redirectUrl = searchParams.get('redirect')
-      if (isRegistered) {
-        window.location.href = '/menunggu'
-      } else if (redirectUrl) {
+      const isRegistered = document.cookie.split(';').some(item => item.trim().startsWith('mosque_registered='))
+      const redirectUrl = searchParams.get('redirect') || localStorage.getItem('redirect_after_login')
+      
+      // Clear localStorage redirect after getting it
+      localStorage.removeItem('redirect_after_login')
+      
+      // Priority 1: Use specific redirect URL if provided (e.g., /daftar-masjid/[token])
+      if (redirectUrl) {
         window.location.href = redirectUrl
-      } else {
+      } 
+      // Priority 2: If already registered, go to waiting page
+      else if (isRegistered) {
+        window.location.href = '/menunggu'
+      } 
+      // Priority 3: Use the smart redirector at /daftar-masjid
+      else {
         window.location.href = '/daftar-masjid'
       }
     } catch (err: any) {
@@ -233,15 +251,15 @@ function LoginPageInner() {
     }
   }
 
-  // Enhanced animation variants
+  // Enhanced animation variants - optimized
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        duration: 0.8,
+        duration: 0.5,
         when: "beforeChildren",
-        staggerChildren: 0.15,
+        staggerChildren: 0.08,
       }
     }
   }
@@ -250,49 +268,43 @@ function LoginPageInner() {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
-      transition: { duration: 1.2, ease: "easeOut" }
+      transition: { duration: 0.8, ease: "easeOut" }
     }
   }
 
   const cardVariants = {
-    hidden: { scale: 0.95, opacity: 0, y: 20 },
+    hidden: { scale: 0.98, opacity: 0, y: 10 },
     visible: { 
       scale: 1, 
       opacity: 1, 
       y: 0,
       transition: { 
-        type: "spring",
-        damping: 25,
-        stiffness: 200,
-        delay: 0.3
+        duration: 0.4,
+        ease: "easeOut"
       }
     }
   }
 
   const leftPanelVariants = {
-    hidden: { x: -100, opacity: 0 },
+    hidden: { x: -50, opacity: 0 },
     visible: { 
       x: 0, 
       opacity: 1,
       transition: { 
-        type: "spring",
-        damping: 20,
-        stiffness: 100,
-        delay: 0.5
+        duration: 0.4,
+        ease: "easeOut"
       }
     }
   }
 
   const rightPanelVariants = {
-    hidden: { x: 100, opacity: 0 },
+    hidden: { x: 50, opacity: 0 },
     visible: { 
       x: 0, 
       opacity: 1,
       transition: { 
-        type: "spring",
-        damping: 20,
-        stiffness: 100,
-        delay: 0.5
+        duration: 0.4,
+        ease: "easeOut"
       }
     }
   }
@@ -302,36 +314,33 @@ function LoginPageInner() {
     visible: { 
       x: 0,
       transition: { 
-        type: "spring",
-        damping: 25,
-        stiffness: 150,
-        delay: 0.8
+        duration: 0.5,
+        ease: "easeOut"
       }
     }
   }
 
   const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
+    hidden: { y: 15, opacity: 0 },
     visible: (custom: number) => ({
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
-        damping: 15,
-        stiffness: 100,
-        delay: 0.9 + (custom * 0.1)
+        duration: 0.3,
+        ease: "easeOut",
+        delay: 0.3 + (custom * 0.05)
       }
     })
   }
 
   const footerVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: { 
       opacity: 1, 
       y: 0,
       transition: { 
-        delay: 1.5,
-        duration: 0.6,
+        delay: 0.8,
+        duration: 0.4,
         ease: "easeOut"
       }
     }
@@ -339,28 +348,26 @@ function LoginPageInner() {
 
   const buttonHoverVariants = {
     hover: { 
-      scale: 1.02,
+      scale: 1.01,
       transition: { 
-        type: "spring",
-        stiffness: 400,
-        damping: 10
+        duration: 0.2,
+        ease: "easeOut"
       }
     },
     tap: { 
-      scale: 0.98,
+      scale: 0.99,
       transition: { 
-        type: "spring",
-        stiffness: 400,
-        damping: 10
+        duration: 0.1,
+        ease: "easeOut"
       }
     }
   }
 
   const inputFocusVariants = {
     focus: { 
-      scale: 1.01,
+      scale: 1.005,
       boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.3)",
-      transition: { duration: 0.2 }
+      transition: { duration: 0.15 }
     }
   }
 
@@ -816,18 +823,21 @@ function LoginPageInner() {
         <p className="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 md:gap-2">
           <span>Hak Cipta @danamasjid 2026</span>
           <span className="hidden sm:inline">|</span>
-          <button 
-            onClick={() => setIsPolicyOpen(true)}
+          <Link 
+            href="/syarat-ketentuan"
+            className="hover:text-white transition-colors underline"
+          >
+            Syarat & Ketentuan
+          </Link>
+          <span className="hidden sm:inline">|</span>
+          <Link 
+            href="/kebijakan-privasi"
             className="hover:text-white transition-colors underline"
           >
             Kebijakan Privasi
-          </button>
+          </Link>
         </p>
       </motion.div>
-
-      <Suspense fallback={null}>
-        <PolicyModal open={isPolicyOpen} onOpenChange={setIsPolicyOpen} />
-      </Suspense>
     </motion.div>
   )
 }

@@ -45,7 +45,7 @@ export function Topbar({ title = "Dashboard", subtitle = "Selamat Datang di Port
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", damping: 20, stiffness: 150 }}
-            className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-100 bg-white/80 backdrop-blur-xl px-4 md:px-6 shadow-sm"
+            className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-gray-100 bg-white backdrop-blur-xl px-4 md:px-6 shadow-sm dark:bg-gray-900 dark:border-gray-800"
         >
             {/* Sidebar Toggle */}
             <SidebarTrigger className="text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all" />
@@ -74,7 +74,6 @@ export function Topbar({ title = "Dashboard", subtitle = "Selamat Datang di Port
                 >
                     <Search className="w-3.5 h-3.5" />
                     <span className="text-xs">Cari...</span>
-                    <kbd className="ml-1 text-[9px] bg-gray-200 px-1 py-0.5 rounded font-mono">⌘K</kbd>
                 </motion.button>
 
                 {/* Notifications */}

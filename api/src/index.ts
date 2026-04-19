@@ -5,6 +5,8 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes';
 import subscribeRoutes from './routes/subscribeRoutes';
+import donationRoutes from './routes/donationRoutes';
+import supplyChainRoutes from './routes/supplyChainRoutes';
 import { 
   apiLimiter, 
   sanitizeInput, 
@@ -114,6 +116,8 @@ app.set('trust proxy', 1);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/subscribe', subscribeRoutes);
+app.use('/api/donations', donationRoutes);
+app.use('/api/supply-chain', supplyChainRoutes);
 
 // Health check endpoint
 app.get('/health', (req: Request, res: Response) => {

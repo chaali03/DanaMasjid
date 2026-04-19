@@ -2,26 +2,46 @@
 
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 export default function NotFound() {
   const router = useRouter()
+  const pathname = usePathname()
   const animationContainer = useRef<HTMLDivElement>(null)
+  const animationInstance = useRef<any>(null)
+
+  // If we're in dashboard, don't render this component
+  // Let the dashboard not-found handle it
+  if (pathname?.startsWith('/dashboard-admin')) {
+    return null
+  }
 
   useEffect(() => {
     if (!animationContainer.current) return
+    if (animationInstance.current) return
 
     // Dynamic import — keeps lottie-web out of the main bundle
     import('lottie-web').then((lottie) => {
-      const animation = lottie.default.loadAnimation({
-        container: animationContainer.current!,
+      if (!animationContainer.current) return
+      if (animationInstance.current) return
+      
+      animationInstance.current = lottie.default.loadAnimation({
+        container: animationContainer.current,
         renderer: 'svg',
         loop: true,
         autoplay: true,
         path: '/lotie/Lonely 404.json'
       })
-      return () => animation.destroy()
+    }).catch((error) => {
+      console.error('Failed to load Lottie animation:', error)
     })
+
+    return () => {
+      if (animationInstance.current) {
+        animationInstance.current.destroy()
+        animationInstance.current = null
+      }
+    }
   }, [])
 
   return (
@@ -36,9 +56,6 @@ export default function NotFound() {
 
         {/* Error Message */}
         <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-            Halaman Tidak Ditemukan
-          </h1>
           <p className="text-lg text-gray-600 max-w-md mx-auto">
             Maaf, halaman yang Anda cari tidak dapat ditemukan. Mungkin halaman telah dipindahkan atau dihapus.
           </p>

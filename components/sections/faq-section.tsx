@@ -4,88 +4,86 @@ import { motion } from "framer-motion"
 
 const faqs = [
   {
-    question: "Bagaimana cara mendaftarkan masjid di DanaMasjid?",
+    question: "Bagaimana blockchain digunakan untuk supply chain tracking?",
     answer:
-      "Sangat mudah! Buat akun, klik 'Daftarkan Masjid', tambahkan foto dan deskripsi masjid Anda, buat program donasi. Masjid Anda akan aktif dalam beberapa menit setelah verifikasi.",
+      "Setiap transaksi dana dan distribusi produk tercatat di blockchain dengan hash unik. Anda bisa lacak perjalanan dana dari donatur hingga penggunaan akhir secara real-time dan transparan.",
   },
   {
-    question: "Berapa biaya untuk pengurus masjid?",
+    question: "Apa itu smart contract dan bagaimana cara kerjanya?",
     answer:
-      "DanaMasjid mengenakan komisi 2.5% hanya ketika donasi diterima. Tanpa biaya pendaftaran, tanpa langganan wajib. Semua transparan dan amanah.",
+      "Smart contract adalah kode otomatis di blockchain yang mengelola distribusi dana tanpa campur tangan pihak ketiga. Ketika kondisi terpenuhi, dana otomatis tersalurkan sesuai tujuan yang telah ditetapkan.",
   },
   {
-    question: "Bagaimana masjid diverifikasi?",
+    question: "Bagaimana cara verifikasi transaksi di blockchain?",
     answer:
-      "Setiap masjid harus menyediakan dokumen legalitas dan identitas pengurus. Kami memverifikasi dokumen ini dan memberikan badge terverifikasi. Donatur dapat melihat profil lengkap sebelum berdonasi.",
+      "Setiap transaksi memiliki hash unik yang dapat Anda verifikasi di blockchain explorer seperti Etherscan atau Polygonscan. Cukup copy hash transaksi dan paste di explorer untuk melihat detail lengkapnya.",
   },
   {
-    question: "Apakah pembayaran aman?",
+    question: "Apakah data di blockchain aman dan tidak bisa diubah?",
     answer:
-      "Ya, semua pembayaran melalui platform kami yang aman. Dana ditahan hingga konfirmasi dari pengurus masjid, kemudian disalurkan. Jika ada sengketa, tim HidupTebe akan membantu menyelesaikan.",
+      "Ya, blockchain bersifat immutable (tidak dapat diubah). Setelah transaksi tercatat, data tidak bisa dihapus atau dimanipulasi oleh siapapun. Ini menjamin integritas dan transparansi penuh.",
   },
   {
-    question: "Apa yang dilindungi oleh sistem transparansi?",
+    question: "Blockchain apa yang digunakan PARANTARA?",
     answer:
-      "Sistem kami mencatat setiap transaksi secara detail dan real-time. Pengurus masjid wajib melaporkan penggunaan dana dengan bukti foto dan keterangan. Semua dapat dilihat oleh donatur.",
+      "Kami mendukung multi-chain termasuk Ethereum, Polygon, Binance Smart Chain (BSC), dan Solana. Anda bisa pilih blockchain sesuai kebutuhan biaya dan kecepatan transaksi.",
   },
   {
-    question: "Bisakah saya membatalkan donasi?",
+    question: "Bagaimana supply chain produk bantuan dilacak?",
     answer:
-      "Donasi yang sudah dikonfirmasi tidak dapat dibatalkan. Namun jika ada masalah atau kecurangan yang terbukti, kami akan membantu proses pengembalian dana sesuai kebijakan yang berlaku.",
+      "Setiap produk bantuan (beras, minyak, sembako) diberi ID unik yang tercatat di blockchain. Anda bisa lacak dari supplier, gudang, hingga distribusi ke penerima manfaat dengan scan QR code atau cek di dashboard.",
   },
 ]
 
 export function FAQSection() {
   return (
-    <AnimatedSection animation="fadeIn" className="py-32 px-6 pb-80 overflow-hidden" id="faq">
+    <AnimatedSection animation="fadeIn" className="py-8 md:py-20 lg:py-32 px-6 pb-16 md:pb-40 lg:pb-80 overflow-hidden" id="faq">
       <div className="max-w-4xl mx-auto">
         <motion.div 
-          initial={{ opacity: 0, rotateY: -45, scale: 0.8 }}
-          whileInView={{ opacity: 1, rotateY: 0, scale: 1 }}
-          transition={{ duration: 1, type: "spring", stiffness: 100 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }}
+          className="text-center mb-8 md:mb-12 lg:mb-16"
         >
           <motion.h2 
-            initial={{ opacity: 0, y: -50, skewY: -10 }}
-            whileInView={{ opacity: 1, y: 0, skewY: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 150 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.1, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
             className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif"
           >
             Pertanyaan yang Sering Diajukan
           </motion.h2>
           <motion.p 
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.2, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.3 }}
             className="text-muted-foreground max-w-2xl mx-auto leading-relaxed"
           >
-            Semua yang perlu Anda ketahui tentang DanaMasjid. Punya pertanyaan lain? Hubungi tim dukungan kami.
+            Semua yang perlu Anda ketahui tentang PARANTARA. Punya pertanyaan lain? Hubungi tim dukungan kami.
           </motion.p>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.2 }}
         >
           <Accordion type="single" collapsible className="space-y-3 py-0 my-0">
             {faqs.map((faq, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50, rotateY: index % 2 === 0 ? -15 : 15 }}
-                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ 
-                  duration: 0.6, 
-                  delay: index * 0.1,
-                  type: "spring",
-                  stiffness: 100
+                  duration: 0.35, 
+                  delay: index * 0.05,
+                  ease: "easeOut"
                 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                viewport={{ once: true, amount: 0.2 }}
               >
                 <AccordionItem
                   value={`item-${index}`}

@@ -256,7 +256,7 @@ export default function MenungguPage() {
                   localStorage.removeItem(`mosque_registration_${userId}`)
                   localStorage.removeItem(`mosque_registration_id_${userId}`)
                 }
-                window.location.href = "/daftar-masjid"
+                window.location.href = "/register"
               }}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-full font-semibold hover:bg-gray-700 transition-colors text-sm"
             >

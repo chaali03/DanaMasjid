@@ -1,12 +1,24 @@
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  outputFileTracingRoot: process.cwd(),
+  // Explicitly set the project root for Turbopack to prevent 
+  // resolving to parent directories (like C:\Users\owner)
+  // especially when multiple lockfiles exist higher up
+  turbopack: {
+    root: __dirname,
+  },
+  outputFileTracingRoot: __dirname,
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  
+  // Disable static page generation
+  output: 'standalone',
   
   // Disable Fast Refresh in development if FAST_REFRESH=false
   ...(process.env.NODE_ENV === 'development' && process.env.FAST_REFRESH === 'false' && {
@@ -29,7 +41,15 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    qualities: [50, 75, 80, 90, 100],
+    // Optimize quality settings for better performance
+    qualities: [70, 75, 85], // Reduced quality for faster loading
+    // Allow query strings for cache busting
+    localPatterns: [
+      {
+        pathname: '/images/**',
+        search: '',
+      },
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -46,18 +66,15 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  // Enhanced compression
+  // Enhanced compression and optimization
   experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts', 'framer-motion', 'lottie-react', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-popover'],
-    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', 'framer-motion', 'lottie-react', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
     serverActions: {
-      allowedOrigins: ['localhost:3000', 'localhost:3001']
+      allowedOrigins: ['localhost:3000', 'localhost:3001', 'localhost:3011']
     },
-    optimizeServerReact: true,
+    parallelServerBuildTraces: false,
+    optimizeCss: true,
     gzipSize: true,
-    webpackBuildWorker: true,
-    parallelServerCompiles: true,
-    parallelServerBuildTraces: true,
   },
   
   // Move serverComponentsExternalPackages to root level
@@ -104,9 +121,54 @@ const nextConfig = {
       ],
     })
 
-    // Optimize module resolution
-    config.resolve.modules = ['node_modules'];
+    // Optimize module resolution to stay within the project directory
+    config.resolve.modules = [path.resolve(__dirname, 'node_modules'), 'node_modules'];
     config.resolve.symlinks = false;
+    
+    // Explicitly handle tailwindcss resolution if needed
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'tailwindcss': path.resolve(__dirname, 'node_modules/tailwindcss'),
+    };
+    
+    // Only optimize in production and client-side
+    if (!dev && !isServer) {
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'deterministic',
+        minimize: true,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            // Vendor chunk for node_modules
+            vendor: {
+              name: 'vendor',
+              chunks: 'all',
+              test: /node_modules/,
+              priority: 20
+            },
+            // Common chunk for shared code
+            common: {
+              name: 'common',
+              minChunks: 2,
+              chunks: 'all',
+              priority: 10,
+              reuseExistingChunk: true,
+              enforce: true
+            },
+            // Separate chunk for large libraries
+            lib: {
+              test: /[\\/]node_modules[\\/](react|react-dom|framer-motion|lottie-react)[\\/]/,
+              name: 'lib',
+              chunks: 'all',
+              priority: 30
+            }
+          }
+        }
+      };
+    }
 
     return config
   },
@@ -216,40 +278,10 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
           },
-          {
-            key: 'Content-Type',
-            value: 'image/*',
-          },
         ],
       },
       {
-        source: '/_next/static/css/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-          {
-            key: 'Content-Type',
-            value: 'text/css; charset=utf-8',
-          },
-        ],
-      },
-      {
-        source: '/_next/static/js/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-          {
-            key: 'Content-Type',
-            value: 'application/javascript; charset=utf-8',
-          },
-        ],
-      },
-      {
-        source: '/_next/static/:path*',
+        source: '/static/:path*',
         headers: [
           {
             key: 'Cache-Control',

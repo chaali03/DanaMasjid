@@ -7,7 +7,115 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
 import { useAuth } from "@/lib/auth-context"
-import { VideoBackground } from "@/components/auth/video-background"
+import dynamic from "next/dynamic"
+
+// Dynamic import for heavy components with pre-fetching hint
+const VideoBackground = dynamic(() => import("@/components/auth/video-background").then(mod => mod.VideoBackground), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-cyan-600" />
+})
+
+// Animation variants defined outside to improve performance and reduce complexity
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.8,
+      when: "beforeChildren",
+      staggerChildren: 0.15,
+    }
+  }
+}
+
+const cardVariants = {
+  hidden: { scale: 0.95, opacity: 0, y: 20 },
+  visible: { 
+    scale: 1, 
+    opacity: 1, 
+    y: 0,
+    transition: { 
+      type: "spring",
+      damping: 25,
+      stiffness: 200,
+      delay: 0.3
+    }
+  }
+}
+
+const slideRightVariants = {
+  hidden: { x: 100, opacity: 0 },
+  visible: { 
+    x: 0, 
+    opacity: 1,
+    transition: { 
+      type: "spring",
+      damping: 20,
+      stiffness: 100,
+      delay: 0.2
+    }
+  }
+}
+
+const slideLeftVariants = {
+  hidden: { x: -100, opacity: 0 },
+  visible: { 
+    x: 0, 
+    opacity: 1,
+    transition: { 
+      type: "spring",
+      damping: 20,
+      stiffness: 100,
+      delay: 0.2
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { y: 30, opacity: 0 },
+  visible: (custom: number) => ({
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      damping: 15,
+      stiffness: 100,
+      delay: 0.3 + (custom * 0.05)
+    }
+  })
+}
+
+const curveVariants = {
+  hidden: { x: "-100%" },
+  visible: { 
+    x: 0,
+    transition: { 
+      type: "spring",
+      damping: 25,
+      stiffness: 150,
+      delay: 0.3
+    }
+  }
+}
+
+const buttonHoverVariants = {
+  hover: { 
+    scale: 1.02,
+    transition: { 
+      type: "spring",
+      stiffness: 400,
+      damping: 10
+    }
+  },
+  tap: { 
+    scale: 0.98,
+    transition: { 
+      type: "spring",
+      stiffness: 400,
+      damping: 10
+    }
+  }
+}
 
 export default function RegisterStep2Page() {
   const router = useRouter()
@@ -34,108 +142,6 @@ export default function RegisterStep2Page() {
     password: "",
     confirmPassword: "",
   })
-
-  // Animation variants - SAMA PERSIS dengan register page
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        when: "beforeChildren",
-        staggerChildren: 0.15,
-      }
-    }
-  }
-
-  const cardVariants = {
-    hidden: { scale: 0.95, opacity: 0, y: 20 },
-    visible: { 
-      scale: 1, 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        type: "spring",
-        damping: 25,
-        stiffness: 200,
-        delay: 0.3
-      }
-    }
-  }
-
-  const slideRightVariants = {
-    hidden: { x: 100, opacity: 0 },
-    visible: { 
-      x: 0, 
-      opacity: 1,
-      transition: { 
-        type: "spring",
-        damping: 20,
-        stiffness: 100,
-        delay: 0.2
-      }
-    }
-  }
-
-  const slideLeftVariants = {
-    hidden: { x: -100, opacity: 0 },
-    visible: { 
-      x: 0, 
-      opacity: 1,
-      transition: { 
-        type: "spring",
-        damping: 20,
-        stiffness: 100,
-        delay: 0.2
-      }
-    }
-  }
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: (custom: number) => ({
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        damping: 15,
-        stiffness: 100,
-        delay: 0.3 + (custom * 0.05)
-      }
-    })
-  }
-
-  const curveVariants = {
-    hidden: { x: "-100%" },
-    visible: { 
-      x: 0,
-      transition: { 
-        type: "spring",
-        damping: 25,
-        stiffness: 150,
-        delay: 0.3
-      }
-    }
-  }
-
-  const buttonHoverVariants = {
-    hover: { 
-      scale: 1.02,
-      transition: { 
-        type: "spring",
-        stiffness: 400,
-        damping: 10
-      }
-    },
-    tap: { 
-      scale: 0.98,
-      transition: { 
-        type: "spring",
-        stiffness: 400,
-        damping: 10
-      }
-    }
-  }
 
   // Verify token on mount
   useEffect(() => {
@@ -245,7 +251,7 @@ export default function RegisterStep2Page() {
       }
 
       // Create Firebase account
-      setSuccess('Membuat akun...')
+      setSuccess('Pendaftaran berhasil! Silahkan untuk login terlebih dahulu')
       
       const user = await signUpWithEmail(
         userData!.email,
@@ -256,10 +262,10 @@ export default function RegisterStep2Page() {
         }
       )
 
-      setSuccess('Pendaftaran berhasil! Mengarahkan ke login...')
-      
-      // Redirect to login immediately
-      router.push('/login?message=Pendaftaran berhasil! Silakan login untuk melanjutkan.')
+      // Redirect to login page first
+      setTimeout(() => {
+        router.push('/login')
+      }, 1500)
     } catch (err: any) {
       console.error('Registration error:', err)
       setError(err?.message || 'Terjadi kesalahan. Silakan coba lagi.')
@@ -375,7 +381,7 @@ export default function RegisterStep2Page() {
               fill
               className="object-cover"
               priority
-              sizes="100vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
               quality={80}
             />
           </motion.div>

@@ -82,9 +82,10 @@ function VerifyDeviceContent() {
       setStatus('success')
       setMessage('Perangkat berhasil diverifikasi! Anda sekarang dapat login.')
 
-      // Redirect to login after 3 seconds, with redirect back to daftar-masjid
+      // Redirect to login after 3 seconds, with redirect back to original destination if provided
+      const finalRedirect = searchParams.get('redirect') || '/'
       setTimeout(() => {
-        router.push('/login?message=Perangkat berhasil diverifikasi. Silakan login.&redirect=/daftar-masjid')
+        router.push(`/login?message=Perangkat berhasil diverifikasi. Silakan login.&redirect=${encodeURIComponent(finalRedirect)}`)
       }, 3000)
 
     } catch (error) {

@@ -15,7 +15,7 @@ export function VideoBackground({ videoSrc, posterSrc, className = '' }: VideoBa
   const [hasError, setHasError] = useState(false)
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
 
-  // Intersection Observer - only load when visible
+  // Intersection Observer - only load when visible with optimizations
   useEffect(() => {
     if (!containerRef.current) return
 
@@ -33,9 +33,13 @@ export function VideoBackground({ videoSrc, posterSrc, className = '' }: VideoBa
             return
           }
 
-          // Short delay so page content renders first
-          const timer = setTimeout(() => setShouldLoadVideo(true), 800)
-          return () => clearTimeout(timer)
+          // Use requestIdleCallback for non-critical video loading
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => setShouldLoadVideo(true), { timeout: 1000 })
+          } else {
+            // Fallback with longer delay for better initial page load
+            setTimeout(() => setShouldLoadVideo(true), 1000)
+          }
         }
       },
       { threshold: 0.01 }
@@ -80,7 +84,7 @@ export function VideoBackground({ videoSrc, posterSrc, className = '' }: VideoBa
         style={posterSrc ? { backgroundImage: `url(${posterSrc})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
       />
 
-      {/* Video — only rendered when ready */}
+      {/* Video — only rendered when ready with GPU acceleration */}
       {shouldLoadVideo && !hasError && (
         <video
           ref={videoRef}
@@ -94,6 +98,8 @@ export function VideoBackground({ videoSrc, posterSrc, className = '' }: VideoBa
           style={{
             opacity: isLoaded ? 1 : 0,
             transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            willChange: isLoaded ? 'auto' : 'opacity'
           }}
         >
           <source src={videoSrc} type="video/mp4" />

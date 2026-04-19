@@ -1,13 +1,9 @@
 "use client"
 
 import { usePathname } from "next/navigation"
-import { useEffect, useRef, useState, useCallback, Suspense, lazy } from "react"
+import { useEffect, useRef, useState, useCallback, Suspense } from "react"
 import { markPageLoadingDone } from "@/lib/page-loading-done"
-
-// Lazy load Lottie only when needed
-const LottieLoading = lazy(() => 
-  import("@/components/ui/lottie-loading").then(mod => ({ default: mod.LottieLoading }))
-)
+import { LottieLoading } from "@/components/ui/lottie-loading"
 
 declare global {
   interface Window {
@@ -23,58 +19,63 @@ function PathWatcher({ onHide }: { onHide: () => void }) {
 
   useEffect(() => {
     if (prevRef.current !== pathname) {
+      const previousPath = prevRef.current
       prevRef.current = pathname
-      // Don't show loading for dashboard-admin routes
-      if (!pathname.startsWith("/dashboard-admin")) {
-        onHide()
+      
+      console.log(`🔄 Path changed: ${previousPath} → ${pathname}`)
+      
+      // Wait for page to be FULLY loaded before hiding
+      const checkPageLoaded = () => {
+        let attempts = 0
+        const maxAttempts = 20 // 2 seconds max (reduced from 25)
+        
+        const checkInterval = setInterval(() => {
+          attempts++
+          
+          // Check multiple conditions to ensure page is truly ready
+          const isDocumentComplete = document.readyState === 'complete'
+          const hasContent = document.body.children.length > 0
+          const noLoadingElements = document.querySelectorAll('[data-loading="true"]').length === 0
+          
+          // All conditions must be met OR max attempts reached
+          const isReady = isDocumentComplete && hasContent && noLoadingElements
+          
+          // Force show page after max attempts to prevent infinite loading
+          const shouldShow = isReady || attempts >= maxAttempts
+          
+          if (shouldShow) {
+            clearInterval(checkInterval)
+            
+            // Shorter delay for faster page display
+            const delay = 150
+            
+            setTimeout(() => {
+              const loadTime = Date.now() - (window as any).__pageLoadStart || 0
+              if (process.env.NODE_ENV === 'development') {
+                if (isReady) {
+                  console.log(`✅ Page fully loaded in ${loadTime}ms`)
+                } else {
+                  console.log(`⚠️ Max loading time reached (${loadTime}ms), showing page anyway`)
+                }
+              }
+              onHide()
+            }, delay)
+          }
+        }, 100) // Check every 100ms
+        
+        return () => clearInterval(checkInterval)
       }
+      
+      // Mark start time for logging
+      (window as any).__pageLoadStart = Date.now()
+      
+      // Start checking immediately
+      const timer = setTimeout(checkPageLoaded, 100)
+      return () => clearTimeout(timer)
     }
   }, [pathname, onHide])
 
   return null
-}
-
-// Beautiful optimized spinner with mosque theme - Golden version
-function SimpleSpinner() {
-  return (
-    <div className="flex flex-col items-center gap-6">
-      {/* Outer rotating ring */}
-      <div className="relative w-24 h-24">
-        {/* Outer golden ring */}
-        <div className="absolute inset-0 rounded-full border-4 border-amber-200 animate-spin" 
-             style={{ 
-               borderTopColor: '#F59E0B',
-               borderRightColor: '#FBBF24',
-               animationDuration: '1.2s'
-             }}>
-        </div>
-        
-        {/* Inner pulsing circle */}
-        <div className="absolute inset-3 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 animate-pulse"
-             style={{ animationDuration: '1.5s' }}>
-        </div>
-        
-        {/* Center mosque image - smaller */}
-        <div className="absolute inset-0 flex items-center justify-center p-6">
-          <img 
-            src="/images/loading/mosque.webp" 
-            alt="Mosque"
-            className="w-full h-full object-contain drop-shadow-lg"
-          />
-        </div>
-      </div>
-      
-      {/* Loading text with gradient */}
-      <div className="text-center space-y-1">
-        <div className="text-lg font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
-          Memuat...
-        </div>
-        <div className="text-sm text-gray-500 animate-pulse">
-          Mohon tunggu sebentar
-        </div>
-      </div>
-    </div>
-  )
 }
 
 function LottieOverlay({ fading }: { fading: boolean }) {
@@ -83,21 +84,19 @@ function LottieOverlay({ fading }: { fading: boolean }) {
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 9999,
+        zIndex: 99999,
         background: "white",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         opacity: fading ? 0 : 1,
-        transition: fading ? "opacity 300ms ease" : "none", // Changed from 100ms to 300ms
+        transition: fading ? "opacity 150ms ease" : "none", // Smooth fade
         pointerEvents: fading ? "none" : "all",
         willChange: fading ? "opacity" : "auto",
       }}
     >
-      {/* Lottie with optimized spinner fallback */}
-      <Suspense fallback={<SimpleSpinner />}>
-        <LottieLoading className="flex flex-col items-center gap-3" />
-      </Suspense>
+      {/* Always use Lottie directly - no fallback */}
+      <LottieLoading className="flex flex-col items-center gap-3" />
     </div>
   )
 }
@@ -117,25 +116,37 @@ function Inner() {
 
   const hideOverlay = useCallback(() => {
     if (!isShowingRef.current) return
+    
+    const elapsedTime = Date.now() - showStartRef.current
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`⏱️ Page loaded in ${elapsedTime}ms`)
+    }
+    
     clearTimers()
     isShowingRef.current = false
     window.__pageLoadingPending = false
 
-    const elapsed = Date.now() - showStartRef.current
-    // Minimal display time - ensure loading animation is visible
-    const remaining = Math.max(0, 800 - elapsed) // Changed from 100ms to 800ms
-
+    // Smooth fade transition
+    setFading(true)
     timerRef.current = setTimeout(() => {
-      setFading(true)
-      timerRef.current = setTimeout(() => {
-        setVisible(false)
-        setFading(false)
-        markPageLoadingDone()
-      }, 300) // Changed from 100ms to 300ms for smoother fade
-    }, remaining)
+      setVisible(false)
+      setFading(false)
+      markPageLoadingDone()
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Loading animation hidden')
+      }
+    }, 200) // Smooth fade duration
   }, [clearTimers])
 
   const showOverlay = useCallback(() => {
+    // Prevent showing if already showing
+    if (isShowingRef.current && visible) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('⏭️ Already showing loading - skipping')
+      }
+      return
+    }
+    
     clearTimers()
     
     // Reset loading done state when showing overlay
@@ -147,13 +158,29 @@ function Inner() {
     showStartRef.current = Date.now()
     setFading(false)
     setVisible(true)
-    // Safety timeout - ensure loading doesn't hang
-    safetyRef.current = setTimeout(() => hideOverlay(), 3000) // Changed from 1500ms to 3000ms
-  }, [clearTimers, hideOverlay])
+    
+    // Add safety timeout to prevent infinite loading (2.5 seconds max)
+    safetyRef.current = setTimeout(() => {
+      if (isShowingRef.current) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('⚠️ Safety timeout reached - forcing hide')
+        }
+        hideOverlay()
+      }
+    }, 2500)
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔄 Loading started - waiting for page to be ready...')
+    }
+  }, [clearTimers, hideOverlay, visible])
 
   useEffect(() => {
     window.__pageLoadingShow = showOverlay
     window.__pageLoadingHide = hideOverlay
+    
+    return () => {
+      // Cleanup
+    }
   }, [showOverlay, hideOverlay])
 
   useEffect(() => {
@@ -165,25 +192,85 @@ function Inner() {
 
     const onNavigate = () => showOverlay()
     window.addEventListener("page-navigate", onNavigate)
+    
+    // Handle browser back/forward buttons - show loading IMMEDIATELY
+    const onPopState = (e: PopStateEvent) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔙 Browser back/forward detected')
+      }
+      // Show overlay immediately without any delay
+      showOverlay()
+    }
+    
+    // Listen to popstate with capture phase to catch it as early as possible
+    window.addEventListener("popstate", onPopState, true)
 
     return () => {
       clearTimers()
       window.removeEventListener("page-navigate", onNavigate)
+      window.removeEventListener("popstate", onPopState, true)
       window.__pageLoadingShow = undefined
       window.__pageLoadingHide = undefined
     }
   }, [showOverlay, clearTimers])
 
-  // Intercept <a> clicks - exclude dashboard-admin routes
+  // Intercept <a> clicks - only show loading for actual page changes
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const a = (e.target as HTMLElement).closest("a")
       if (!a) return
+      
       const href = a.getAttribute("href")
-      if (!href || !href.startsWith("/") || href.startsWith("/#") || href.startsWith("/api")) return
-      if (href === window.location.pathname) return
-      // Skip loading animation for dashboard-admin routes
-      if (href.startsWith("/dashboard-admin")) return
+      if (!href) return
+      
+      // Skip if not internal link
+      if (!href.startsWith("/")) return
+      
+      // Skip if hash link (same page navigation)
+      if (href.startsWith("/#") || href.includes("#")) return
+      
+      // Skip if API route
+      if (href.startsWith("/api")) return
+      
+      // Skip if external link attribute
+      if (a.target === "_blank" || a.rel?.includes("external")) return
+      
+      // Get current pathname without query/hash
+      const currentPath = window.location.pathname
+      const targetPath = href.split("?")[0].split("#")[0]
+      
+      // Normalize paths - treat "/" and "" as the same
+      const normalizedCurrent = currentPath === "" ? "/" : currentPath
+      const normalizedTarget = targetPath === "" ? "/" : targetPath
+      
+      // Skip if same page (exact match)
+      if (normalizedTarget === normalizedCurrent) {
+        console.log(`⏭️ Skipping loading - already on ${normalizedCurrent}`)
+        return
+      }
+      
+      // Skip if clicking within same section (e.g., dashboard sub-pages)
+      const currentBase = normalizedCurrent.split("/")[1]
+      const targetBase = normalizedTarget.split("/")[1]
+      
+      // Only skip for dashboard-admin internal navigation
+      if (currentBase === "dashboard-admin" && targetBase === "dashboard-admin") {
+        // Allow loading for main dashboard page transitions
+        if (normalizedTarget === "/dashboard-admin" || normalizedCurrent === "/dashboard-admin") {
+          showOverlay()
+        }
+        return
+      }
+      
+      // ALWAYS show loading when navigating FROM about-us to any other page
+      if (normalizedCurrent === "/about-us" && normalizedTarget !== "/about-us") {
+        console.log(`🔄 Navigating FROM about-us to ${normalizedTarget}`)
+        showOverlay()
+        return
+      }
+      
+      // Show loading for all other page changes
+      console.log(`🔄 Navigating from ${normalizedCurrent} to ${normalizedTarget}`)
       showOverlay()
     }
     document.addEventListener("click", onClick, true)

@@ -8,27 +8,36 @@ interface AnimatedTextProps {
 }
 
 export function AnimatedText({ text, delay = 0 }: AnimatedTextProps) {
-  const chars = useMemo(() => Array.from(text), [text])
+  // Use a simple split('') for stable character mapping
+  const chars = text.split('')
 
   return (
     <span
-      className="font-bold text-center leading-[0.75] text-black block"
-      style={{ perspective: 400, fontFamily: "'ArabicRamadan', serif", letterSpacing: "0.08em" }}
+      className="font-normal leading-tight text-black inline-block"
+      style={{ 
+        perspective: 400, 
+        fontFamily: "'ArabicRamadan', serif", 
+        letterSpacing: "0.05em",
+        whiteSpace: "pre-wrap" // Preserve spaces naturally
+      }}
+      suppressHydrationWarning
     >
       {chars.map((char, i) => {
-        const isSpace = char === " "
-        if (isSpace) return <span key={`space-${i}`}>{" "}</span>
+        // Handle spaces with a non-breaking space for layout stability
+        const displayChar = char === " " ? "\u00A0" : char
 
         return (
           <span
             key={`${char}-${i}`}
-            className="dm-animated-char"
+            className="dm-animated-char inline-block"
             style={{
               animationDelay: `${delay + i * 0.025}s`,
+              fontFamily: "inherit",
+              fontWeight: "inherit"
             }}
             aria-hidden="true"
           >
-            {char}
+            {displayChar}
           </span>
         )
       })}

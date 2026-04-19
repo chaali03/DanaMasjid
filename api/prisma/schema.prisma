@@ -74,6 +74,22 @@ model User {
   @@map("users")
 }
 
+model RegistrationToken {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  email       String
+  name        String
+  nickname    String
+  expiresAt   DateTime
+  sessionExpiry DateTime? // For 1 hour active session
+  isUsed      Boolean  @default(false)
+  isVerified  Boolean  @default(false) // For device verification
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("registration_tokens")
+}
+
 model MasjidRegistration {
   id                    String   @id @default(cuid())
   userId                String   // Firebase UID — no FK relation, auth handled by Firebase

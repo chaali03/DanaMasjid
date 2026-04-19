@@ -1,0 +1,19 @@
+# Build outputs
+.next/
+.netlify/
+out/
+build/
+
+# Dependencies
+node_modules/
+blockchain/node_modules/
+
+# Generated files
+*.tsbuildinfo
+next-env.d.ts
+
+# OpenNext
+.open-next/
+
+# Wrangler
+.wrangler/

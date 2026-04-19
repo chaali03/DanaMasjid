@@ -1,21 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { authMiddleware, redirectToLogin } from 'next-firebase-auth-edge'
+import { authMiddleware } from 'next-firebase-auth-edge'
 import { authEdgeConfig } from '@/lib/firebase-auth-edge'
 
-// Rate limiting configuration
-const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
-const MAX_REQUESTS_PER_WINDOW = 100
-
-const requestCounts = new Map<string, { count: number; resetTime: number }>()
-
-const SUSPICIOUS_PATTERNS = [
-  /\.\./g,
-  /<script/gi,
-  /union.*select/gi,
-  /javascript:/gi,
-  /on\w+=/gi,
-]
+const SUSPICIOUS_PATTERNS = [/\.\./g, /<script/gi, /union.*select/gi, /javascript:/gi, /on\w+=/gi]
 
 const BOT_PATTERNS = [/bot/i, /crawler/i, /spider/i, /scraper/i, /curl/i, /wget/i, /python/i, /java/i]
 
@@ -24,17 +12,6 @@ function getClientIP(request: NextRequest): string {
   const realIP = request.headers.get('x-real-ip')
   const cfIP = request.headers.get('cf-connecting-ip')
   return forwarded?.split(',')[0] || realIP || cfIP || 'unknown'
-}
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const record = requestCounts.get(ip)
-  if (!record || now > record.resetTime) {
-    requestCounts.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW })
-    return false
-  }
-  record.count++
-  return record.count > MAX_REQUESTS_PER_WINDOW
 }
 
 function isSuspiciousRequest(request: NextRequest): boolean {
@@ -59,10 +36,23 @@ function isSuspiciousRequest(request: NextRequest): boolean {
 const PROTECTED_PATHS = ['/menunggu', '/dashboard']
 
 function addSecurityHeaders(response: NextResponse): NextResponse {
+  // Basic security headers
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('X-Frame-Options', 'SAMEORIGIN')
   response.headers.set('X-XSS-Protection', '1; mode=block')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+
+  // Additional headers from middleware
+  response.headers.set('X-DNS-Prefetch-Control', 'on')
+  response.headers.set('X-Robots-Tag', 'index, follow')
+  response.headers.delete('X-Powered-By')
+  response.headers.delete('Server')
+
+  // COOP/COEP headers for better isolation
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups')
+  response.headers.set('Cross-Origin-Embedder-Policy', 'unsafe-none')
+  response.headers.set('Cross-Origin-Resource-Policy', 'cross-origin')
+
   return response
 }
 
@@ -82,26 +72,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Security checks first
+  // Security checks
   if (isSuspiciousRequest(request)) {
     console.warn(`[Security] Suspicious request blocked from IP: ${ip}`)
     return new NextResponse('Forbidden', { status: 403 })
   }
 
-  if (isRateLimited(ip)) {
-    console.warn(`[Security] Rate limit exceeded for IP: ${ip}`)
-    return new NextResponse('Too Many Requests', {
-      status: 429,
-      headers: {
-        'Retry-After': '60',
-        'X-RateLimit-Limit': MAX_REQUESTS_PER_WINDOW.toString(),
-        'X-RateLimit-Remaining': '0',
-        'X-RateLimit-Reset': new Date(Date.now() + RATE_LIMIT_WINDOW).toISOString(),
-      },
-    })
-  }
+  // Simplified rate limiting for Edge (no Map to avoid memory issues)
+  // Real rate limiting should be handled by provider (Netlify/Vercel) or a DB (Redis)
 
-  const isProtected = PROTECTED_PATHS.some(p => pathname.startsWith(p))
+  const isProtected = PROTECTED_PATHS.some((p) => pathname.startsWith(p))
   const isDaftarMasjid = pathname.startsWith('/daftar-masjid')
 
   // /daftar-masjid: only redirect if already submitted (mosque_registered cookie matches current user)
@@ -142,7 +122,7 @@ export async function middleware(request: NextRequest) {
       },
       handleInvalidToken: async (reason) => {
         console.log(`[Auth] Invalid token on ${pathname}: ${reason}`)
-        
+
         // Fallback: if legacy auth_token cookie exists, allow through
         // Client-side will refresh the proper session cookie
         const legacyToken = request.cookies.get('auth_token')?.value
@@ -172,7 +152,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 }

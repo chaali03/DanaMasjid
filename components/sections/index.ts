@@ -13,6 +13,7 @@ export { FeaturesSection } from "./features-section"
 export { ServicesSection } from "./services-section"
 export { StatsSection } from "./stats-section"
 export { BerkahStatsSection } from "./berkah-stats-section"
+// export { BlockchainSupplyChainSection as ProcessSection } from "./blockchain-supply-chain-section" // File not found
 
 // Pricing Sections
 export { PricingSection } from "./pricing-section"

@@ -1,24 +1,24 @@
 "use client"
 
-import { FileText, CheckCircle, Shield } from "lucide-react"
+import { FileText, CheckCircle, Shield, Link2, Package, Database } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 
 const services = [
   {
-    icon: FileText,
-    title: "Laporan Transparan",
-    description: "Laporan keuangan real-time dengan detail lengkap setiap transaksi donasi dan penggunaan dana.",
+    icon: Database,
+    title: "Blockchain Transparan",
+    description: "Setiap transaksi donasi tercatat di blockchain, memastikan transparansi penuh dan tidak dapat dimanipulasi.",
   },
   {
-    icon: CheckCircle,
-    title: "Verifikasi Masjid",
-    description: "Sistem verifikasi masjid yang ketat untuk memastikan setiap donasi sampai ke tujuan yang tepat.",
+    icon: Link2,
+    title: "Supply Chain Terlacak",
+    description: "Lacak perjalanan dana dari donatur hingga penggunaan akhir dengan teknologi blockchain yang terdesentralisasi.",
   },
   {
     icon: Shield,
-    title: "Pembayaran Aman",
-    description: "Transaksi terlindungi dengan sistem pembayaran yang aman dan tersertifikasi.",
+    title: "Keamanan Terjamin",
+    description: "Smart contract otomatis memastikan dana masjid tersalurkan dengan aman dan sesuai tujuan yang telah ditetapkan.",
   },
 ]
 
@@ -65,7 +65,12 @@ export function ServicesSection() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
+          // Use requestIdleCallback for non-critical state updates
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => setIsVisible(true))
+          } else {
+            setIsVisible(true)
+          }
         }
       },
       { threshold: 0.2 },
@@ -132,7 +137,8 @@ export function ServicesSection() {
               style={{ 
                 minWidth: '100%', 
                 minHeight: '100%',
-                objectPosition: 'center 20%'
+                objectPosition: 'center 20%',
+                willChange: isVisible ? 'auto' : 'transform'
               }}
               loading="lazy"
               decoding="async"
@@ -147,14 +153,14 @@ export function ServicesSection() {
             <div className="order-1 lg:order-2">
               <p className="text-sm uppercase tracking-[0.2em] text-white/80 font-medium mb-4">Misi Kami</p>
               <h2 className="font-sans md:text-4xl lg:text-5xl font-medium text-white text-balance mb-8 text-5xl">
-                Membangun Kepercayaan Melalui Transparansi
+                Membangun Transparansi Dana Masjid & Supply Chain
               </h2>
               <div className="space-y-6 text-white/90 leading-relaxed">
                 <p>
-                  Di DanaMasjid, kami percaya bahwa setiap donasi harus dikelola dengan penuh amanah dan transparansi. Platform kami menghubungkan donatur dengan masjid secara langsung.
+                  Di Parantara, kami menghadirkan sistem transparan untuk mengelola donasi dan distribusi bantuan menggunakan teknologi blockchain. Kami menghubungkan donatur, masjid, dan rantai pasok dalam satu ekosistem terintegrasi.
                 </p>
                 <p>
-                  Setiap masjid terverifikasi, setiap transaksi tercatat. Kami menciptakan ekosistem donasi yang transparan, cepat, dan penuh kepercayaan.
+                  Setiap masjid terverifikasi, setiap transaksi tercatat permanen di blockchain. Supply chain bantuan dapat dipantau real-time dari pengadaan hingga distribusi, memastikan bantuan tepat sasaran dan mengurangi potensi penyalahgunaan.
                 </p>
               </div>
               <div className="mt-10"></div>
@@ -165,7 +171,7 @@ export function ServicesSection() {
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance font-serif">Semua yang Anda Butuhkan</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Platform lengkap untuk mengelola donasi masjid dari A sampai Z, baik Anda pengurus masjid atau donatur.
+            Platform lengkap untuk mengelola donasi masjid dan supply chain produk bantuan dari A sampai Z dengan teknologi blockchain.
           </p>
         </div>
 

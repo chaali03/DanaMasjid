@@ -166,7 +166,7 @@ export function AnimatedSection({
 }: AnimatedSectionProps) {
   const selectedVariant = variantMap[variant]
   const ref = useRef(null)
-  const isInView = useInView(ref, { once, margin: "-80px" })
+  const isInView = useInView(ref, { once, margin: "-80px", amount: 0.2 })
   const loadingDone = usePageLoadingDone()
   
   return (
@@ -178,6 +178,7 @@ export function AnimatedSection({
       variants={selectedVariant}
       transition={{ delay }}
       className={className}
+      style={{ willChange: isInView && !loadingDone ? 'transform, opacity' : 'auto' }}
     >
       {children}
     </motion.div>
@@ -193,7 +194,7 @@ interface StaggerContainerProps {
 
 export function StaggerContainer({ children, className = "", fast = false, once = true }: StaggerContainerProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once, margin: "-50px" })
+  const isInView = useInView(ref, { once, margin: "-50px", amount: 0.15 })
   const loadingDone = usePageLoadingDone()
 
   return (
@@ -203,6 +204,7 @@ export function StaggerContainer({ children, className = "", fast = false, once 
       animate={loadingDone && isInView ? "visible" : "hidden"}
       variants={fast ? staggerFastContainer : staggerContainer}
       className={className}
+      style={{ willChange: isInView && !loadingDone ? 'opacity' : 'auto' }}
     >
       {children}
     </motion.div>

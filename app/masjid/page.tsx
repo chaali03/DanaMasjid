@@ -198,7 +198,7 @@ export default function MasjidPage() {
               {/* Background Image */}
               <div className="absolute inset-0 z-0">
                 <Image
-                  src="/images/thubnail/thubnail.png"
+                  src={ctaImagePath}
                   alt="Masjid Background"
                   fill
                   className="object-cover"
@@ -208,7 +208,7 @@ export default function MasjidPage() {
 
               <div className="relative z-10">
                 <Link
-                  href="/login?redirect=/daftar-masjid&type=daftar-masjid&message=Login+dulu+sebelum+daftarkan+masjid+Anda"
+                  href="/register"
                   className="inline-block px-10 py-5 bg-white text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 text-lg"
                 >
                   Daftarkan Masjid Sekarang

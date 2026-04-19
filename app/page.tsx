@@ -8,7 +8,7 @@ declare global {
   interface Window { __scrollTarget?: string }
 }
 
-// Invisible placeholder — sections load silently, no lottie spam per-section
+// Optimized placeholder with minimal height
 const P = ({ h }: { h: string }) => <div style={{ minHeight: h }} />
 
 function scrollToId(id: string) {
@@ -24,20 +24,55 @@ function scrollToId(id: string) {
   tryScroll()
 }
 
+// Optimized dynamic imports with better loading states
 const HeroSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.HeroSection })), {
   loading: () => <div className="h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50" />,
   ssr: true,
 })
-const StatsSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.StatsSection })), { ssr: false })
-const ServicesSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.ServicesSection })), { ssr: false })
-const Marquee = dynamic(() => import("@/components/client-wrappers").then(mod => ({ default: mod.Marquee })), { ssr: false })
-const FeaturesSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.FeaturesSection })), { ssr: false })
-const DonationProgramsSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.DonationProgramsSection })), { ssr: false })
-const ScrollingAnimation = dynamic(() => import("@/components/client-wrappers").then(mod => ({ default: mod.ScrollingAnimation })), { ssr: false })
-const TestimonialsSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.TestimonialsSection })), { ssr: false })
-const FAQSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.FAQSection })), { ssr: false })
-const CTASection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.CTASection })), { ssr: false })
-const Footer = dynamic(() => import("@/components/layout").then(mod => ({ default: mod.Footer })), { ssr: false })
+const StatsSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.StatsSection })), { 
+  ssr: false,
+  loading: () => <P h="256px" />
+})
+const ServicesSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.ServicesSection })), { 
+  ssr: false,
+  loading: () => <P h="384px" />
+})
+const Marquee = dynamic(() => import("@/components/client-wrappers").then(mod => ({ default: mod.Marquee })), { 
+  ssr: false,
+  loading: () => <P h="128px" />
+})
+const FeaturesSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.FeaturesSection })), { 
+  ssr: false,
+  loading: () => <P h="384px" />
+})
+const DonationProgramsSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.DonationProgramsSection })), { 
+  ssr: false,
+  loading: () => <P h="800px" />
+})
+const ScrollingAnimation = dynamic(() => import("@/components/client-wrappers").then(mod => ({ default: mod.ScrollingAnimation })), { 
+  ssr: false,
+  loading: () => <P h="384px" />
+})
+const FeatureSectionsBlock = dynamic(() => import("@/components/feature-sections").then(mod => ({ default: mod.FeatureSections })), { 
+  ssr: true,
+  loading: () => <P h="480px" />
+})
+const TestimonialsSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.TestimonialsSection })), { 
+  ssr: true,
+  loading: () => <P h="384px" />
+})
+const FAQSection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.FAQSection })), { 
+  ssr: false,
+  loading: () => <P h="384px" />
+})
+const CTASection = dynamic(() => import("@/components/sections").then(mod => ({ default: mod.CTASection })), { 
+  ssr: false,
+  loading: () => <P h="128px" />
+})
+const Footer = dynamic(() => import("@/components/layout").then(mod => ({ default: mod.Footer })), { 
+  ssr: true,
+  loading: () => <P h="256px" />
+})
 
 export default function Home() {
   useEffect(() => {
@@ -66,6 +101,7 @@ export default function Home() {
       <div id="program" style={{ scrollMarginTop: "100px" }} />
       <Suspense fallback={<P h="800px" />}><DonationProgramsSection /></Suspense>
       <Suspense fallback={<P h="384px" />}><ScrollingAnimation /></Suspense>
+      <Suspense fallback={<P h="480px" />}><FeatureSectionsBlock /></Suspense>
       <Suspense fallback={<P h="384px" />}><TestimonialsSection /></Suspense>
       <Suspense fallback={<P h="384px" />}><FAQSection /></Suspense>
       <Suspense fallback={<P h="256px" />}><Footer /></Suspense>

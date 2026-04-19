@@ -71,15 +71,28 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
-  masjidRegistrations MasjidRegistration[]
-  
   @@map("users")
+}
+
+model RegistrationToken {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  email       String
+  name        String
+  nickname    String
+  expiresAt   DateTime
+  sessionExpiry DateTime? // For 1 hour active session
+  isUsed      Boolean  @default(false)
+  isVerified  Boolean  @default(false) // For device verification
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("registration_tokens")
 }
 
 model MasjidRegistration {
   id                    String   @id @default(cuid())
-  userId                String
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String   // Firebase UID — no FK relation, auth handled by Firebase
   
   // Step 1: Data Masjid
   mosqueName            String
@@ -89,6 +102,7 @@ model MasjidRegistration {
   district              String
   village               String
   postalCode            String
+  mosqueImage           String?
   
   // Step 2: Data Legalitas
   aktaPendirian         String?

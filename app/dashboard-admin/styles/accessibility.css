@@ -1,0 +1,284 @@
+/* Accessibility Styles */
+
+:root {
+  --accessibility-font-scale: 1;
+  --spacing-scale: 1;
+  --line-height: 1.5;
+  --letter-spacing: 0px;
+}
+
+/* Font Size Scaling - Using rem-based approach */
+html.text-size-small {
+  font-size: 14px;
+}
+
+html.text-size-medium {
+  font-size: 16px;
+}
+
+html.text-size-large {
+  font-size: 18px;
+}
+
+html.text-size-x-large {
+  font-size: 20px;
+}
+
+/* Grayscale Mode */
+.grayscale-mode {
+  filter: grayscale(100%) !important;
+}
+
+/* Apply line height and letter spacing to dashboard content */
+html[class*="text-size-"] body *:not(.loading-text-fixed):not(.loading-text-fixed *):not([class*="loading"]):not([class*="loading"] *):not([id*="loader"]):not([id*="loader"] *):not(#initial-loader-overlay):not(#initial-loader-overlay *):not([data-lottie]):not([data-lottie] *):not([data-sonner-toaster]):not([data-sonner-toaster] *) {
+  line-height: var(--line-height);
+  letter-spacing: var(--letter-spacing);
+}
+
+/* Force loading text to stay at fixed size */
+.loading-text-fixed,
+.loading-text-fixed * {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0 !important;
+}
+
+/* Spacing Scaling */
+.p-4, .p-6, .px-4, .px-6, .py-4, .py-6 {
+  padding: calc(var(--spacing-scale) * 1rem) !important;
+}
+
+.gap-2, .gap-3, .gap-4 {
+  gap: calc(var(--spacing-scale) * 0.5rem) !important;
+}
+
+.space-y-4 > * + *, .space-y-6 > * + * {
+  margin-top: calc(var(--spacing-scale) * 1rem) !important;
+}
+
+/* Color Blind Modes */
+[data-colorblind-mode="protanopia"] body {
+  filter: url(#protanopia-filter);
+}
+
+[data-colorblind-mode="deuteranopia"] body {
+  filter: url(#deuteranopia-filter);
+}
+
+[data-colorblind-mode="tritanopia"] body {
+  filter: url(#tritanopia-filter);
+}
+
+/* Reduced Motion */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Navigation Position Styles */
+
+/* Sidebar Right - Mirror the layout */
+[data-navigation-position="sidebar-right"] .min-h-screen {
+  flex-direction: row-reverse !important;
+}
+
+[data-navigation-position="sidebar-right"] aside,
+[data-navigation-position="sidebar-right"] nav[class*="sidebar"],
+[data-navigation-position="sidebar-right"] [class*="Sidebar"] {
+  right: 0 !important;
+  left: auto !important;
+  transform: translateX(0) !important;
+  border-left: 2px solid rgb(243 244 246) !important;
+  border-right: none !important;
+  box-shadow: -4px 0 6px -1px rgb(0 0 0 / 0.05), -2px 0 4px -2px rgb(0 0 0 / 0.05) !important;
+}
+
+/* Override mobile translate for right sidebar */
+@media (max-width: 1023px) {
+  [data-navigation-position="sidebar-right"] aside.-translate-x-full {
+    transform: translateX(100%) !important;
+  }
+  
+  [data-navigation-position="sidebar-right"] aside.translate-x-0 {
+    transform: translateX(0) !important;
+  }
+}
+
+html.dark [data-navigation-position="sidebar-right"] aside,
+html.dark [data-navigation-position="sidebar-right"] nav[class*="sidebar"],
+html.dark [data-navigation-position="sidebar-right"] [class*="Sidebar"] {
+  border-left-color: rgb(55 65 81) !important;
+  box-shadow: -4px 0 6px -1px rgb(0 0 0 / 0.5), -2px 0 4px -2px rgb(0 0 0 / 0.5) !important;
+}
+
+/* Sidebar Left (default) */
+[data-navigation-position="sidebar-left"] aside,
+[data-navigation-position="sidebar-left"] nav[class*="sidebar"],
+[data-navigation-position="sidebar-left"] [class*="Sidebar"] {
+  left: 0 !important;
+  right: auto !important;
+}
+
+/* Focus Indicators */
+*:focus-visible {
+  outline: 3px solid #3b82f6 !important;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Color Blind Filters (SVG) */
+svg.accessibility-filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* Accessibility Panel Backdrop Blur */
+.fixed.inset-0.z-\[99998\] {
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+}
+
+/* Ensure backdrop filter is supported */
+@supports (backdrop-filter: blur(20px)) or (-webkit-backdrop-filter: blur(20px)) {
+  .fixed.inset-0.z-\[99998\] {
+    background: rgba(0, 0, 0, 0.4) !important;
+  }
+}
+
+/* Fallback for browsers that don't support backdrop-filter */
+@supports not ((backdrop-filter: blur(20px)) or (-webkit-backdrop-filter: blur(20px))) {
+  .fixed.inset-0.z-\[99998\] {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+}
+
+/* Blur content behind panel */
+body.accessibility-panel-open > div:not([class*="z-[99"]) {
+  filter: blur(8px) brightness(0.7);
+  transition: filter 0.3s ease-in-out;
+}
+
+body.accessibility-panel-open aside,
+body.accessibility-panel-open header,
+body.accessibility-panel-open main,
+body.accessibility-panel-open .min-h-screen > div:first-child {
+  filter: blur(8px) brightness(0.7);
+  transition: filter 0.3s ease-in-out;
+}
+
+/* Ensure panel itself is not blurred */
+body.accessibility-panel-open [class*="z-[99999]"],
+body.accessibility-panel-open [class*="z-[99998]"] {
+  filter: none !important;
+}
+
+/* Toaster (Sonner) Responsive Positioning */
+[data-sonner-toaster][data-x-position="right"] {
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+}
+
+[data-sonner-toaster] {
+  top: 1rem !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  max-width: calc(100vw - 2rem) !important;
+  width: auto !important;
+}
+
+[data-sonner-toast] {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Desktop: Move to top-right */
+@media (min-width: 768px) {
+  [data-sonner-toaster][data-x-position="right"] {
+    left: auto !important;
+    right: 1rem !important;
+    transform: none !important;
+  }
+  
+  [data-sonner-toaster] {
+    top: 1rem !important;
+    right: 1rem !important;
+    left: auto !important;
+    transform: none !important;
+    max-width: 356px !important;
+    width: 356px !important;
+  }
+  
+  [data-sonner-toast] {
+    width: 356px !important;
+  }
+}
+
+/* Ensure toasts are visible above other content */
+[data-sonner-toaster] {
+  z-index: 9999 !important;
+}
+
+/* Mobile & Tablet Animation Optimization */
+@media (max-width: 1023px) {
+  aside {
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+  }
+  
+  .transition-all,
+  .transition-transform,
+  .transition-colors,
+  .transition-opacity {
+    transition-duration: 150ms !important;
+  }
+  
+  [class*="animate-in"],
+  [class*="dropdown"],
+  [class*="submenu"] {
+    transition-duration: 150ms !important;
+    will-change: transform, opacity !important;
+  }
+  
+  [class*="backdrop"],
+  [class*="overlay"] {
+    transition-duration: 150ms !important;
+    will-change: opacity !important;
+  }
+  
+  button,
+  a,
+  [role="button"] {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+}
+
+/* Tablet specific optimizations */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .transition-all {
+    transition-duration: 200ms !important;
+  }
+}

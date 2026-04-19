@@ -5,18 +5,18 @@ import { motion } from "framer-motion"
 import { RealtimePropertyCard } from "@/components/cards"
 
 const features = [
-  "Daftar masjid dalam 5 menit",
-  "Verifikasi profil termasuk",
-  "Notifikasi real-time",
-  "Dukungan 24/7",
-  "Tanpa biaya tersembunyi",
-  "Pembayaran aman",
+  "Pelacakan produk real-time",
+  "Verifikasi asal produk otomatis",
+  "Notifikasi pergerakan barang",
+  "Smart contract supply chain",
+  "Transparansi penuh distribusi",
+  "Keamanan data terdesentralisasi",
 ]
 
 export function FeaturesSection() {
   return (
     <section id="features" className="py-32 px-6 relative max-w-full">
-      <div className="absolute top-[50%] md:top-[45%] lg:top-[85%] xl:top-[80%] -translate-y-1/2 left-0 right-0 lg:left-[46%] flex justify-center pointer-events-none z-20 max-w-full overflow-hidden">
+      <div className="absolute top-[40%] md:top-[40%] lg:top-[85%] xl:top-[80%] -translate-y-1/2 left-0 right-0 lg:left-[46%] flex justify-center pointer-events-none z-20 max-w-full overflow-hidden">
         <span className="relative inline-block">
           <span className="relative z-10 font-bold text-center text-[20vw] sm:text-[14vw] md:text-[12vw] lg:text-[12vw] leading-none tracking-tighter text-white whitespace-nowrap px-4" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.3)' }}>
             KELOLA
@@ -46,10 +46,10 @@ export function FeaturesSection() {
               viewport={{ once: true }}
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-balance">
-                Kelola keuangan masjid dengan transparan
+                Lacak supply chain produk dengan blockchain
               </h2>
               <p className="text-muted-foreground leading-relaxed text-lg">
-                Pantau pemasukan dan pengeluaran, kelola program masjid, publikasikan laporan keuangan real-time, dan tingkatkan kepercayaan jamaah dengan transparansi penuh.
+                Pantau perjalanan produk dari supplier hingga konsumen akhir, kelola distribusi barang dengan transparan, publikasikan laporan berbasis blockchain, dan tingkatkan kepercayaan dengan teknologi terdesentralisasi yang dapat diverifikasi.
               </p>
             </motion.div>
 

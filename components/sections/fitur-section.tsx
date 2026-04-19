@@ -11,9 +11,10 @@ export function FiturSection() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.1 }}
           className="absolute inset-0 z-0"
+          style={{ willChange: 'opacity' }}
         >
           {/* Top Wave */}
           <svg
@@ -21,6 +22,7 @@ export function FiturSection() {
             viewBox="0 0 1440 800"
             preserveAspectRatio="none"
             xmlns="http://www.w3.org/2000/svg"
+            style={{ transform: 'translateZ(0)' }}
           >
             <defs>
               <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -41,6 +43,7 @@ export function FiturSection() {
             viewBox="0 0 1440 800"
             preserveAspectRatio="none"
             xmlns="http://www.w3.org/2000/svg"
+            style={{ transform: 'translateZ(0)' }}
           >
             <defs>
               <linearGradient id="waveGradient2" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -58,23 +61,19 @@ export function FiturSection() {
 
         {/* TRANSPARAN - Pojok Kanan Atas */}
         <motion.div
-          initial={{ opacity: 0, x: 40 }}
+          initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.4, ease: "easeOut", delay: 0.05 }}
+          viewport={{ once: true, amount: 0.1 }}
           className="absolute top-4 left-1/2 -translate-x-1/2 lg:top-12 lg:right-16 lg:left-auto lg:translate-x-0 overflow-visible w-[85vw] sm:w-[70vw] md:w-[60vw] lg:w-[25vw] z-10"
         >
-          <motion.div
-            whileHover={{ scale: 1.05, rotate: -2 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="relative inline-block w-full"
-          >
+          <div className="relative inline-block w-full">
             <div className="absolute inset-0 border-3 sm:border-4 border-gray-200 dark:border-gray-700 rounded-2xl sm:rounded-3xl pointer-events-none z-20 shadow-lg"></div>
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 rounded-2xl sm:rounded-3xl shadow-xl"></div>
             <span className="relative z-10 font-bold text-center text-[8vw] sm:text-[7vw] md:text-[6vw] lg:text-[3.5vw] leading-none tracking-tighter text-white whitespace-nowrap px-3 py-2 sm:px-4 sm:py-3 md:px-5 md:py-4 block drop-shadow-lg">
               TRANSPARAN
             </span>
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* Main Content */}
@@ -92,32 +91,32 @@ export function FiturSection() {
                 {
                   gradient: "linear-gradient(177deg, rgb(9, 138, 95) 2.45%, rgb(5, 227, 156) 97.55%)",
                   icon: "/images/stak/Zakat-Ramadan.webp",
-                  title: "Manajemen Donasi Digital",
-                  desc: "Platform terintegrasi untuk mencatat dan mengelola donasi, infaq, wakaf, dan zakat secara digital dengan dashboard yang mudah digunakan pengurus masjid."
+                  title: "Blockchain Supply Chain",
+                  desc: "Platform berbasis blockchain untuk melacak perjalanan dana zakat, infaq, dan wakaf dari donatur hingga penggunaan akhir dengan teknologi terdesentralisasi yang transparan."
                 },
                 {
                   gradient: "linear-gradient(177deg, rgb(67, 49, 94) 2.45%, rgb(168, 119, 217) 97.55%)",
                   icon: "/images/stak/Halal-Sign-Ramadan.webp",
-                  title: "Laporan Keuangan Transparan",
-                  desc: "Setiap donasi tercatat otomatis dan dapat diakses jamaah secara real-time. Laporan pemasukan dan pengeluaran tersedia lengkap dan terbuka untuk publik."
+                  title: "Sertifikasi Halal & Verified",
+                  desc: "Setiap transaksi dan produk bantuan tersertifikasi halal dan terverifikasi di blockchain dengan badge digital yang dapat divalidasi secara publik."
                 },
                 {
                   gradient: "linear-gradient(177deg, rgb(251, 186, 111) 2.45%, rgb(255, 236, 225) 97.55%)",
                   icon: "/images/stak/Ramadan-Lantern-Ramadan.webp",
-                  title: "Verifikasi Masjid Resmi",
-                  desc: "Setiap masjid yang bergabung melalui proses verifikasi dokumen resmi oleh tim DanaMasjid untuk memastikan keabsahan dan kepercayaan platform."
+                  title: "Cahaya Transparansi",
+                  desc: "Menerangi setiap transaksi dengan teknologi blockchain yang membuat semua aliran dana terlihat jelas seperti cahaya lentera di malam Ramadan."
                 }
               ].map((card, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.5,
-                    delay: index * 0.08,
-                    ease: [0.16, 1, 0.3, 1]
+                    duration: 0.4,
+                    delay: index * 0.05,
+                    ease: "easeOut"
                   }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.2 }}
                   className="flex flex-col p-4 md:p-8 border-r border-gray-200 dark:border-gray-700 last:border-r-0"
                 >
                   {/* Gradient Header with Icon */}
@@ -154,35 +153,35 @@ export function FiturSection() {
               {[
                 {
                   icon: "/images/stak/Tauhid-Ramadan.webp",
-                  title: "Notifikasi Donasi Real-time",
-                  desc: "Pengurus masjid dan donatur mendapat notifikasi langsung setiap ada donasi masuk, sehingga tidak ada transaksi yang terlewat."
+                  title: "Tauhid dalam Transparansi",
+                  desc: "Menjaga keesaan dan kejujuran dalam setiap transaksi dengan pelacakan blockchain yang tidak dapat diubah, mencerminkan nilai tauhid dalam pengelolaan dana."
                 },
                 {
                   icon: "/images/stak/Sorry-Hand-Ramadan.webp",
-                  title: "Dukungan Pengurus Masjid",
-                  desc: "Tim support siap membantu pengurus masjid dalam penggunaan platform, mulai dari pendaftaran hingga pengelolaan laporan keuangan harian."
+                  title: "Dukungan & Bantuan",
+                  desc: "Tim support siap membantu dengan tangan terbuka dalam penggunaan platform blockchain, mulai dari setup wallet hingga verifikasi transaksi on-chain."
                 },
                 {
                   icon: "/images/stak/Ramadan-Drum-Ramadan.webp",
-                  title: "Riwayat Donasi Lengkap",
-                  desc: "Semua riwayat donasi tersimpan permanen dan dapat diunduh kapan saja untuk keperluan audit, pelaporan, atau pertanggungjawaban kepada jamaah."
+                  title: "Notifikasi Real-time",
+                  desc: "Seperti bedug yang mengumumkan waktu, sistem kami memberikan notifikasi instant setiap ada transaksi blockchain yang masuk atau keluar."
                 },
                 {
                   icon: "/images/stak/Ramadan-Discount-Ramadan.webp",
-                  title: "Berbagai Metode Pembayaran",
-                  desc: "Mendukung transfer bank, QRIS, dan berbagai e-wallet populer sehingga jamaah dapat berdonasi dengan cara yang paling mudah dan nyaman."
+                  title: "Multi-Chain Support",
+                  desc: "Hemat biaya gas fee dengan dukungan berbagai blockchain seperti Ethereum, Polygon, BSC, dan Solana untuk fleksibilitas dan efisiensi maksimal."
                 }
               ].map((card, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.45,
-                    delay: index * 0.08,
-                    ease: [0.16, 1, 0.3, 1]
+                    duration: 0.35,
+                    delay: index * 0.05,
+                    ease: "easeOut"
                   }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.2 }}
                   className="flex items-center gap-3 md:gap-5 border-t border-gray-200 dark:border-gray-700 p-0 md:p-5 lg:px-8 lg:py-6 hover:bg-gray-50 transition-colors duration-200"
                 >
                   {/* Icon */}
@@ -217,10 +216,10 @@ export function FiturSection() {
 
         {/* JUJUR - Pojok Kiri Bawah */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
+          initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.4, ease: "easeOut", delay: 0.05 }}
+          viewport={{ once: true, amount: 0.1 }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 sm:bottom-12 lg:bottom-12 lg:left-16 lg:translate-x-0 overflow-visible w-[85vw] sm:w-[70vw] md:w-[60vw] lg:w-[25vw] z-10"
         >
           <div className="relative inline-block w-full">

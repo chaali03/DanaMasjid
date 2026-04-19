@@ -37,14 +37,14 @@ function useCountUp(end: number, duration = 2000, suffix = "") {
 }
 
 export function StatsSection() {
-  const homes = useCountUp(15, 2500, "K+")
-  const cities = useCountUp(120, 2800, "")
-  const users = useCountUp(50, 3000, "K+")
+  const transactions = useCountUp(25, 2500, "K+")
+  const transparency = useCountUp(99, 2800, "%")
+  const supply = useCountUp(15, 3000, "K+")
 
   const startCounters = () => {
-    setTimeout(() => homes.start(), 200)
-    setTimeout(() => cities.start(), 400)
-    setTimeout(() => users.start(), 600)
+    setTimeout(() => transactions.start(), 200)
+    setTimeout(() => transparency.start(), 400)
+    setTimeout(() => supply.start(), 600)
   }
 
   return (
@@ -56,11 +56,11 @@ export function StatsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            onViewportEnter={() => !homes.hasStarted && startCounters()}
+            onViewportEnter={() => !transactions.hasStarted && startCounters()}
             className="text-center"
           >
-            <p className="font-light text-foreground mb-2 text-6xl md:text-7xl leading-none">{homes.value}</p>
-            <p className="text-xs text-muted-foreground uppercase tracking-wider">Masjid Terdaftar</p>
+            <p className="font-light text-foreground mb-2 text-6xl md:text-7xl leading-none">{transactions.value}</p>
+            <p className="text-xs text-muted-foreground uppercase tracking-wider">Transaksi Dana Tercatat</p>
           </motion.div>
 
           <motion.div
@@ -70,8 +70,8 @@ export function StatsSection() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <p className="font-light text-foreground mb-2 text-6xl md:text-7xl leading-none">{cities.value}</p>
-            <p className="text-xs text-muted-foreground uppercase tracking-wider">Kota</p>
+            <p className="font-light text-foreground mb-2 text-6xl md:text-7xl leading-none">{transparency.value}</p>
+            <p className="text-xs text-muted-foreground uppercase tracking-wider">Terpublikasi kepada Masyarakat</p>
           </motion.div>
 
           <motion.div
@@ -81,8 +81,8 @@ export function StatsSection() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <p className="font-light text-foreground mb-2 text-6xl md:text-7xl leading-none">{users.value}</p>
-            <p className="text-xs text-muted-foreground uppercase tracking-wider">Jamaah Terhubung</p>
+            <p className="font-light text-foreground mb-2 text-6xl md:text-7xl leading-none">{supply.value}</p>
+            <p className="text-xs text-muted-foreground uppercase tracking-wider">rantai Supply Terlacak</p>
           </motion.div>
         </div>
       </div>

@@ -186,20 +186,20 @@ layer(base);
     cursor: pointer;
   }
   body {
-    @apply relative font-normal font-outfit z-1 bg-gray-50;
+    @apply relative font-normal font-outfit z-1 bg-gray-50 dark:bg-gray-950;
   }
 }
 
 @utility menu-item {
-  @apply relative flex items-center w-full gap-3 px-3 py-2 font-medium rounded-lg text-theme-sm;
+  @apply relative flex items-center w-full gap-3 px-4 py-3 font-medium rounded-xl text-theme-sm transition-all duration-200;
 }
 
 @utility menu-item-active {
-  @apply bg-brand-50 text-brand-500 dark:bg-brand-500/[0.12] dark:text-brand-400;
+  @apply bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-lg shadow-brand-500/30 dark:from-brand-500 dark:to-brand-600 dark:shadow-brand-500/20;
 }
 
 @utility menu-item-inactive {
-  @apply text-gray-700 hover:bg-gray-100 group-hover:text-gray-700 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-gray-300;
+  @apply text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:shadow-sm group-hover:text-gray-900 dark:text-gray-300 dark:hover:from-white/5 dark:hover:to-white/10 dark:hover:text-white;
 }
 
 @utility menu-item-icon {
@@ -207,7 +207,7 @@ layer(base);
 }
 
 @utility menu-item-icon-active {
-  @apply text-brand-500 dark:text-brand-400;
+  @apply text-white dark:text-white;
 }
 
 @utility menu-item-icon-size {
@@ -217,7 +217,7 @@ layer(base);
 }
 
 @utility menu-item-icon-inactive {
-  @apply text-gray-500 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-300;
+  @apply text-gray-500 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200 transition-colors duration-200;
 }
 
 @utility menu-item-arrow {
@@ -233,15 +233,15 @@ layer(base);
 }
 
 @utility menu-dropdown-item {
-  @apply relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-theme-sm font-medium;
+  @apply relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-theme-sm font-medium transition-all duration-200;
 }
 
 @utility menu-dropdown-item-active {
-  @apply bg-brand-50 text-brand-500 dark:bg-brand-500/[0.12] dark:text-brand-400;
+  @apply bg-gradient-to-r from-brand-50 to-brand-100 text-brand-600 border-l-2 border-brand-500 dark:from-brand-500/10 dark:to-brand-500/20 dark:text-brand-400 dark:border-brand-400;
 }
 
 @utility menu-dropdown-item-inactive {
-  @apply text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5;
+  @apply text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:border-l-2 hover:border-gray-300 dark:text-gray-300 dark:hover:from-white/5 dark:hover:to-white/10 dark:hover:border-gray-600;
 }
 
 @utility menu-dropdown-badge {

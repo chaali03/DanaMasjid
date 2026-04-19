@@ -5,33 +5,33 @@ import { CookieConsentBanner } from "@/components/cookie-consent"
 import { QueryProvider, RecaptchaProvider, SecurityProvider } from "@/components/providers"
 import { AuthProvider } from "@/lib/auth-context"
 import { ScrollProgress } from "@/components/ui/scroll-progress"
-import { BackToTop } from "@/components/ui/back-to-top"
+import { ScrollRestoration } from "@/components/scroll-restoration"
 import { SuppressExtensionErrors } from "@/components/suppress-extension-errors"
 import "./globals.css"
 import { PageLoadingTransition } from "@/components/ui/page-loading-transition"
 import { LottieLoading } from "@/components/ui/lottie-loading"
 
 export const metadata: Metadata = {
-  title: "DanaMasjid - Platform Donasi Masjid Transparan & Amanah",
-  description: "Platform donasi masjid dengan transparansi keuangan pada program masjid-masjid yang ada di Indonesia. Salurkan zakat, infaq, dan sedekah Anda dengan amanah dan pantau penggunaan dana secara real-time. Gratis 3 bulan pertama untuk masjid yang mendaftar.",
-  keywords: ["donasi masjid", "zakat", "infaq", "sedekah", "masjid", "donasi online", "transparansi donasi", "transparansi keuangan masjid"],
-  authors: [{ name: "DanaMasjid" }],
-  creator: "DanaMasjid",
-  publisher: "DanaMasjid",
+  title: "PARANTARA: Platform Transparansi Berbasis Blockchain untuk Dana Masjid dan Rantai Pasokan Nusantara",
+  description: "PARANTARA menghadirkan solusi transparansi berbasis blockchain untuk pengelolaan dana masjid dan supply chain bantuan di Indonesia. Lacak donasi, zakat, infaq, dan sedekah secara real-time dengan teknologi yang aman dan tidak dapat dimanipulasi.",
+  keywords: ["blockchain", "transparansi", "dana masjid", "supply chain", "zakat", "infaq", "sedekah", "masjid", "donasi online", "transparansi donasi", "rantai pasokan", "blockchain indonesia"],
+  authors: [{ name: "PARANTARA" }],
+  creator: "PARANTARA",
+  publisher: "PARANTARA",
   generator: 'byHidupTebe',
   manifest: '/favicon_io/site.webmanifest',
   openGraph: {
     type: 'website',
     locale: 'id_ID',
     url: 'https://danamasjid.com',
-    title: 'DanaMasjid - Platform Donasi Masjid Transparan & Amanah',
-    description: 'Platform donasi masjid dengan transparansi keuangan pada program masjid-masjid yang ada di Indonesia. Salurkan zakat, infaq, dan sedekah Anda dengan amanah dan pantau penggunaan dana secara real-time.',
-    siteName: 'DanaMasjid',
+    title: 'PARANTARA: Platform Transparansi Berbasis Blockchain untuk Dana Masjid dan Rantai Pasokan Nusantara',
+    description: 'PARANTARA menghadirkan solusi transparansi berbasis blockchain untuk pengelolaan dana masjid dan supply chain bantuan di Indonesia. Lacak donasi secara real-time dengan teknologi yang aman.',
+    siteName: 'PARANTARA',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'DanaMasjid - Platform Donasi Masjid Transparan & Amanah',
-    description: 'Platform donasi masjid dengan transparansi keuangan pada program masjid-masjid yang ada di Indonesia. Pantau penggunaan dana secara real-time.',
+    title: 'PARANTARA: Platform Transparansi Berbasis Blockchain untuk Dana Masjid dan Rantai Pasokan Nusantara',
+    description: 'PARANTARA menghadirkan solusi transparansi berbasis blockchain untuk pengelolaan dana masjid dan supply chain bantuan di Indonesia.',
   },
   robots: {
     index: true,
@@ -67,67 +67,52 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="id" suppressHydrationWarning>
+    <html lang="id" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         {/* Viewport - required to avoid 300ms tap delay on mobile */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {/* Console ASCII art */}
-        <script src="/console-art.js" />
-
-        {/* Block page content until loader dismisses */}
-        <style id="initial-loader-style" dangerouslySetInnerHTML={{ __html: `
-          body.loading-active { overflow: hidden; }
-          body.loading-active > *:not(#initial-loader-overlay) { opacity: 0 !important; }
+        {/* Inline CSS for instant loading screen - prevents flash of content */}
+        <style suppressHydrationWarning dangerouslySetInnerHTML={{__html: `
+          #initial-loader-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: linear-gradient(to bottom right, #eff6ff, #ffffff, #fefce8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          body.loading-active {
+            overflow: hidden !important;
+          }
+          .loading-text-fixed {
+            font-family: system-ui, -apple-system, sans-serif;
+          }
         `}} />
+
+        {/* Console ASCII art */}
+        <Script src="/console-art.js" strategy="afterInteractive" id="console-art" />
+
+        {/* Preload critical assets - only assets that are actually used immediately */}
+        <link rel="preload" href="/images/loading/mosque.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/lotie-loading.json" as="fetch" type="application/json" crossOrigin="anonymous" />
+        <link rel="preload" href="/font/arabic-ramadan/ArabicRamadan.otf" as="font" type="font/otf" crossOrigin="anonymous" />
         
-        {/* Preload Lottie animation JSON for faster loading screens */}
-        <link rel="preload" href="/lotie-loading.json" as="fetch" crossOrigin="anonymous" />
-        
-        {/* Only preconnect to origins that will actually be used on login page */}
+        {/* Preconnect to critical origins */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://apis.google.com" crossOrigin="anonymous" />
+        
+        {/* DNS prefetch for other origins */}
         <link rel="dns-prefetch" href="https://danamasjid.firebaseapp.com" />
-        <link rel="dns-prefetch" href="https://apis.google.com" />
+        <link rel="dns-prefetch" href="https://www.google.com" />
         
         {/* Meta Description */}
-        <meta name="description" content="Platform donasi masjid dengan transparansi keuangan pada program masjid-masjid yang ada di Indonesia. Salurkan zakat, infaq, dan sedekah Anda dengan amanah dan pantau penggunaan dana secara real-time. Gratis 3 bulan pertama untuk masjid yang mendaftar." />
-
-        {/* Scroll restoration — keep position on refresh, skip for home page */}
-        <script
-          id="scroll-restoration"
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                if ('scrollRestoration' in history) {
-                  history.scrollRestoration = 'manual';
-                }
-                var key = 'sr_' + location.pathname;
-                // Always scroll to top on home page
-                if (location.pathname === '/') {
-                  sessionStorage.removeItem(key);
-                  window.scrollTo(0, 0);
-                } else {
-                  var saved = sessionStorage.getItem(key);
-                  if (saved) {
-                    requestAnimationFrame(function() {
-                      requestAnimationFrame(function() {
-                        window.scrollTo(0, parseInt(saved, 10));
-                      });
-                    });
-                  }
-                }
-                window.addEventListener('beforeunload', function() {
-                  sessionStorage.setItem(key, String(window.scrollY));
-                });
-              })();
-            `
-          }}
-        />
+        <meta name="description" content="PARANTARA menghadirkan solusi transparansi berbasis blockchain untuk pengelolaan dana masjid dan supply chain bantuan di Indonesia. Lacak donasi, zakat, infaq, dan sedekah secara real-time dengan teknologi yang aman dan tidak dapat dimanipulasi." />
       </head>
-      <body className={`font-sans antialiased`} suppressHydrationWarning>
-        {/* Run immediately — blocks content before React hydrates */}
-        <script suppressHydrationWarning dangerouslySetInnerHTML={{ __html: `document.body.classList.add('loading-active');` }} />
+      <body className={`font-sans antialiased loading-active`} suppressHydrationWarning>
+        <ScrollRestoration />
         {/* Defer all structured data to after interactive */}
         <Script
           id="organization-schema"
@@ -137,10 +122,10 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "DanaMasjid",
+              "name": "PARANTARA",
               "url": "https://danamasjid.com",
               "logo": "https://danamasjid.com/favicon_io/android-chrome-512x512.png",
-              "description": "Platform donasi masjid dengan transparansi keuangan pada program masjid-masjid yang ada di Indonesia",
+              "description": "Platform transparansi berbasis blockchain untuk pengelolaan dana masjid dan supply chain bantuan di Indonesia",
               "sameAs": [
                 "https://www.facebook.com/danamasjid",
                 "https://www.instagram.com/danamasjid",
@@ -164,9 +149,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "DanaMasjid",
+              "name": "PARANTARA",
               "url": "https://danamasjid.com",
-              "description": "Platform donasi masjid dengan transparansi keuangan pada program masjid-masjid yang ada di Indonesia. Salurkan zakat, infaq, dan sedekah Anda dengan amanah dan pantau penggunaan dana secara real-time.",
+              "description": "PARANTARA menghadirkan solusi transparansi berbasis blockchain untuk pengelolaan dana masjid dan supply chain bantuan di Indonesia. Lacak donasi, zakat, infaq, dan sedekah secara real-time dengan teknologi yang aman dan tidak dapat dimanipulasi.",
               "potentialAction": {
                 "@type": "SearchAction",
                 "target": "https://danamasjid.com/search?q={search_term_string}",

@@ -56,6 +56,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Skip CSS files with query parameters (Next.js HMR)
+  if (url.pathname.endsWith('.css') && url.search) {
+    return;
+  }
+
   // Skip external requests (except for specific domains)
   if (url.origin !== location.origin && 
       !url.hostname.includes('danamasjid.firebaseapp.com') &&

@@ -3,7 +3,7 @@
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip, Cell } from "recharts"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect } from "react"
-import { Home, Eye } from "lucide-react"
+import { Home, Eye, Package } from "lucide-react"
 
 const defaultHourlyData = [
   { hour: "12am", visitors: 120 },
@@ -21,10 +21,10 @@ const defaultHourlyData = [
 ]
 
 const defaultTopProperties = [
-  { page: "Masjid Al-Ikhlas", visitors: 245 },
-  { page: "Masjid Nurul Huda", visitors: 189 },
-  { page: "Masjid Ar-Rahman", visitors: 156 },
-  { page: "Masjid Al-Falah", visitors: 98 },
+  { page: "Beras Premium 25kg", visitors: 245 },
+  { page: "Minyak Goreng 5L", visitors: 189 },
+  { page: "Gula Pasir 10kg", visitors: 156 },
+  { page: "Paket Sembako", visitors: 98 },
 ]
 
 export function RealtimePropertyCard() {
@@ -42,45 +42,70 @@ export function RealtimePropertyCard() {
     setMounted(true)
   }, [])
 
-  // Animate visitor count
+  // Animate visitor count with throttling
   useEffect(() => {
+    let lastUpdate = Date.now()
     const interval = setInterval(() => {
-      setCurrentVisitors((prev) => prev + Math.floor(Math.random() * 10) - 3)
-      setPageViews((prev) => prev + Math.floor(Math.random() * 5))
+      const now = Date.now()
+      if (now - lastUpdate >= 2000) {
+        setCurrentVisitors((prev) => prev + Math.floor(Math.random() * 10) - 3)
+        setPageViews((prev) => prev + Math.floor(Math.random() * 5))
+        lastUpdate = now
+      }
     }, 2000)
     return () => clearInterval(interval)
   }, [])
 
-  // Animate bar highlight
+  // Animate bar highlight with RAF for smoother performance
   useEffect(() => {
-    const interval = setInterval(() => {
-      setHighlightedBar((prev) => (prev + 1) % hourlyData.length)
-    }, 1500)
-    return () => clearInterval(interval)
+    let animationFrame: number
+    let lastTime = 0
+    const interval = 1500
+    
+    const animate = (time: number) => {
+      if (time - lastTime >= interval) {
+        setHighlightedBar((prev) => (prev + 1) % hourlyData.length)
+        lastTime = time
+      }
+      animationFrame = requestAnimationFrame(animate)
+    }
+    
+    animationFrame = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(animationFrame)
   }, [hourlyData.length])
 
-  // Update hourly data periodically
+  // Update hourly data periodically with throttling
   useEffect(() => {
+    let lastUpdate = Date.now()
     const interval = setInterval(() => {
-      setHourlyData((prev) =>
-        prev.map((item) => ({
-          ...item,
-          visitors: Math.max(30, item.visitors + Math.floor(Math.random() * 40) - 20),
-        })),
-      )
+      const now = Date.now()
+      if (now - lastUpdate >= 3000) {
+        setHourlyData((prev) =>
+          prev.map((item) => ({
+            ...item,
+            visitors: Math.max(30, item.visitors + Math.floor(Math.random() * 40) - 20),
+          })),
+        )
+        lastUpdate = now
+      }
     }, 3000)
     return () => clearInterval(interval)
   }, [])
 
-  // Update top properties periodically
+  // Update top properties periodically with throttling
   useEffect(() => {
+    let lastUpdate = Date.now()
     const interval = setInterval(() => {
-      setTopProperties((prev) =>
-        prev.map((item) => ({
-          ...item,
-          visitors: Math.max(50, item.visitors + Math.floor(Math.random() * 20) - 10),
-        })),
-      )
+      const now = Date.now()
+      if (now - lastUpdate >= 2500) {
+        setTopProperties((prev) =>
+          prev.map((item) => ({
+            ...item,
+            visitors: Math.max(50, item.visitors + Math.floor(Math.random() * 20) - 10),
+          })),
+        )
+        lastUpdate = now
+      }
     }, 2500)
     return () => clearInterval(interval)
   }, [])
@@ -105,7 +130,7 @@ export function RealtimePropertyCard() {
         >
           <div className="flex items-center gap-2 mb-1">
             <Eye className="w-4 h-4 opacity-60" />
-            <p className="text-sm opacity-80">Sedang Melihat</p>
+            <p className="text-sm opacity-80">Sedang Dilacak</p>
           </div>
           <AnimatePresence mode="wait">
             <motion.p
@@ -125,8 +150,8 @@ export function RealtimePropertyCard() {
           transition={{ type: "spring", stiffness: 300 }}
         >
           <div className="flex items-center gap-2 mb-1">
-            <Home className="w-4 h-4 opacity-60" />
-            <p className="text-sm opacity-80">Kunjungan Masjid</p>
+            <Package className="w-4 h-4 opacity-60" />
+            <p className="text-sm opacity-80">Produk Terlacak</p>
           </div>
           <AnimatePresence mode="wait">
             <motion.p
@@ -143,7 +168,7 @@ export function RealtimePropertyCard() {
       </div>
 
       <div className="mb-6">
-        <p className="mb-3 text-sm font-medium text-slate-700">Kunjungan Hari Ini</p>
+        <p className="mb-3 text-sm font-medium text-slate-700">Pelacakan Hari Ini</p>
         <div className="h-32" style={{ width: '100%', height: '128px' }}>
           <ResponsiveContainer width="100%" height="100%" minHeight={128}>
             <BarChart data={hourlyData} width={400} height={128}>
@@ -175,7 +200,7 @@ export function RealtimePropertyCard() {
       </div>
 
       <div>
-        <p className="mb-3 text-sm font-medium text-slate-700">Masjid Populer</p>
+        <p className="mb-3 text-sm font-medium text-slate-700">Produk Populer</p>
         <div className="space-y-2">
           {topProperties.map((property, index) => (
             <motion.div
@@ -201,6 +226,32 @@ export function RealtimePropertyCard() {
             </motion.div>
           ))}
         </div>
+        
+        {/* Button Daftarkan Produk Anda */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          viewport={{ once: true }}
+          className="mt-6"
+        >
+          <a
+            href="/register-product"
+            className="relative flex items-center justify-center gap-0 bg-foreground text-background rounded-full pl-6 pr-1.5 py-2.5 transition-all duration-300 group overflow-hidden hover:opacity-90 w-full"
+          >
+            <span className="text-sm pr-4 font-medium">Daftarkan Produk Anda</span>
+            <span className="w-10 h-10 bg-background rounded-full flex items-center justify-center">
+              <svg 
+                className="w-4 h-4 text-foreground" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7V17" />
+              </svg>
+            </span>
+          </a>
+        </motion.div>
       </div>
     </motion.div>
   )

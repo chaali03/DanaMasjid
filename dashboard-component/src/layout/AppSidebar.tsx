@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAccessibility } from "@/app/dashboard-admin/contexts/accessibility-context";
 
 // Assume these icons are imported from an icon library
 import {
@@ -10,10 +11,8 @@ import {
   GridIcon,
   HorizontaLDots,
   ListIcon,
-  PageIcon,
   PieChartIcon,
   PlugInIcon,
-  TableIcon,
   UserCircleIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
@@ -30,35 +29,31 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    subItems: [{ name: "Dashboard Masjid", path: "/", pro: false }],
   },
   {
     icon: <CalenderIcon />,
-    name: "Calendar",
+    name: "Keuangan",
+    subItems: [
+      { name: "Transparansi", path: "/finance", pro: false },
+      { name: "Pemasukan", path: "/finance/income", pro: false },
+      { name: "Pengeluaran", path: "/finance/expense", pro: false },
+    ],
+  },
+  {
+    icon: <ListIcon />,
+    name: "Program & Kegiatan",
+    path: "/programs",
+  },
+  {
+    icon: <CalenderIcon />,
+    name: "Kalender",
     path: "/calendar",
   },
   {
     icon: <UserCircleIcon />,
     name: "User Profile",
     path: "/profile",
-  },
-  {
-    name: "Forms",
-    icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  },
-  {
-    name: "Tables",
-    icon: <TableIcon />,
-    subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
-    subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "404 Error", path: "/error-404", pro: false },
-    ],
   },
 ];
 
@@ -69,6 +64,7 @@ const othersItems: NavItem[] = [
     subItems: [
       { name: "Line Chart", path: "/line-chart", pro: false },
       { name: "Bar Chart", path: "/bar-chart", pro: false },
+      { name: "Comparison Chart", path: "/comparison-chart", pro: false },
     ],
   },
   {
@@ -95,6 +91,7 @@ const othersItems: NavItem[] = [
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
+  const { settings } = useAccessibility();
   const pathname = usePathname();
   const toDashboardPath = useCallback((path: string) => {
     if (path === "/") return "/dashboard-admin";
@@ -109,6 +106,20 @@ const AppSidebar: React.FC = () => {
     {}
   );
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // Determine if sidebar is on the right
+  const isRightSidebar = settings.navigationPosition === "sidebar-right";
+  
+  // Hide sidebar completely in top/bottom navbar modes
+  const isNavbarMode = settings.navigationPosition === "top-navbar" || settings.navigationPosition === "bottom-navbar";
+
+  // Get mobile translate classes based on sidebar position
+  const getMobileTranslate = () => {
+    if (isMobileOpen) {
+      return "translate-x-0";
+    }
+    return isRightSidebar ? "translate-x-full" : "-translate-x-full";
+  };
 
   // const isActive = (path: string) => location.pathname === path;
   const isActive = useCallback(
@@ -196,7 +207,7 @@ const AppSidebar: React.FC = () => {
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
                 <ChevronDownIcon
-                  className={`ml-auto w-5 h-5 transition-transform duration-200 ${
+                  className={`ml-auto w-5 h-5 transition-transform duration-150 ${
                     openSubmenu?.type === menuType &&
                     openSubmenu?.index === index
                       ? "rotate-180 text-brand-500"
@@ -233,7 +244,7 @@ const AppSidebar: React.FC = () => {
               ref={(el) => {
                 subMenuRefs.current[`${menuType}-${index}`] = el;
               }}
-              className="overflow-hidden transition-all duration-300"
+              className="overflow-hidden transition-all duration-200"
               style={{
                 height:
                   openSubmenu?.type === menuType && openSubmenu?.index === index
@@ -288,9 +299,15 @@ const AppSidebar: React.FC = () => {
     </ul>
   );
 
+  // Don't render sidebar in navbar modes
+  if (isNavbarMode) {
+    return null;
+  }
+
   return (
     <aside
-      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
+      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 ${isRightSidebar ? 'right-0' : 'left-0'} bg-white dark:bg-gray-900 dark:border-gray-700 text-gray-900 h-screen transition-all ease-in-out z-50 ${isRightSidebar ? 'border-l-2' : 'border-r-2'} border-gray-100 shadow-xl shadow-gray-200/50 dark:shadow-gray-950/50
+        duration-150 lg:duration-300
         ${
           isExpanded || isMobileOpen
             ? "w-[290px]"
@@ -298,10 +315,12 @@ const AppSidebar: React.FC = () => {
             ? "w-[290px]"
             : "w-[90px]"
         }
-        ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0`}
+        ${getMobileTranslate()}
+        lg:translate-x-0
+        will-change-transform`}
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      style={{ transform: 'translateZ(0)' }}
     >
       <div
         className={`py-8 flex ${
@@ -310,29 +329,16 @@ const AppSidebar: React.FC = () => {
       >
         <Link href="/dashboard-admin">
           {isExpanded || isHovered || isMobileOpen ? (
-            <>
-              <img
-                className="dark:hidden"
-                src="/images/logo/logo.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
-              <img
-                className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
-            </>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">D</span>
+              </div>
+              <span className="text-xl font-bold text-gray-800 dark:text-white">Dana Masjid</span>
+            </div>
           ) : (
-            <img
-              src="/images/logo/logo-icon.svg"
-              alt="Logo"
-              width={32}
-              height={32}
-            />
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">D</span>
+            </div>
           )}
         </Link>
       </div>
