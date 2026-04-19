@@ -27,7 +27,7 @@
   "dependencies": {
     "@prisma/client": "^6.2.0",
     "@types/cookie-parser": "^1.4.10",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
@@ -35,15 +35,15 @@
     "ethers": "^6.16.0",
     "express": "^4.18.2",
     "express-mongo-sanitize": "^2.2.0",
-    "express-rate-limit": "^8.0.1",
+    "express-rate-limit": "^8.3.2",
     "express-slow-down": "^3.0.1",
     "express-validator": "^7.3.1",
     "firebase-admin": "^12.0.0",
     "helmet": "^8.1.0",
-    "hono": "^4.7.7",
+    "hono": "^4.12.14",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^8.0.1",
+    "nodemailer": "^8.0.5",
     "pg": "^8.11.3",
     "xss-clean": "^0.1.4"
   },
@@ -62,6 +62,6 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.3.3",
-    "wrangler": "^4.68.1"
+    "wrangler": "^4.83.0"
   }
 }
