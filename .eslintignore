@@ -3,10 +3,12 @@
 .netlify/
 out/
 build/
+dist/
 
 # Dependencies
 node_modules/
 blockchain/node_modules/
+**/node_modules/
 
 # Generated files
 *.tsbuildinfo
@@ -17,3 +19,7 @@ next-env.d.ts
 
 # Wrangler
 .wrangler/
+
+# Netlify build artifacts
+.netlify/**/*
+**/.netlify/**/*

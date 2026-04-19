@@ -176,9 +176,14 @@ export const LottieLoading = memo(function LottieLoading({
         // Check if everything is ready
         const isDocumentComplete = document.readyState === 'complete'
         const hasContent = document.body.children.length > 1 // More than just the loader
+        
+        // Add about-us-active as an alternative to stop loading
+        const isAboutUsActive = document.body.classList.contains('about-us-active') || 
+                                document.documentElement.classList.contains('about-us-active')
+
         const noLoadingElements = document.querySelectorAll('[data-loading="true"]').length === 0
         
-        if (isDocumentComplete && hasContent && noLoadingElements) {
+        if ((isDocumentComplete && hasContent && noLoadingElements) || (attempts > 5 && isAboutUsActive)) {
           clearInterval(checkInterval)
           
           // Faster fade out with GPU acceleration

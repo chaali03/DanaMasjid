@@ -64,135 +64,142 @@ export default function ScrollAdventure() {
   return (
     <div ref={containerRef} className="relative bg-black" style={{ height: `${numOfPages * 100}vh` }}>
       <div className="sticky top-0 h-screen overflow-hidden">
-        {pages.map((page, i) => {
-          // Calculate when each page should be visible
-          const pageStart = i / numOfPages;
-          const pageEnd = (i + 1) / numOfPages;
-          
-          // Left side: slides from bottom to center to top
-          const leftY = useTransform(
-            scrollYProgress,
-            [pageStart, (pageStart + pageEnd) / 2, pageEnd],
-            ['100%', '0%', '-100%']
-          );
-          
-          // Right side: slides from top to center to bottom
-          const rightY = useTransform(
-            scrollYProgress,
-            [pageStart, (pageStart + pageEnd) / 2, pageEnd],
-            ['-100%', '0%', '100%']
-          );
-          
-          // Opacity for smooth fade in/out
-          const opacity = useTransform(
-            scrollYProgress,
-            [
-              Math.max(0, pageStart - 0.05),
-              pageStart,
-              pageEnd,
-              Math.min(1, pageEnd + 0.05)
-            ],
-            [0, 1, 1, 0]
-          );
-
-          return (
-            <div key={i} className="absolute inset-0">
-              {/* Left Half */}
-              <motion.div
-                className="absolute top-0 left-0 w-1/2 h-full"
-                style={{ y: leftY, opacity }}
-              >
-                <div
-                  className="w-full h-full bg-cover bg-center bg-no-repeat"
-                  style={{ 
-                    backgroundImage: page.leftBgImage ? `url(${page.leftBgImage})` : undefined,
-                    backgroundColor: page.leftBgImage ? undefined : '#1a1a1a'
-                  }}
-                >
-                  <div className="flex flex-col items-center justify-center h-full text-white p-4 md:p-8">
-                    {page.leftContent && (
-                      <>
-                        <h2 className="text-xl md:text-2xl lg:text-3xl uppercase mb-2 md:mb-4 text-center font-bold">
-                          {page.leftContent.heading}
-                        </h2>
-                        <p className="text-sm md:text-base lg:text-lg text-center max-w-md">
-                          {page.leftContent.description}
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Right Half */}
-              <motion.div
-                className="absolute top-0 left-1/2 w-1/2 h-full"
-                style={{ y: rightY, opacity }}
-              >
-                <div
-                  className="w-full h-full bg-cover bg-center bg-no-repeat"
-                  style={{ 
-                    backgroundImage: page.rightBgImage ? `url(${page.rightBgImage})` : undefined,
-                    backgroundColor: page.rightBgImage ? undefined : '#1a1a1a'
-                  }}
-                >
-                  <div className="flex flex-col items-center justify-center h-full text-white p-4 md:p-8">
-                    {page.rightContent && (
-                      <>
-                        <h2 className="text-xl md:text-2xl lg:text-3xl uppercase mb-2 md:mb-4 text-center font-bold">
-                          {page.rightContent.heading}
-                        </h2>
-                        {typeof page.rightContent.description === 'string' ? (
-                          <p className="text-sm md:text-base lg:text-lg text-center max-w-md">
-                            {page.rightContent.description}
-                          </p>
-                        ) : (
-                          <div className="text-sm md:text-base lg:text-lg text-center max-w-md">
-                            {page.rightContent.description}
-                          </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          );
-        })}
+        {pages.map((page, i) => (
+          <PageItem key={i} page={page} i={i} numOfPages={numOfPages} scrollYProgress={scrollYProgress} />
+        ))}
 
         {/* Page Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
-          {pages.map((_, i) => {
-            const pageStart = i / numOfPages;
-            const pageEnd = (i + 1) / numOfPages;
-            
-            const dotWidth = useTransform(
-              scrollYProgress,
-              [pageStart, (pageStart + pageEnd) / 2, pageEnd],
-              [8, 32, 8]
-            );
-            
-            const dotOpacity = useTransform(
-              scrollYProgress,
-              [
-                Math.max(0, pageStart - 0.05),
-                pageStart,
-                pageEnd,
-                Math.min(1, pageEnd + 0.05)
-              ],
-              [0.5, 1, 1, 0.5]
-            );
-
-            return (
-              <motion.div
-                key={i}
-                className="h-2 rounded-full bg-white"
-                style={{ width: dotWidth, opacity: dotOpacity }}
-              />
-            );
-          })}
+          {pages.map((_, i) => (
+            <PageIndicator key={i} i={i} numOfPages={numOfPages} scrollYProgress={scrollYProgress} />
+          ))}
         </div>
       </div>
     </div>
+  );
+}
+
+function PageItem({ page, i, numOfPages, scrollYProgress }: { page: any, i: number, numOfPages: number, scrollYProgress: any }) {
+  // Calculate when each page should be visible
+  const pageStart = i / numOfPages;
+  const pageEnd = (i + 1) / numOfPages;
+  
+  // Left side: slides from bottom to center to top
+  const leftY = useTransform(
+    scrollYProgress,
+    [pageStart, (pageStart + pageEnd) / 2, pageEnd],
+    ['100%', '0%', '-100%']
+  );
+  
+  // Right side: slides from top to center to bottom
+  const rightY = useTransform(
+    scrollYProgress,
+    [pageStart, (pageStart + pageEnd) / 2, pageEnd],
+    ['-100%', '0%', '100%']
+  );
+  
+  // Opacity for smooth fade in/out
+  const opacity = useTransform(
+    scrollYProgress,
+    [
+      Math.max(0, pageStart - 0.05),
+      pageStart,
+      pageEnd,
+      Math.min(1, pageEnd + 0.05)
+    ],
+    [0, 1, 1, 0]
+  );
+
+  return (
+    <div className="absolute inset-0">
+      {/* Left Half */}
+      <motion.div
+        className="absolute top-0 left-0 w-1/2 h-full"
+        style={{ y: leftY, opacity }}
+      >
+        <div
+          className="w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: page.leftBgImage ? `url(${page.leftBgImage})` : undefined,
+            backgroundColor: page.leftBgImage ? undefined : '#1a1a1a'
+          }}
+        >
+          <div className="flex flex-col items-center justify-center h-full text-white p-4 md:p-8">
+            {page.leftContent && (
+              <>
+                <h2 className="text-xl md:text-2xl lg:text-3xl uppercase mb-2 md:mb-4 text-center font-bold">
+                  {page.leftContent.heading}
+                </h2>
+                <p className="text-sm md:text-base lg:text-lg text-center max-w-md">
+                  {page.leftContent.description}
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Right Half */}
+      <motion.div
+        className="absolute top-0 left-1/2 w-1/2 h-full"
+        style={{ y: rightY, opacity }}
+      >
+        <div
+          className="w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: page.rightBgImage ? `url(${page.rightBgImage})` : undefined,
+            backgroundColor: page.rightBgImage ? undefined : '#1a1a1a'
+          }}
+        >
+          <div className="flex flex-col items-center justify-center h-full text-white p-4 md:p-8">
+            {page.rightContent && (
+              <>
+                <h2 className="text-xl md:text-2xl lg:text-3xl uppercase mb-2 md:mb-4 text-center font-bold">
+                  {page.rightContent.heading}
+                </h2>
+                {typeof page.rightContent.description === 'string' ? (
+                  <p className="text-sm md:text-base lg:text-lg text-center max-w-md">
+                    {page.rightContent.description}
+                  </p>
+                ) : (
+                  <div className="text-sm md:text-base lg:text-lg text-center max-w-md">
+                    {page.rightContent.description}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+function PageIndicator({ i, numOfPages, scrollYProgress }: { i: number, numOfPages: number, scrollYProgress: any }) {
+  const pageStart = i / numOfPages;
+  const pageEnd = (i + 1) / numOfPages;
+  
+  const dotWidth = useTransform(
+    scrollYProgress,
+    [pageStart, (pageStart + pageEnd) / 2, pageEnd],
+    [8, 32, 8]
+  );
+  
+  const dotOpacity = useTransform(
+    scrollYProgress,
+    [
+      Math.max(0, pageStart - 0.05),
+      pageStart,
+      pageEnd,
+      Math.min(1, pageEnd + 0.05)
+    ],
+    [0.5, 1, 1, 0.5]
+  );
+
+  return (
+    <motion.div
+      className="h-2 rounded-full bg-white"
+      style={{ width: dotWidth, opacity: dotOpacity }}
+    />
   );
 }

@@ -10,13 +10,13 @@ export default function NotFound() {
   const animationContainer = useRef<HTMLDivElement>(null)
   const animationInstance = useRef<any>(null)
 
-  // If we're in dashboard, don't render this component
-  // Let the dashboard not-found handle it
-  if (pathname?.startsWith('/dashboard-admin')) {
-    return null
-  }
-
   useEffect(() => {
+    // If we're in dashboard, don't render this component
+    // Let the dashboard not-found handle it
+    if (pathname?.startsWith('/dashboard-admin')) {
+      return
+    }
+
     if (!animationContainer.current) return
     if (animationInstance.current) return
 
