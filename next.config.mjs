@@ -77,6 +77,15 @@ const nextConfig = {
     gzipSize: true,
     // Disable parallel build traces to prevent manifest corruption in dev
     webpackBuildWorker: true,
+    // Add memory limits for Turbopack if applicable
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
   
   // Move serverComponentsExternalPackages to root level

@@ -96,7 +96,7 @@ export default function RootLayout({
 
         {/* Preload critical assets - only assets that are actually used immediately */}
         <link rel="preload" href="/images/loading/mosque.webp" as="image" type="image/webp" />
-        <link rel="preload" href="/lotie-loading.json" as="fetch" type="application/json" crossOrigin="anonymous" />
+        <link rel="preload" href="/loading.lottie" as="fetch" type="application/octet-stream" crossOrigin="anonymous" />
         <link rel="preload" href="/font/arabic-ramadan/ArabicRamadan.otf" as="font" type="font/otf" crossOrigin="anonymous" />
         
         {/* Preconnect to critical origins */}

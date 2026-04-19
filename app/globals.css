@@ -626,3 +626,92 @@ img[width][height] {
   animation-delay: 1s;
   will-change: transform;
 }
+
+/* ============================================
+   Lottie Animation Smooth Optimization
+   ============================================ */
+
+/* Smooth Lottie container with GPU acceleration */
+.lottie-smooth-container,
+[class*="dotlottie"],
+[class*="DotLottie"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  will-change: transform;
+  /* Enable hardware acceleration */
+  -webkit-transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth canvas rendering for Lottie */
+.lottie-smooth-container canvas,
+[class*="dotlottie"] canvas,
+[class*="DotLottie"] canvas {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  /* Smooth scaling */
+  -ms-interpolation-mode: bicubic;
+}
+
+/* Optimize SVG rendering in Lottie */
+.lottie-smooth-container svg,
+[class*="dotlottie"] svg,
+[class*="DotLottie"] svg {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+}
+
+/* Smooth fade-in for Lottie when loaded */
+@keyframes lottie-smooth-fade-in {
+  from {
+    opacity: 0;
+    transform: translateZ(0) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0) scale(1);
+  }
+}
+
+.lottie-loaded {
+  animation: lottie-smooth-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Prevent flickering during animation */
+.lottie-smooth-container *,
+[class*="dotlottie"] *,
+[class*="DotLottie"] * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Optimize for 60fps animations */
+@media (prefers-reduced-motion: no-preference) {
+  .lottie-smooth-container,
+  [class*="dotlottie"],
+  [class*="DotLottie"] {
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .lottie-smooth-container,
+  [class*="dotlottie"],
+  [class*="DotLottie"] {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

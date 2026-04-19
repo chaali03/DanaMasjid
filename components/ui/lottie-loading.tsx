@@ -4,98 +4,33 @@ import { memo, useState, useEffect, useRef } from "react";
 import { markPageLoadingDone } from "@/lib/page-loading-done";
 import dynamic from "next/dynamic";
 
-// Dynamic import Lottie to prevent SSR issues
-const LottieReact = dynamic(() => import("lottie-react"), { ssr: false });
+// Dynamic import DotLottieReact to prevent SSR issues
+const DotLottieReact = dynamic(
+  () => import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
+  { ssr: false }
+);
 
-// Optimized Lottie Player with reduced complexity
+// Optimized Lottie Player with DotLottie support
 const LottiePlayer = memo(function LottiePlayer() {
-  const [animationData, setAnimationData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const loadedRef = useRef(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
 
   useEffect(() => {
-    if (loadedRef.current) return;
-    loadedRef.current = true;
-
-    // Show spinner only after 500ms delay (give Lottie more time to load)
+    // Show spinner only after 800ms delay if Lottie is not loaded
     const spinnerTimer = setTimeout(() => {
-      if (!animationData) {
+      if (!isLoaded) {
         setShowSpinner(true);
       }
-    }, 500);
+    }, 800);
 
-    const load = async () => {
-      try {
-        // Check cache first for instant load
-        const cached = sessionStorage.getItem('lottie-animation-data');
-        
-        // If cached, load immediately
-        if (cached) {
-          try {
-            const cachedData = JSON.parse(cached);
-            setAnimationData(cachedData);
-            setIsLoading(false);
-            clearTimeout(spinnerTimer);
-            if (process.env.NODE_ENV === 'development') {
-              console.log('✅ Lottie loaded from cache');
-            }
-            return;
-          } catch (e) {
-            // If cache is corrupted, continue to fetch
-            sessionStorage.removeItem('lottie-animation-data');
-          }
-        }
-        
-        // Load Lottie animation data with timeout to prevent hanging
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout (increased)
-        
-        const response = await fetch("/lotie-loading.json", { signal: controller.signal });
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // Cache for session
-        try {
-          sessionStorage.setItem('lottie-animation-data', JSON.stringify(data));
-        } catch (e) {
-          // Ignore quota errors
-        }
-        
-        setAnimationData(data);
-        setIsLoading(false);
-        clearTimeout(spinnerTimer);
-        
-        if (process.env.NODE_ENV === 'development') {
-          console.log('✅ Lottie loaded from network');
-        }
-      } catch (e) {
-        if (process.env.NODE_ENV === 'development') {
-          console.error("Failed to load Lottie:", e);
-        }
-        // On error, force show spinner
-        setIsLoading(false);
-        setShowSpinner(true);
-      }
-    };
-    
-    // Start loading immediately without delay
-    load();
-    
     return () => clearTimeout(spinnerTimer);
-  }, [animationData]);
+  }, [isLoaded]);
 
-  // Only show spinner if loading takes more than 300ms
-  if ((isLoading || !animationData) && showSpinner) {
+  // Only show spinner if loading takes too long
+  if (!isLoaded && showSpinner) {
     return (
       <div className="w-36 h-36 md:w-40 md:h-40 flex items-center justify-center">
         <div className="relative w-20 h-20 md:w-24 md:h-24">
-          {/* Outer yellow ring - spinning animation */}
           <div 
             className="absolute inset-0 rounded-full border-4 border-yellow-200 animate-spin" 
             style={{ 
@@ -104,23 +39,16 @@ const LottiePlayer = memo(function LottiePlayer() {
               willChange: 'transform'
             }}>
           </div>
-          
-          {/* Inner pulsing circle - yellow */}
           <div 
             className="absolute inset-3 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 animate-pulse"
-            style={{ 
-              willChange: 'opacity'
-            }}>
+            style={{ willChange: 'opacity' }}>
           </div>
-          
-          {/* Center mosque image - optimized */}
           <div className="absolute inset-0 flex items-center justify-center p-6">
             <img 
               src="/images/loading/mosque.webp" 
               alt="Mosque"
               className="w-full h-full object-contain drop-shadow-lg"
               loading="eager"
-              decoding="async"
             />
           </div>
         </div>
@@ -129,17 +57,33 @@ const LottiePlayer = memo(function LottiePlayer() {
   }
 
   return (
-    <div className="w-36 h-36 md:w-40 md:h-40" style={{ willChange: 'transform', transform: 'translateZ(0)' }}>
-      <LottieReact
-        animationData={animationData}
-        loop={true}
-        autoplay={true}
-        style={{ width: "100%", height: "100%", transform: 'translateZ(0)' }}
-        rendererSettings={{ 
-          preserveAspectRatio: "xMidYMid slice", 
-          progressiveLoad: true,
-          hideOnTransparent: true
+    <div 
+      className="w-72 h-72 md:w-96 md:h-96 lottie-smooth-container" 
+      style={{ 
+        willChange: 'transform', 
+        transform: 'translateZ(0)',
+        perspective: '1000px',
+      }}
+    >
+      <DotLottieReact
+        src="/loading.lottie"
+        loop
+        autoplay
+        speed={1}
+        onLoad={() => setIsLoaded(true)}
+        className={isLoaded ? 'lottie-loaded' : ''}
+        style={{ 
+          width: "100%", 
+          height: "100%",
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
         }}
+        renderConfig={{
+          devicePixelRatio: typeof window !== 'undefined' ? Math.min(window.devicePixelRatio, 2) : 2,
+          freezeOnOffscreen: true,
+          hideOnTransparent: true,
+        }}
+        backgroundColor="transparent"
       />
     </div>
   );
